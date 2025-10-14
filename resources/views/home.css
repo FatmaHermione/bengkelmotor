@@ -1,0 +1,139 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background-color: #f9f9f9;
+}
+
+/* ===== HEADER ===== */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to right, #ff7f00, #ffb36b);
+    padding: 15px 30px;
+    color: #000;
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-icon {
+    width: 50px;
+}
+
+.logo-text h1 {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.logo-text p {
+    font-size: 14px;
+    margin-top: -5px;
+}
+
+/* User */
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-icon {
+    font-size: 26px;
+}
+
+.user-info {
+    text-align: right;
+}
+
+.user-info .role {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.logout {
+    font-size: 13px;
+    color: #000;
+    text-decoration: none;
+}
+
+.logout:hover {
+    text-decoration: underline;
+}
+
+/* ===== MAIN CONTENT ===== */
+main {
+    padding: 30px 50px;
+}
+
+.section-title {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+/* Service Menu */
+.service-container {
+    border: 1px solid #999;
+    border-radius: 6px;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+}
+
+.service-box {
+    border: 1px solid #555;
+    border-radius: 8px;
+    width: 150px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.service-box img {
+    width: 35px;
+    height: 35px;
+    margin-bottom: 5px;
+}
+
+.service-box:hover {
+    transform: scale(1.05);
+    background-color: #fff7e6;
+}
+
+/* ===== BUTTON FORM SERVICE ===== */
+.form-button {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 25px;
+}
+
+.btn-service {
+    background: linear-gradient(to right, #ff7f00, #ffb36b);
+    padding: 12px 25px;
+    border-radius: 8px;
+    color: #000;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+
+.btn-service:hover {
+    transform: translateY(-3px);
+}
