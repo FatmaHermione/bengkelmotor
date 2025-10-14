@@ -21,4 +21,4 @@ Route::delete('/daftar-layanan/{id}', [DaftarLayananController::class, 'destroy'
 <<<<<<< HEAD
 >>>>>>> e6f327a9a164c6e0f663da7f7993d837d672acd6 
 =======
->>>>>>> 9deae8922370972dae4a90945635a9e7b87deaf9
+>>>>>>> 9deae8922370972dae4a90945635a9e7b87deaf9`
