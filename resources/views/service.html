@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Service - AXERA MOTOR</title>
+    <link rel="stylesheet" href="service.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <img src="bike.png" alt="Logo Bengkel" class="logo">
+            <div class="judul">
+                <h2>AXERA MOTOR</h2>
+                <p>Bengkel Servis Motor</p>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <p class="role">Kasir</p>
+            <a href="login.html" class="logout">Log out</a>
+        </div>
+    </header>
+
+    <main>
+        <a href="home.html" class="back-btn">←</a>
+
+        <div class="form-container">
+            <h3>Form berikut untuk melakukan service ya!</h3>
+            <form>
+                <label>Nama</label>
+                <input type="text" required>
+
+                <label>No Handphone</label>
+                <input type="tel" required>
+
+                <label>Nomor Polisi Kendaraan</label>
+                <input type="text" required>
+
+                <label>Type Motor Anda</label>
+                <input type="text" required>
+
+                <label>Tgl Rencana Servis</label>
+                <input type="date" required>
+
+                <label>Rencana Jam Servis</label>
+                <div class="jam">
+                    <select required>
+                        <option value="">Jam</option>
+                        <option>08</option>
+                        <option>09</option>
+                        <option>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                        <option>13</option>
+                        <option>14</option>
+                        <option>15</option>
+                    </select>
+                    <select required>
+                        <option value="">Menit</option>
+                        <option>00</option>
+                        <option>15</option>
+                        <option>30</option>
+                        <option>45</option>
+                    </select>
+                </div>
+
+                <label>Keluhan Anda? (Jika ada)</label>
+                <input type="text">
+
+                <button type="submit" class="submit-btn">
+                    Kirim <span>📤</span>
+                </button>
+            </form>
+        </div>
+    </main>
+
+</body>
+</html>
