@@ -18,4 +18,4 @@ Route::get('/daftar-layanan', [DaftarLayananController::class, 'index'])->name('
 Route::get('/daftar-layanan/create', [DaftarLayananController::class, 'create'])->name('daftar-layanan.create');
 Route::post('/daftar-layanan', [DaftarLayananController::class, 'store'])->name('daftar-layanan.store');
 Route::delete('/daftar-layanan/{id}', [DaftarLayananController::class, 'destroy'])->name('daftar-layanan.destroy');
->>>>>>> e6f327a9a164c6e0f663da7f7993d837d672acd6
+>>>>>>> e6f327a9a164c6e0f663da7f7993d837d672acd6 
