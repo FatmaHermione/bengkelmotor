@@ -43,6 +43,6 @@ class AuthController extends Controller
 
 public function register(Request $request)
 {
-    // Logika untuk mendaftarkan user baru akan ada di sini
+ 
 }
 }
