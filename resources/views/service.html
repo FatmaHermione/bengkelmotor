@@ -28,7 +28,7 @@
 
         <div class="form-container">
             <h3>Form berikut untuk melakukan service ya!</h3>
-            <form>
+            <form id="serviceForm">
                 <label>Nama</label>
                 <input type="text" required>
 
@@ -75,6 +75,27 @@
             </form>
         </div>
     </main>
+
+    <div id="notif" class="notif">
+        ✅ Pendaftaran berhasil dikirim!
+    </div>
+
+    <script>
+        const form = document.getElementById('serviceForm');
+        const notif = document.getElementById('notif');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            notif.classList.add('show');
+
+            // Hilangkan otomatis setelah 3 detik
+            setTimeout(() => {
+                notif.classList.remove('show');
+            }, 3000);
+
+            form.reset();
+        });
+    </script>
 
 </body>
 </html>
