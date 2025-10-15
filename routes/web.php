@@ -2,11 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DaftarLayananController;
-
-// Route default Laravel
-Route::get('/', function () {
-    return view('welcome');
-});
+use App\Http\Controllers\AuthController;
 
 // Route test environment (punya kamu)
 Route::get('/test-env', function () {
@@ -18,3 +14,12 @@ Route::get('/daftar-layanan', [DaftarLayananController::class, 'index'])->name('
 Route::get('/daftar-layanan/create', [DaftarLayananController::class, 'create'])->name('daftar-layanan.create');
 Route::post('/daftar-layanan', [DaftarLayananController::class, 'store'])->name('daftar-layanan.store');
 Route::delete('/daftar-layanan/{id}', [DaftarLayananController::class, 'destroy'])->name('daftar-layanan.destroy');
+
+// Route untuk Login dan Logout
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.form');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// TAMBAHKAN DUA ROUTE INI UNTUK REGISTRASI
+Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register.form');
+Route::post('/register', [AuthController::class, 'register'])->name('register');
