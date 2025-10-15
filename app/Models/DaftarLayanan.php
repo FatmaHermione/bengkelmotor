@@ -18,7 +18,7 @@ class DaftarLayanan extends Model
         'no_handphone',
         'nomor_polisi',
         'tipe_motor',
-        'tgl_rencana_servis',
+        'tgl_rencana_servis', 
         'rencana_jam',
         'keluhan',
     ];

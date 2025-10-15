@@ -1,3 +1,25 @@
+/* Notifikasi muncul di kanan atas */
+.notif {
+    position: fixed;
+    top: 20px;
+    right: -350px;
+    background: #4caf50;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    font-weight: bold;
+    opacity: 0;
+    transition: all 0.6s ease;
+    z-index: 1000;
+}
+
+/* Saat muncul */
+.notif.show {
+    right: 20px;
+    opacity: 1;
+}
+
 body {
     margin: 0;
     font-family: "Poppins", sans-serif;
