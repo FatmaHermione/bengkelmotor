@@ -15,10 +15,10 @@ class ServisController extends Controller
         $servis = Servis::with(['motor', 'montir', 'sparepart'])->get();
         return view('servis.index', compact('servis'));
     }
-    
+
     public function create()
     {
-        $motor = Motor::all();
+        $motor = Motor::all(); 
         $montir = Montir::all();
         $sparepart = Sparepart::all();
         return view('servis.create', compact('motor', 'montir', 'sparepart'));
