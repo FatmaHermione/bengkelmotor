@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DaftarLayananController;
 use App\Http\Controllers\AuthController;
 
+Route::get('/', function () {
+    return redirect()->route('login.form');
+});
+
 // Route test environment (punya kamu)
 Route::get('/test-env', function () {
     dd(env('DB_CONNECTION'));
