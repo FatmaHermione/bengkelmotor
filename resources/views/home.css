@@ -137,3 +137,25 @@ main {
 .btn-service:hover {
     transform: translateY(-3px);
 }
+
+/* ===== BUTTON DATA PEGAWAI ===== */
+.pegawai-button {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+.btn-pegawai {
+    background: linear-gradient(to right, #ff7f00, #ffb36b);
+    padding: 12px 25px;
+    border-radius: 8px;
+    color: #000;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+
+.btn-pegawai:hover {
+    transform: translateY(-3px);
+}
