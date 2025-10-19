@@ -4,22 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - AXERA MOTOR</title>
-    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="{{ asset('css/signups.css') }}">
 </head>
 <body>
 
     <div class="form-card">
         <div class="tabs">
-            <a href="login.html" class="tab-item">Login</a>
-            <a href="signup.html" class="tab-item active">Sign Up</a>
-        </div>
+    <a href="{{ route('login.form') }}" class="tab-item">Login</a>
+    <a href="{{ route('signup') }}" class="tab-item active">Sign Up</a>
+</div>
 
-        <form action="login.html" method="post" class="signup-form">
-            <input type="text" placeholder="ENTER YOUR USERNAME" required>
-            <input type="password" placeholder="ENTER YOUR PASSWORD" required>
-            <input type="password" placeholder="ENTER YOUR CONFIRM PASSWORD" required>
-            <button type="submit">Sign Up</button>
-        </form>
+        <form action="{{ route('signup') }}" method="POST" class="signup-form">
+    @csrf
+    <input type="text" name="username" placeholder="ENTER YOUR USERNAME" required>
+    <input type="password" name="password" placeholder="ENTER YOUR PASSWORD" required>
+    <input type="password" name="password_confirmation" placeholder="ENTER YOUR CONFIRM PASSWORD" required>
+    <button type="submit">Sign Up</button>
+</form>
     </div>
 
 </body>

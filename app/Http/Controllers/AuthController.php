@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User; 
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -35,14 +37,23 @@ class AuthController extends Controller
         return redirect('/login');
     }
 
-    public function showRegistrationForm()
-{
-    // Nantinya kita akan buat view khusus untuk register
-    return view('register'); 
-}
+    public function showForm()
+    {
+        return view('signup'); // tampilkan halaman signup.blade.php
+    }
 
-public function register(Request $request)
-{
- 
-}
+    public function store(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string|max:50|unique:users,username',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        User::create([
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return back()->with('success', 'Akun berhasil dibuat!');
+    }
 }

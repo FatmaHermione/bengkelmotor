@@ -1,4 +1,3 @@
-/* 🎨 Palet Warna dari Figma */
 :root {
     --bg-orange: #f28b3a;
     --card-bg: #e0bc87;
@@ -8,7 +7,6 @@
     --tab-inactive-text: #666666;
 }
 
-/* 🔄 Reset CSS */
 * {
     margin: 0;
     padding: 0;
@@ -16,7 +14,6 @@
     font-family: "Poppins", sans-serif;
 }
 
-/* 🧡 Latar Belakang dan Posisi Tengah */
 body {
     display: flex;
     justify-content: center;
@@ -25,7 +22,6 @@ body {
     background-color: var(--bg-orange);
 }
 
-/* 📦 Card Form */
 .form-card {
     background-color: var(--card-bg);
     border-radius: 12px;
@@ -41,7 +37,6 @@ body {
     transform: translateY(-3px);
 }
 
-/* 🔘 Tabs Login & Sign Up */
 .tabs {
     display: flex;
     justify-content: space-around;
@@ -73,7 +68,6 @@ body {
     background-color: var(--input-border);
 }
 
-/* 🧾 Form Style (Login & Sign Up) */
 .signup-form,
 .login-form {
     display: flex;
@@ -82,7 +76,6 @@ body {
     margin-top: 10px;
 }
 
-/* 🧩 Input Style */
 .signup-form input[type="text"],
 .signup-form input[type="password"],
 .login-form input[type="text"],
@@ -104,14 +97,12 @@ input:focus {
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Placeholder */
 .signup-form input::placeholder,
 .login-form input::placeholder {
     color: var(--tab-inactive-text);
     text-transform: uppercase;
 }
 
-/* 🔵 Tombol Submit */
 .signup-form button[type="submit"],
 .login-form button[type="submit"] {
     width: 100%;

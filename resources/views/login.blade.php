@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - AXERA MOTOR</title>
     
-    <!-- INI ADALAH BARIS YANG DIPERBAIKI -->
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/logins.css') }}">
 </head>
 <body>
 
 <div class="form-card">
     <div class="tabs">
-        <a href="{{ route('login.form') }}" class="tab-item active">Login</a>
-        <a href="{{ route('register.form') }}" class="tab-item">Sign Up</a>
-    </div>
+    <a href="{{ route('login.form') }}" class="tab-item active">Login</a>
+    <a href="{{ route('signup') }}" class="tab-item">Sign Up</a>
+</div>
 
     <form action="{{ route('login') }}" method="POST" class="login-form">
         @csrf
