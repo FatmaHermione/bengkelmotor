@@ -29,13 +29,14 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request)
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+{
+    Auth::logout(); // logout user
+    $request->session()->invalidate(); // hapus session lama
+    $request->session()->regenerateToken(); // buat token baru (aman)
 
-        return redirect('/login');
-    }
+    // arahkan ke halaman signup (atau login, terserah urutanmu)
+    return redirect()->route('signup.form');
+}
 
     public function showForm()
     {
@@ -50,9 +51,10 @@ class AuthController extends Controller
         ]);
 
         User::create([
-            'username' => $request->username,
-            'password' => Hash::make($request->password),
-        ]);
+    'username' => $request->username,
+    'password' => bcrypt($request->password),
+]);
+
 
         return back()->with('success', 'Akun berhasil dibuat!');
     }

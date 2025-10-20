@@ -113,7 +113,7 @@
 
     <!-- Tombol kembali -->
     <div class="back-container">
-        <a href="home.html" class="back-btn">⬅ Kembali</a>
+        <a href="{{ route('home') }}" class="back-btn">⬅ Kembali</a>
     </div>
 
     <!-- Konten produk -->

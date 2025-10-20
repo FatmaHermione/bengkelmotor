@@ -8,12 +8,11 @@
     <link rel="stylesheet" href="{{ asset('css/logins.css') }}">
 </head>
 <body>
-
-<div class="form-card">
-    <div class="tabs">
+    <div class="form-card">
+            <div class="tabs">
     <a href="{{ route('login.form') }}" class="tab-item active">Login</a>
-    <a href="{{ route('signup') }}" class="tab-item">Sign Up</a>
-</div>
+    <a href="{{ route('signup.form') }}" class="tab-item">Sign Up</a>
+    </div>
 
     <form action="{{ route('login') }}" method="POST" class="login-form">
         @csrf
@@ -29,6 +28,7 @@
     </form>
 </div>
 
+    </div>
 </body>
 </html>
 
