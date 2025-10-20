@@ -26,6 +26,14 @@ Route::get('/oli', function () {
     return view('oli');
 })->name('oli');
 
+Route::get('/gear', function () {
+    return view('gear');
+})->name('gear');
+
+Route::get('/ban', function () {
+    return view('ban');
+})->name('ban');
+
 // Halaman Home
 Route::get('/home', function () {
     return view('home');

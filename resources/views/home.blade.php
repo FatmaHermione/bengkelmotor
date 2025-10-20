@@ -39,7 +39,8 @@
 
         <div class="service-container">
             <div class="service-box">
-                <img src="{{ asset('images/gears.png') }}" alt="Gear / Mesin Motor">
+                <a href="{{ route('gear') }}">
+                <img src="https://cdn-icons-png.flaticon.com/512/798/798867.png" alt="Gear / Mesin Motor">
                 <p><b>Gear</b></p>
             </div>
 
@@ -51,7 +52,8 @@
             </div>
 
             <div class="service-box">
-                <img src="{{ asset('images/tyre.png') }}" alt="Ban / Roda">
+                <a href="{{ route('ban') }}">
+                <img src="https://cdn-icons-png.flaticon.com/512/798/798867.png" alt="Ban / Roda">
                 <p><b>Ban</b></p>
             </div>
 
