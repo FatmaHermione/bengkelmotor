@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User; 
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -29,18 +29,17 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request)
-{
-    Auth::logout(); // logout user
-    $request->session()->invalidate(); // hapus session lama
-    $request->session()->regenerateToken(); // buat token baru (aman)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-    // arahkan ke halaman signup (atau login, terserah urutanmu)
-    return redirect()->route('signup.form');
-}
+        return redirect()->route('signup.form');
+    }
 
     public function showForm()
     {
-        return view('signup'); // tampilkan halaman signup.blade.php
+        return view('signup');
     }
 
     public function store(Request $request)
@@ -51,11 +50,58 @@ class AuthController extends Controller
         ]);
 
         User::create([
-    'username' => $request->username,
-    'password' => bcrypt($request->password),
-]);
-
+            'username' => $request->username,
+            'password' => bcrypt($request->password),
+        ]);
 
         return back()->with('success', 'Akun berhasil dibuat!');
+    }
+
+    // ==============================
+    // FITUR PAYMENT
+    // ==============================
+    public function payment()
+    {
+        // Contoh data barang yang akan ditampilkan di tampilan payment
+        $items = [
+            [
+                'nama' => 'MOTUL Oil Motor SCOOTER POWER LE',
+                'detail' => '4T 5W40 - 0.8 Kendaraan Mesin Oil',
+                'harga' => 82000,
+                'qty' => 1,
+                'image' => 'motul.png',
+            ],
+            [
+                'nama' => 'FDR TL GENZI PRO Ring 14 Ban Motor',
+                'detail' => 'Tubeless Accessories Motorcycle Rasio - 80/80-14',
+                'harga' => 212000,
+                'layanan' => 'Servis mesin',
+                'biaya_layanan' => 14000,
+                'qty' => 1,
+                'image' => 'fdr.png',
+            ],
+        ];
+
+        // Total harga keseluruhan
+        $total = collect($items)->sum(function ($item) {
+            return ($item['harga'] * $item['qty']) + ($item['biaya_layanan'] ?? 0);
+        });
+
+        return view('payment', compact('items', 'total'));
+    }
+
+    public function processPayment(Request $request)
+    {
+        // Misal untuk menyimpan transaksi
+        // Di sini kamu bisa simpan ke tabel `payments` atau `orders`
+        // Contoh sederhana:
+        // Payment::create([...]);
+
+        return redirect()->route('payment.success')->with('success', 'Pembayaran berhasil!');
+    }
+
+    public function paymentSuccess()
+    {
+        return view('payment-success');
     }
 }
