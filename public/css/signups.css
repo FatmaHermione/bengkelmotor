@@ -50,12 +50,13 @@ body {
     font-weight: 500;
     padding: 6px 10px;
     position: relative;
-    transition: color 0.3s;
+    transition: all 0.3s;
 }
 
 .tab-item.active {
     color: var(--text-dark);
     font-weight: 600;
+    transform: scale(1.05);
 }
 
 .tab-item.active::after {
