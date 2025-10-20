@@ -6,15 +6,22 @@
     <title>Sign Up - AXERA MOTOR</title>
 
     <link rel="stylesheet" href="{{ asset('css/signups.css') }}">
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
+
 </head>
 <body>
     <div class="form-card">
         <div class="tabs">
             <a href="{{ route('login.form') }}" class="tab-item">Login</a>
+
             <a href="{{ route('signup.form') }}" class="tab-item active">Sign Up</a>
         </div>
 
         <form action="{{ route('signup') }}" method="POST" class="signup-form">
+            <a href="{{ route('register.form') }}" class="tab-item active">Sign Up</a>
+        </div>
+
+        <form action="{{ route('register') }}" method="post" class="signup-form">
             @csrf
             <input type="text" name="username" placeholder="ENTER YOUR USERNAME" required>
             <input type="password" name="password" placeholder="ENTER YOUR PASSWORD" required>
