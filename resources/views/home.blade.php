@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AXERA MOTOR - Home</title>
-    <!-- Ambil file CSS dari folder public/css/home.css -->
+    <link rel="icon" href="{{ asset('img/logo.png')}} ">
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 </head>
 <body>
@@ -12,7 +12,7 @@
     <header class="navbar">
         <div class="logo">
             <!-- Logo bengkel -->
-            <img src="{{ asset('images/bike.png') }}" alt="Logo Motor" class="logo-icon">
+            <img src="{{ asset('img/bike.png') }}" alt="Logo Motor" class="logo-icon">
             <div class="logo-text">
                 <h1>AXERA MOTOR</h1>
                 <p>Bengkel Servis Motor</p>
@@ -22,13 +22,11 @@
         <div class="user-section">
             <div class="user-icon">👤</div>
             <div class="user-info">
-                <!-- Menampilkan username user yang login -->
                 <p class="role">{{ Auth::user()->username ?? 'Kasir' }}</p>
 
-                <!-- Tombol logout (POST request ke route logout) -->
-                <form action="{{ route('signup') }}" method="POST">
+                <form action="{{ route('logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="signup">Log out</button>
+                    <button type="submit">Log out</button>
                 </form>
             </div>
         </div>
@@ -40,7 +38,7 @@
         <div class="service-container">
             <div class="service-box">
                 <a href="{{ route('gear') }}">
-                <img src="https://cdn-icons-png.flaticon.com/512/798/798867.png" alt="Gear / Mesin Motor">
+                <img src="{{ asset('img/gear.png') }}" alt="Gear / Mesin Motor">
                 <p><b>Gear</b></p>
             </div>
 
@@ -53,7 +51,7 @@
 
             <div class="service-box">
                 <a href="{{ route('ban') }}">
-                <img src="https://cdn-icons-png.flaticon.com/512/798/798867.png" alt="Ban / Roda">
+                <img src="{{ asset('img/ban.png') }}" alt="Ban / Roda">
                 <p><b>Ban</b></p>
             </div>
 

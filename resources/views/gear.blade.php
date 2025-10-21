@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AXERA MOTOR - Gear</title>
-    <link rel="stylesheet" href="home.css">
+    <link rel="icon" href="{{ asset('img/logo.png')}} ">
+    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
     <style>
         body {
             margin: 0;
@@ -102,7 +103,7 @@
     <!-- Header -->
     <header class="navbar">
         <div class="logo">
-            <img src="bike.png" alt="Logo Motor" class="logo-icon">
+            <img src="{{ asset('img/bike.png') }}" alt="Logo Motor" class="logo-icon">
             <div class="logo-text">
                 <h1>AXERA MOTOR</h1>
                 <p>Bengkel Servis Motor</p>
@@ -113,31 +114,31 @@
 
     <!-- Tombol kembali -->
     <div class="back-container">
-        <a href="home.html" class="back-btn">⬅ Kembali</a>
+        <a href="{{ route('home') }}" class="back-btn">⬅ Kembali</a>
     </div>
 
     <!-- Konten produk -->
     <main class="product-container">
         <div class="product-card">
-            <img src="gear 1.png" alt="Gear 1">
+            <img src="{{ asset('img/gear1.png') }}" alt="Gear 1">
             <p class="product-name">GEAR SET RANTAI MEGA PRO VERZA SONIC CB150R FI KYE</p>
             <p class="price">Rp126.500</p>
         </div>
 
         <div class="product-card">
-            <img src="gear 2.png" alt="Gear 2">
+            <img src="{{ asset('img/gear2.png') }}" alt="Gear 2">
             <p class="product-name">GEAR SET JUPITER MX NEW 135 MX NEW 50C</p>
             <p class="price">Rp116.000</p>
         </div>
 
         <div class="product-card">
-            <img src="gear 3.png" alt="Gear 3">
+            <img src="{{ asset('img/gear3.png') }}" alt="Gear 3">
             <p class="product-name">GEAR SET KHARISMA SUPRA X 125 KARBU KIRANA KPH</p>
             <p class="price">Rp110.000</p>
         </div>
 
         <div class="product-card">
-            <img src="gear 4.png" alt="Gear 4">
+            <img src="{{ asset('img/gear4.png') }}" alt="Gear 4">
             <p class="product-name">GEAR SET SUZUKI SMASH SHOGUN 110 - SHOGUN 125 - SMASH 110</p>
             <p class="price">Rp116.000</p>
         </div>

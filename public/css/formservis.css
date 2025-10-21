@@ -1,0 +1,180 @@
+/* --- Global & Body --- */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #383838; /* Latar belakang abu-abu tua */
+}
+
+/* --- Header --- */
+.header-container {
+    background: linear-gradient(to right, #f9a825, #ef6c00); /* Gradient oranye */
+    padding: 15px 30px;
+    color: #000;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-icon {
+    height: 45px;
+}
+
+.logo-text h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.logo-text p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-icon {
+    font-size: 30px; /* Sesuaikan ukuran ikon user */
+    border: 2px solid #000;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-info {
+    text-align: center;
+}
+
+.user-info .role {
+    margin: 0;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.user-info .logout-button {
+    background: none;
+    border: none;
+    color: #000;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font-size: 14px;
+}
+
+.action-bar {
+    margin-top: 10px;
+}
+
+.back-arrow {
+    display: inline-block;
+    font-size: 28px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    background-color: #333;
+    padding: 0px 10px 4px 10px;
+    border-radius: 5px;
+    line-height: 1;
+}
+
+.back-arrow:hover {
+    background-color: #000;
+}
+
+/* --- Main Content & Form --- */
+main {
+    padding: 20px;
+}
+
+.form-title {
+    color: white;
+    text-align: center;
+    font-weight: normal;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+.form-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #E0E0E0; /* Latar belakang form abu-abu muda */
+    border: 5px solid #6c9dcf; /* Border biru di sekeliling form */
+    border-radius: 15px;
+    padding: 30px 40px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 200px 1fr; /* Kolom 1 (label), Kolom 2 (input) */
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.form-row label {
+    font-weight: bold;
+    color: #333;
+    font-size: 1.1em;
+}
+
+/* --- Input & Select Styling --- */
+.form-row input[type="text"],
+.form-row input[type="tel"],
+.form-row input[type="date"],
+.form-row select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box; /* Penting agar padding tidak merusak layout */
+    font-size: 1em;
+}
+
+/* Khusus untuk dropdown Jam & Menit */
+.time-select {
+    display: flex;
+    gap: 10px;
+}
+
+.time-select select {
+    width: 50%;
+}
+
+/* --- Tombol Kirim --- */
+.submit-row {
+    /* Mendorong tombol ke kanan */
+    grid-column: 2 / 3;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.btn-kirim {
+    background-color: #6c9dcf; /* Warna biru sesuai border */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-kirim:hover {
+    background-color: #4a8dcc;
+}

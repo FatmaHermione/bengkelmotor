@@ -6,7 +6,7 @@ use App\Models\Pelanggan;
 use Illuminate\Http\Request;
 
 class PelangganController extends Controller
-{
+{ 
 
     public function index()
     {
