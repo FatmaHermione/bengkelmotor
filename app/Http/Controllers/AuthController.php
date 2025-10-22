@@ -13,9 +13,6 @@ use Illuminate\Support\Facades\Redirect;
 
 class AuthController extends Controller
 {
-    // ==============================
-    // FITUR AUTENTIKASI (Login, Logout, Signup)
-    // ==============================
 
     public function showLoginForm()
     {
@@ -42,7 +39,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // Diubah ke route login, karena signup.form mungkin tidak ada
         return redirect()->route('login'); 
     }
 
@@ -65,10 +61,7 @@ class AuthController extends Controller
 
         return back()->with('success', 'Akun berhasil dibuat!');
     }
-
-    // ==============================
-    // FITUR PAYMENT (Sudah ada)
-    // ==============================
+    
     public function payment()
     {
         // ... (kode payment Anda) ...
@@ -84,27 +77,13 @@ class AuthController extends Controller
         // ... (kode payment Anda) ...
     }
 
-    // ==============================
-    // FITUR FORM SERVIS (Baru Ditambahkan)
-    // ==============================
-
-    /**
-     * Menampilkan halaman form servis.
-     * (Nama diubah menjadi serviceCreate agar tidak bentrok)
-     */
     public function serviceCreate()
     {
-        // Pastikan Anda punya view 'form-servis.blade.php'
         return view('formservice');
     }
 
-    /**
-     * Menyimpan data dari form servis ke database.
-     * (Nama diubah menjadi serviceStore agar tidak bentrok dengan store signup)
-     */
     public function serviceView(Request $request)
     {
-        // 1. Validasi data yang masuk
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'no_hp' => 'required|string|max:15',
@@ -116,12 +95,9 @@ class AuthController extends Controller
             'keluhan' => 'nullable|string',
         ]);
 
-        // 2. Gabungkan tanggal, jam, dan menit
         $waktu_servis = $validated['tgl_servis'] . ' ' . $validated['jam'] . ':' . $validated['menit'] . ':00';
 
-        // 3. Simpan ke database
         try {
-            // Pastikan Anda sudah membuat Model 'Servis'
             Servis::create([
                 'nama' => $validated['nama'],
                 'no_handphone' => $validated['no_hp'],
