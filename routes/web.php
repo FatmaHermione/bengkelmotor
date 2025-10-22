@@ -21,9 +21,12 @@ Route::get('/daftar-layanan', [DaftarLayananController::class, 'index'])->name('
 Route::get('/daftar-layanan/create', [DaftarLayananController::class, 'create'])->name('daftar-layanan.create');
 Route::post('/daftar-layanan', [DaftarLayananController::class, 'store'])->name('daftar-layanan.store');
 Route::delete('/daftar-layanan/{id}', [DaftarLayananController::class, 'destroy'])->name('daftar-layanan.destroy');
-Route::get('/payment', [AuthController::class, 'payment'])->name('payment');
-Route::post('/payment/process', [AuthController::class, 'processPayment'])->name('payment.process');
-Route::get('/payment/success', [AuthController::class, 'paymentSuccess'])->name('payment.success');
+
+Route::get('/payment', [AuthController::class, 'payment'])->name('payment')->middleware('auth');
+Route::post('/process-payment', [AuthController::class, 'processPayment'])->name('payment.process')->middleware('auth');
+Route::get('/payment-success', [AuthController::class, 'paymentSuccess'])->name('payment.success')->middleware('auth');
+Route::get('/payment-method', [AuthController::class, 'paymentMethod'])->name('payment.method')->middleware('auth');
+Route::post('/choose-payment-method', [AuthController::class, 'choosePaymentMethod'])->name('choose.payment.method')->middleware('auth');
 
 Route::get('/oli', function () {
     return view('oli');

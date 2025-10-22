@@ -57,12 +57,9 @@ class AuthController extends Controller
         return back()->with('success', 'Akun berhasil dibuat!');
     }
 
-    // ==============================
-    // FITUR PAYMENT
-    // ==============================
     public function payment()
     {
-        // Contoh data barang yang akan ditampilkan di tampilan payment
+   
         $items = [
             [
                 'nama' => 'MOTUL Oil Motor SCOOTER POWER LE',
@@ -82,7 +79,6 @@ class AuthController extends Controller
             ],
         ];
 
-        // Total harga keseluruhan
         $total = collect($items)->sum(function ($item) {
             return ($item['harga'] * $item['qty']) + ($item['biaya_layanan'] ?? 0);
         });
@@ -92,10 +88,6 @@ class AuthController extends Controller
 
     public function processPayment(Request $request)
     {
-        // Misal untuk menyimpan transaksi
-        // Di sini kamu bisa simpan ke tabel `payments` atau `orders`
-        // Contoh sederhana:
-        // Payment::create([...]);
 
         return redirect()->route('payment.success')->with('success', 'Pembayaran berhasil!');
     }
@@ -104,4 +96,36 @@ class AuthController extends Controller
     {
         return view('payment-success');
     }
+
+    // Tampilkan halaman metode pembayaran
+public function paymentMethod()
+{
+    $paymentMethods = [
+        [
+            'id' => 'cash',
+            'nama' => 'Cash Payment',
+            'icon' => 'cash.png',
+        ],
+        [
+            'id' => 'barcode',
+            'nama' => 'Barcode Payment (QRIS)',
+            'icon' => 'qris.png',
+        ],
+        [
+            'id' => 'bank',
+            'nama' => 'Bank Transfer (BCA)',
+            'icon' => 'bca.png',
+        ],
+        [
+            'id' => 'va',
+            'nama' => 'Virtual Account',
+            'icon' => 'va.png',
+        ],
+    ];
+
+    $total = session('total', 0); // total dari halaman sebelumnya (jika disimpan)
+
+    return view('payment-method', compact('paymentMethods', 'total'));
+}
+
 }

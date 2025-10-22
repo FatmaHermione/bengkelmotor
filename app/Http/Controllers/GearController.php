@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class OliController extends Controller
+class GearController extends Controller
 {
     public function index()
     {
