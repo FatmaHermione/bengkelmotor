@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Service - AXERA MOTOR</title>
-    <link rel="stylesheet" href="service.css">
+    <link rel="stylesheet" href="{{ asset('css/service.css') }}">
 </head>
 <body>
 
