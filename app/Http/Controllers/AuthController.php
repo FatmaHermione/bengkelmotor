@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\Redirect;
 
 class AuthController extends Controller
 {
-    // ==============================
-    // FITUR AUTENTIKASI (Login, Logout, Signup)
-    // ==============================
 
     public function showLoginForm()
     {
@@ -64,7 +61,7 @@ class AuthController extends Controller
     }
 
     // ==============================
-    // FITUR PAYMENT
+    // FITUR PAYMENT (Sudah ada)
     // ==============================
     public function payment()
     {
@@ -105,41 +102,13 @@ class AuthController extends Controller
     }
 
     // ==============================
-    // FITUR PEMILIHAN METODE PEMBAYARAN
+    // FITUR FORM SERVIS (Baru Ditambahkan)
     // ==============================
-    public function paymentMethod()
-    {
-        $paymentMethods = [
-            [
-                'id' => 'cash',
-                'nama' => 'Cash Payment',
-                'icon' => 'cash.png',
-            ],
-            [
-                'id' => 'barcode',
-                'nama' => 'Barcode Payment (QRIS)',
-                'icon' => 'qris.png',
-            ],
-            [
-                'id' => 'bank',
-                'nama' => 'Bank Transfer (BCA)',
-                'icon' => 'bca.png',
-            ],
-            [
-                'id' => 'va',
-                'nama' => 'Virtual Account',
-                'icon' => 'va.png',
-            ],
-        ];
 
-        $total = session('total', 0);
-
-        return view('payment-method', compact('paymentMethods', 'total'));
-    }
-
-    // ==============================
-    // FITUR FORM SERVIS
-    // ==============================
+    /**
+     * Menampilkan halaman form servis.
+     * (Nama diubah menjadi serviceCreate agar tidak bentrok)
+     */
     public function serviceCreate()
     {
         return view('formservice');

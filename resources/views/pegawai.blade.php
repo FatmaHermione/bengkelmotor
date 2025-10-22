@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Data Pegawai</title>
-  <link rel="stylesheet" href="data pegawai.css">
+  <link rel="stylesheet" href="Pegawai.css">
+
 </head>
 <body>
   <header>
@@ -19,7 +20,7 @@
       </div>
       <div class="info">
         <h2>Yola Valery</h2>
-        <p><strong>Jabatan:</strong> CEO AXERA MOTOR </p>
+        <p><strong>Jabatan:</strong> CEO AXERA MOTOR</p>
         <p><strong>Email:</strong> yola@example.com</p>
       </div>
     </div>
@@ -30,7 +31,7 @@
       </div>
       <div class="info">
         <h2>Rian Saputra</h2>
-        <p><strong>Jabatan:</strong> Montir </p>
+        <p><strong>Jabatan:</strong> Montir</p>
         <p><strong>Email:</strong> rian@example.com</p>
       </div>
     </div>
@@ -41,7 +42,7 @@
       </div>
       <div class="info">
         <h2>Intan Ayu</h2>
-        <p><strong>Jabatan:</strong> Kasir </p>
+        <p><strong>Jabatan:</strong> Kasir</p>
         <p><strong>Email:</strong> intan@example.com</p>
       </div>
     </div>

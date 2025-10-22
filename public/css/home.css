@@ -40,7 +40,7 @@ body {
     margin-top: -5px;
 }
 
-/* User */
+/* User Section */
 .user-section {
     display: flex;
     align-items: center;
@@ -60,14 +60,23 @@ body {
     font-weight: 500;
 }
 
+/* ===== LOGOUT BUTTON ===== */
 .logout {
+    background: linear-gradient(to right, #ff7f00, #ffb36b);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
     font-size: 13px;
     color: #000;
-    text-decoration: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .logout:hover {
-    text-decoration: underline;
+    opacity: 0.85;
+    transform: translateY(-2px);
 }
 
 /* ===== MAIN CONTENT ===== */
@@ -80,7 +89,7 @@ main {
     margin-bottom: 15px;
 }
 
-/* Service Menu */
+/* ===== SERVICE MENU ===== */
 .service-container {
     border: 1px solid #999;
     border-radius: 6px;
