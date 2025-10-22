@@ -9,7 +9,7 @@ class DataPegawai extends Model
 {
     use HasFactory;
 
-    protected $table = 'pegawais'; // nama tabel di database
+
 
     protected $fillable = [
         'nama',
