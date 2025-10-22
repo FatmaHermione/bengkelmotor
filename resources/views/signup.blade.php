@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - AXERA MOTOR</title>
-
-    <!-- Import CSS -->
+    <link rel="icon" href="{{ asset('img/logo.png')}} ">
     <link rel="stylesheet" href="{{ asset('css/signups.css') }}">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
 </head>
