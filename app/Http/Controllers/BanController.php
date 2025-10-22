@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class OliController extends Controller
+class BanController extends Controller
 {
     public function index()
     {
