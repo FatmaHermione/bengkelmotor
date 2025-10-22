@@ -11,7 +11,6 @@
 
     <header class="navbar">
         <div class="logo">
-            <!-- Logo bengkel -->
             <img src="{{ asset('img/bike.png') }}" alt="Logo Motor" class="logo-icon">
             <div class="logo-text">
                 <h1>AXERA MOTOR</h1>
@@ -57,8 +56,10 @@
             </div>
 
             <div class="service-box">
-                <img src="{{ asset('img/crankshaft.png') }}" alt="Sparepart / Perlengkapan">
-                <p><b>Sparepart</b></p>
+                <a href="{{ route('sparepart') }}">
+                    <img src="{{ asset('img/crankshaft.png') }}" alt="Sparepart / Perlengkapan">
+                    <p><b>Sparepart</b></p>
+                </a>
             </div>
         </div>
 

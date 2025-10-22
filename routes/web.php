@@ -40,7 +40,10 @@ Route::get('/ban', function () {
     return view('ban');
 })->name('ban');
 
-// Halaman Home
+Route::get('/sparepart', function () {
+    return view('sparepart');
+})->name('sparepart');
+
 Route::get('/home', function () {
     return view('home');
 })->name('home');
