@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AXERA MOTOR - Ban</title>
+    <link rel="icon" href="{{ asset('img/logo.png')}} ">
     <link rel="stylesheet" href="home.css">
     <style>
         body {
@@ -102,7 +103,7 @@
     <!-- Header -->
     <header class="navbar">
         <div class="logo">
-            <img src="bike.png" alt="Logo Motor" class="logo-icon">
+            <img src="{{ asset('img/bike.png') }}" alt="Logo Motor" class="logo-icon">
             <div class="logo-text">
                 <h1>AXERA MOTOR</h1>
                 <p>Bengkel Servis Motor</p>
@@ -113,55 +114,55 @@
 
     <!-- Tombol kembali -->
     <div class="back-container">
-        <a href="home.html" class="back-btn">⬅ Kembali</a>
+        <a href="{{ route('home') }}" class="back-btn">⬅ Kembali</a>
     </div>
 
     <!-- Konten produk -->
     <main class="product-container">
         <div class="product-card">
-            <img src="ban 1.png" alt="Ban 1">
+            <img src="{{ asset('img/ban1.png') }}" alt="Ban 1">
             <p class="product-name">FDR TT/TL FLEMMO RING 14 BAN MOTOR TUBE TYPE DAN TUBELESS 80/90-14 TL</p>
             <p class="price">Rp225.000</p>
         </div>
 
         <div class="product-card">
-            <img src="ban 2.png" alt="Ban 2">
+            <img src="{{ asset('img/ban2.png') }}" alt="Ban 2">
             <p class="product-name">FDR TL SPORT MP27 RING 14 RACING 90/80-14</p>
             <p class="price">Rp369.000</p>
         </div>
 
         <div class="product-card">
-            <img src="ban 3.png" alt="Ban 3">
+            <img src="{{ asset('img/ban3.png') }}" alt="Ban 3">
             <p class="product-name">FDR TT/TL SPARTAX RING 17 TUBELESS 70/90-17 TT</p>
             <p class="price">Rp174.000</p>
         </div>
 
         <div class="product-card">
-            <img src="ban 4.png" alt="Ban 4">
+            <img src="{{ asset('img/ban4.png') }}" alt="Ban 4">
             <p class="product-name">FDR TL SPORT MP76 RING 17 TUBELESS 90/80-17</p>
             <p class="price">Rp477.000</p>
         </div>
 
         <div class="product-card">
-            <img src="ban 5.png" alt="Ban 5">
+            <img src="{{ asset('img/ban5.png') }}" alt="Ban 5">
             <p class="product-name">FDR TL SPORT XR EVO RING 14 80/90-14</p>
             <p class="price">Rp230.000</p>
         </div>
 
         <div class="product-card">
-            <img src="ban 6.png" alt="Ban 6">
+            <img src="{{ asset('img/ban6.png') }}" alt="Ban 6">
             <p class="product-name">FDR TL GENZI PRO RING 14 80/80-14</p>
             <p class="price">Rp212.000</p>
         </div>
 
         <div class="product-card">
-            <img src="ban 7.png" alt="Ban 7">
+            <img src="{{ asset('img/ban7.png') }}" alt="Ban 7">
             <p class="product-name">IRC NF66 TUBELESS MATIC 80/90-14</p>
             <p class="price">Rp221.000</p>
         </div>
 
         <div class="product-card">
-            <img src="ban 8.png" alt="Ban 8">
+            <img src="{{ asset('img/ban8.png') }}" alt="Ban 8">
             <p class="product-name">IRC GP5 SEMI TRAIL MATIC RING 14 80/90 & 90/90-14</p>
             <p class="price">Rp225.000</p>
         </div>

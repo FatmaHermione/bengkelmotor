@@ -6,9 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Servis; 
+use Illuminate\Support\Facades\Redirect;
 
 class AuthController extends Controller
 {
+    // ==============================
+    // FITUR AUTENTIKASI (Login, Logout, Signup)
+    // ==============================
+
     public function showLoginForm()
     {
         return view('login');
@@ -34,7 +40,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('signup.form');
+        return redirect()->route('login'); 
     }
 
     public function showForm()
@@ -57,9 +63,11 @@ class AuthController extends Controller
         return back()->with('success', 'Akun berhasil dibuat!');
     }
 
+    // ==============================
+    // FITUR PAYMENT
+    // ==============================
     public function payment()
     {
-   
         $items = [
             [
                 'nama' => 'MOTUL Oil Motor SCOOTER POWER LE',
@@ -88,7 +96,6 @@ class AuthController extends Controller
 
     public function processPayment(Request $request)
     {
-
         return redirect()->route('payment.success')->with('success', 'Pembayaran berhasil!');
     }
 
@@ -97,35 +104,75 @@ class AuthController extends Controller
         return view('payment-success');
     }
 
-    // Tampilkan halaman metode pembayaran
-public function paymentMethod()
-{
-    $paymentMethods = [
-        [
-            'id' => 'cash',
-            'nama' => 'Cash Payment',
-            'icon' => 'cash.png',
-        ],
-        [
-            'id' => 'barcode',
-            'nama' => 'Barcode Payment (QRIS)',
-            'icon' => 'qris.png',
-        ],
-        [
-            'id' => 'bank',
-            'nama' => 'Bank Transfer (BCA)',
-            'icon' => 'bca.png',
-        ],
-        [
-            'id' => 'va',
-            'nama' => 'Virtual Account',
-            'icon' => 'va.png',
-        ],
-    ];
+    // ==============================
+    // FITUR PEMILIHAN METODE PEMBAYARAN
+    // ==============================
+    public function paymentMethod()
+    {
+        $paymentMethods = [
+            [
+                'id' => 'cash',
+                'nama' => 'Cash Payment',
+                'icon' => 'cash.png',
+            ],
+            [
+                'id' => 'barcode',
+                'nama' => 'Barcode Payment (QRIS)',
+                'icon' => 'qris.png',
+            ],
+            [
+                'id' => 'bank',
+                'nama' => 'Bank Transfer (BCA)',
+                'icon' => 'bca.png',
+            ],
+            [
+                'id' => 'va',
+                'nama' => 'Virtual Account',
+                'icon' => 'va.png',
+            ],
+        ];
 
-    $total = session('total', 0); // total dari halaman sebelumnya (jika disimpan)
+        $total = session('total', 0);
 
-    return view('payment-method', compact('paymentMethods', 'total'));
-}
+        return view('payment-method', compact('paymentMethods', 'total'));
+    }
 
+    // ==============================
+    // FITUR FORM SERVIS
+    // ==============================
+    public function serviceCreate()
+    {
+        return view('formservice');
+    }
+
+    public function serviceView(Request $request)
+    {
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'no_hp' => 'required|string|max:15',
+            'nopol' => 'required|string|max:10',
+            'tipe_motor' => 'required|string|max:50',
+            'tgl_servis' => 'required|date',
+            'jam' => 'required|string',
+            'menit' => 'required|string',
+            'keluhan' => 'nullable|string',
+        ]);
+
+        $waktu_servis = $validated['tgl_servis'] . ' ' . $validated['jam'] . ':' . $validated['menit'] . ':00';
+
+        try {
+            Servis::create([
+                'nama' => $validated['nama'],
+                'no_handphone' => $validated['no_hp'],
+                'nomor_polisi' => $validated['nopol'],
+                'tipe_motor' => $validated['tipe_motor'],
+                'rencana_servis_at' => $waktu_servis,
+                'keluhan' => $validated['keluhan'],
+            ]);
+        } catch (\Exception $e) {
+            return Redirect::back()->with('error', 'Gagal menyimpan data. Silakan coba lagi.');
+        }
+
+        return redirect()->route('home')->with('success', 'Data servis berhasil dikirim!');
+    }
 }

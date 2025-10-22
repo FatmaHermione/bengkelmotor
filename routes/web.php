@@ -54,6 +54,8 @@ Route::get('/pegawai', function () {
     return view('pegawai');
 })->name('pegawai.index');
 
-// TAMBAHKAN DUA ROUTE INI UNTUK REGISTRASI
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register.form');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
+
+Route::get('/formservice', [AuthController::class, 'showFormService'])->name('formservice.form');
+Route::post('/formservice/view', [AuthController::class, 'formService'])->name('formservice.view');
