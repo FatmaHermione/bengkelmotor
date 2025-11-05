@@ -15,28 +15,26 @@ header {
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
-/* ====== Ikon Kembali ====== */
-.ikon-kembali {
+/* ====== Tombol Kembali ====== */
+.back-container {
   position: absolute;
-  top: 50%;
   left: 20px;
-  transform: translateY(-50%);
-  font-size: 26px;
-  color: white;
-  text-decoration: none;
-  background-color: transparent;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s, color 0.2s;
+  bottom: -40px; /* sebelumnya -20px, sekarang lebih ke bawah */
 }
 
-.ikon-kembali:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #fff;
+.back-btn {
+  text-decoration: none;
+  background-color: #ff9933;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: 0.2s;
+  box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+}
+
+.back-btn:hover {
+  background-color: #e67e22;
 }
 
 /* ====== Kontainer Pegawai ====== */
