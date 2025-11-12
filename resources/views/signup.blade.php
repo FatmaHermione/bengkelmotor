@@ -18,8 +18,7 @@
 
         <!-- Form Sign Up -->
         <form action="{{ route('signup') }}" method="POST" class="signup-form">
-            @csrf
-            <input type="text" name="username" placeholder="ENTER YOUR USERNAME" required>
+            @csrf <input type="text" name="username" placeholder="ENTER YOUR USERNAME" required>
             <input type="password" name="password" placeholder="ENTER YOUR PASSWORD" required>
             <input type="password" name="password_confirmation" placeholder="ENTER YOUR CONFIRM PASSWORD" required>
             <button type="submit">Sign Up</button>

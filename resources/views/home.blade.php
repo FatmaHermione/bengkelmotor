@@ -11,7 +11,6 @@
 
     <header class="navbar">
         <div class="logo">
-            <!-- Logo bengkel -->
             <img src="{{ asset('img/bike.png') }}" alt="Logo Motor" class="logo-icon">
             <div class="logo-text">
                 <h1>AXERA MOTOR</h1>
@@ -35,43 +34,41 @@
         <h2 class="section-title">Servis</h2>
 
         <div class="service-container">
-            <div class="service-box">
-                <a href="{{ route('gear') }}">
-                    <img src="{{ asset('img/gear.png') }}" alt="Gear / Mesin Motor">
-                    <p><b>Gear</b></p>
-                </a>
-            </div>
+            <a href="{{ route('gear') }}" class="service-box">
+                <img src="{{ asset('img/gear.png') }}" alt="Gear / Mesin Motor">
+                <p>Gear</p>
+            </a>
 
-            <div class="service-box">
-                <a href="{{ route('oli') }}">
-                    <img src="https://cdn-icons-png.flaticon.com/512/798/798867.png" alt="Oli Mesin / Pelumas">
-                    <p><b>Oli</b></p>
-                </a>
-            </div>
+            <a href="{{ route('oli') }}" class="service-box">
+                <img src="https://cdn-icons-png.flaticon.com/512/798/798867.png" alt="Oli Mesin / Pelumas">
+                <p>Oli</p>
+            </a>
 
-            <div class="service-box">
-                <a href="{{ route('ban') }}">
-                    <img src="{{ asset('img/ban.png') }}" alt="Ban / Roda">
-                    <p><b>Ban</b></p>
-                </a>
-            </div>
+            <a href="{{ route('ban') }}" class="service-box">
+                <img src="{{ asset('img/ban.png') }}" alt="Ban / Roda">
+                <p>Ban</p>
+            </a>
 
-            <div class="service-box">
+            <a href="{{ route('sparepart') }}" class="service-box">
                 <img src="{{ asset('img/crankshaft.png') }}" alt="Sparepart / Perlengkapan">
-                <p><b>Sparepart</b></p>
-            </div>
+                <p>Sparepart</p>
+            </a>
         </div>
+<div class="form-button">
+    <!-- Link ke form service -->
+    <a href="{{ route('service.form') }}" class="btn-service">
+        Form Service
+    </a>
+</div>
 
-        <div class="form-button">
-            <!-- Link ke form service -->
-            <a href="{{ route('service.form') }}" class="btn-service">Form Service</a>
-        </div>
+<div class="pegawai-button">
+    <!-- Link ke halaman data pegawai -->
+    <a href="{{ route('pegawai.index') }}" class="btn-pegawai">
+        Data Pegawai
+    </a>
+</div>
 
-        <div class="pegawai-button">
-            <!-- Link ke halaman data pegawai -->
-            <a href="{{ route('pegawai.index') }}" class="btn-pegawai">Data Pegawai</a>
-        </div>
-    </main>
-
+</main>
 </body>
 </html>
+    

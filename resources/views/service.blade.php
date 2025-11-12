@@ -10,7 +10,7 @@
 
     <header>
         <div class="header-left">
-            <img src="bike.png" alt="Logo Bengkel" class="logo">
+            <img src="{{ asset('img/bike.png') }}" alt="Logo Motor" class="logo-icon">
             <div class="judul">
                 <h2>AXERA MOTOR</h2>
                 <p>Bengkel Servis Motor</p>
@@ -24,8 +24,7 @@
     </header>
 
     <main>
-        <a href="home.html" class="back-btn">←</a>
-
+   <a href="{{ route('home') }}" class="ikon-kembali" title="Kembali ke Home">←</a>
         <div class="form-container">
             <h3>Form berikut untuk melakukan service ya!</h3>
             <form id="serviceForm">

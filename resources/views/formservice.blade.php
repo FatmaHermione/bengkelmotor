@@ -30,10 +30,12 @@
                 </div>
             </div>
         </nav>
+        
+<!-- Tombol kembali -->
+<div class="back-container">
+  <a href="{{ route('home') }}" class="back-btn">⬅ Kembali</a>
+</div>
 
-        <div class="action-bar">
-            <a href="{{ route('home') }}" class="back-arrow" title="Kembali">&larr;</a>
-        </div>
     </header>
 
     <main>
