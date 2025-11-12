@@ -49,7 +49,7 @@
                 <p>Ban</p>
             </a>
 
-            <a href="{{ route('sparepart') }}" class="service-box">
+            <a href="{{ route('sparepart.index') }}" class="service-box">
                 <img src="{{ asset('img/crankshaft.png') }}" alt="Sparepart / Perlengkapan">
                 <p>Sparepart</p>
             </a>

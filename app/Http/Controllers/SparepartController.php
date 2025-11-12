@@ -11,7 +11,7 @@ class SparepartController extends Controller
     public function index()
     {
         $spareparts = Sparepart::all();
-        return view('sparepart.index', compact('spareparts'));
+        return view('sparepart', compact('spareparts'));
     }
 
     // Menampilkan form tambah data sparepart

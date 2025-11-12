@@ -117,54 +117,28 @@
 
     <!-- Konten produk -->
     <main class="product-container">
-        <div class="product-card">
-            <img src="{{ asset('img/spar1.png') }}" alt="Sparepart 1">
-            <p class="product-name">16450-KZR-601 INJECTOR VARIO 125 OLD 2012 - 2014 NON ISS</p>
-            <p class="price">Rp404.900</p>
-        </div>
 
+    @foreach ($spareparts as $part)
         <div class="product-card">
-            <img src="{{ asset('img/spar2.png') }}" alt="Sparepart 2">
-            <p class="product-name">PAKET KOIL COIL KVY KUNCI + SPARKPLUG BEAT SCOOPY</p>
-            <p class="price">Rp92.900</p>
-        </div>
+            
+            <img src="{{ asset('img/' . $part->gambar) }}" alt="{{ $part->namaSparepart }}">
 
-        <div class="product-card">
-            <img src="{{ asset('img/spar3.png') }}" alt="Sparepart 3">
-            <p class="product-name">KZR KABEL GAS ONLY HONDA VARIO 125 LAMA</p>
-            <p class="price">Rp82.000</p>
-        </div>
+            <p class="product-name">{{ $part->namaSparepart }}</p>
+            <p class="price">Rp {{ number_format($part->harga, 0, ',', '.') }}</p>
+            <p class="stok">Stok: {{ $part->stok }}</p>
 
-        <div class="product-card">
-            <img src="{{ asset('img/spar4.png') }}" alt="Sparepart 4">
-            <p class="product-name">BUSI TDR BALLISTIC 065 R 085 MATIC BEBEK SPORT</p>
-            <p class="price">Rp46.000</p>
-        </div>
+            <div style="margin-top: 10px;">
+                <a href="{{ route('sparepart.edit', $part->idSparepart) }}" class="back-btn" style="background-color: #3498db;">Edit</a>
+                
+                <form action="{{ route('sparepart.destroy', $part->idSparepart) }}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="back-btn" style="background-color: #e74c3c; border:none; cursor:pointer;" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
+                </form>
+            </div>
 
-        <div class="product-card">
-            <img src="{{ asset('img/spar5.png') }}" alt="Sparepart 5">
-            <p class="product-name">TITANIUM BAUT PROBLOT JALU STANG MOTOR HONDA YAMAHA KING NUT</p>
-            <p class="price">Rp150.000</p>
         </div>
-
-        <div class="product-card">
-            <img src="{{ asset('img/spar6.png') }}" alt="Sparepart 6">
-            <p class="product-name">ECU M5 UMA RACING FOR YAMAHA NMAX / AEROX R25-R3</p>
-            <p class="price">Rp4.000.000</p>
-        </div>
-
-        <div class="product-card">
-            <img src="{{ asset('img/spar7.png') }}" alt="Sparepart 7">
-            <p class="product-name">ECU BRT JUKENS 5++ NINJA 250 MONO FI RR SL RACING TURBO DUALBAND</p>
-            <p class="price">Rp1.816.000</p>
-        </div>
-
-        <div class="product-card">
-            <img src="{{ asset('img/spar8.png') }}" alt="Sparepart 8">
-            <p class="product-name">SENSOR WIDEBAND BRT BOSCH LSU 4.9 ADV AFR METER DATA BOX ECU CDI IMAX</p>
-            <p class="price">Rp1.100.000</p>
-        </div>
+    @endforeach
     </main>
-
 </body>
 </html>

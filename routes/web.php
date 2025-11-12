@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DaftarLayananController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SparepartController;
 
 Route::get('/', function () {
     return redirect()->route('login.form');
@@ -40,9 +41,11 @@ Route::get('/ban', function () {
     return view('ban');
 })->name('ban');
 
-Route::get('/sparepart', function () {
-    return view('sparepart');
-})->name('sparepart');
+// Route::get('/sparepart', function () {
+//     return view('sparepart');
+// })->name('sparepart');
+
+Route::resource('sparepart', SparepartController::class);
 
 Route::get('/home', function () {
     return view('home');
