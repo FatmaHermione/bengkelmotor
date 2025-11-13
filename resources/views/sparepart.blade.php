@@ -110,9 +110,12 @@
         <h2 class="page-title">SPAREPART</h2>
     </header>
 
-    <!-- Tombol kembali -->
+   <!-- Tombol kembali dan tambah -->
     <div class="back-container">
         <a href="{{ route('home') }}" class="back-btn">⬅ Kembali</a>
+
+        <!-- 🔹 Tombol Tambah Sparepart -->
+        <a href="{{ route('sparepart.create') }}" class="back-btn" style="background-color: #2ecc71;">+ Tambah Sparepart</a>
     </div>
 
     <!-- Konten produk -->
