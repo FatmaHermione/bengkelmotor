@@ -15,7 +15,7 @@
 }
 
 /* LAYOUT UTAMA */
-.signup-wrapper {
+.login-wrapper {
   display: flex;
   height: 100vh;
 }
@@ -64,7 +64,7 @@
   padding: 40px;
 }
 
-/* CARD SIGNUP */
+/* CARD LOGIN */
 .form-card {
   background: var(--card-bg);
   border-radius: 18px;
@@ -109,13 +109,13 @@
 }
 
 /* FORM INPUT */
-.signup-form {
+.login-form {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.signup-form input {
+.login-form input {
   width: 100%;
   padding: 14px 16px;
   border: 1px solid #ccc;
@@ -127,13 +127,13 @@
   transition: all 0.3s ease;
 }
 
-.signup-form input:focus {
+.login-form input:focus {
   border-color: var(--orange);
   box-shadow: 0 0 6px rgba(255, 127, 0, 0.4);
 }
 
 /* BUTTON */
-.signup-form button {
+.login-form button {
   width: 100%;
   padding: 14px;
   background: linear-gradient(to right, var(--orange), var(--light-orange));
@@ -147,7 +147,7 @@
   transition: all 0.3s ease;
 }
 
-.signup-form button:hover {
+.login-form button:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(255, 127, 0, 0.3);
 }
@@ -165,7 +165,7 @@
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
-  .signup-wrapper {
+  .login-wrapper {
     flex-direction: column;
   }
 
