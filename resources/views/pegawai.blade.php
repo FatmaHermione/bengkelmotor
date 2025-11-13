@@ -18,7 +18,7 @@
   <main class="pegawai-container">
     <div class="pegawai-card">
       <div class="foto">
-        <img src="{{ asset('img/marsya.jpeg') }}" alt="Pegawai 1">
+        <img src="{{ asset(path: 'img/marsya.jpeg') }}" alt="Pegawai 1">
       </div>
       <div class="info">
         <h2>Yola Valery</h2>
