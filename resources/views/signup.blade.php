@@ -10,7 +10,7 @@
 <body>
 
     <div class="login-wrapper">
-        <!-- Bagian Kiri Background -->
+        <!-- Bagian Kiri -->
         <div class="left-section" 
             style="
                 background-image: url('{{ asset('img/axera login 1.png') }}');
@@ -24,16 +24,14 @@
             </div>
         </div>
 
-        <!-- Bagian Kanan Form -->
+        <!-- Bagian Kanan -->
         <div class="right-section">
             <div class="form-card">
-                <!-- Navigasi Tab -->
                 <div class="tabs">
                     <a href="{{ route('login.form') }}" class="tab-item">Login</a>
                     <a href="{{ route('signup.form') }}" class="tab-item active">Sign Up</a>
                 </div>
 
-                <!-- Form Sign Up -->
                 <form action="{{ route('signup') }}" method="POST" class="login-form">
                     @csrf
                     <input type="text" name="username" placeholder="ENTER YOUR USERNAME" required>

@@ -10,9 +10,12 @@
 <body>
 
     <div class="login-wrapper">
-        <!-- Bagian Kiri Background -->
-<div class="left-section" style="background-image: url('{{ asset('img/axera login 1.png') }}');">
-
+        <div class="left-section" 
+            style="
+                background-image: url('{{ asset('img/axera login 1.png') }}');
+                background-size: cover;
+                background-position: center right;
+            ">
             <div class="overlay"></div>
             <div class="brand-text">
                 <h1>AXERA MOTOR</h1>
@@ -20,7 +23,6 @@
             </div>
         </div>
 
-        <!-- Bagian Kanan Form -->
         <div class="right-section">
             <div class="form-card">
                 <div class="tabs">
