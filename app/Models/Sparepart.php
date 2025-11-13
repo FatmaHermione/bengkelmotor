@@ -17,7 +17,8 @@ class Sparepart extends Model
     protected $fillable = [
         'namaSparepart',
         'stok',
-        'harga'
+        'harga',
+        'gambar'
     ];
 
     // Menonaktifkan timestamps karena di tabel tidak ada created_at dan updated_at

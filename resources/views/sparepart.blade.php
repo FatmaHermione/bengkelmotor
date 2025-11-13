@@ -121,8 +121,12 @@
     @foreach ($spareparts as $part)
         <div class="product-card">
             
-            <img src="{{ asset('img/' . $part->gambar) }}" alt="{{ $part->namaSparepart }}">
-
+            @if ($part->gambar && Storage::disk('public')->exists($part->gambar))
+            <img src="{{ asset('storage/' . $part->gambar) }}" alt="{{ $part->namaSparepart }}">
+            @else
+            <img src="{{ asset('img/spar1.png') }}" alt="Placeholder">
+            @endif
+            
             <p class="product-name">{{ $part->namaSparepart }}</p>
             <p class="price">Rp {{ number_format($part->harga, 0, ',', '.') }}</p>
             <p class="stok">Stok: {{ $part->stok }}</p>

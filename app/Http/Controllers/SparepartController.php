@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Sparepart;
+use Illuminate\Support\Facades\Storage; 
 
 class SparepartController extends Controller
 {
@@ -20,40 +23,61 @@ class SparepartController extends Controller
         return view('sparepart.create');
     }
 
-    // Menyimpan data sparepart baru
     public function store(Request $request)
-    {
-        $request->validate([
-            'namaSparepart' => 'required|string|max:100',
-            'stok' => 'required|integer',
-            'harga' => 'required|numeric'
-        ]);
+{
+    $request->validate([
+        'namaSparepart' => 'required|string|max:100',
+        'stok' => 'required|integer',
+        'harga' => 'required|numeric',
+        'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048' 
+    ]);
 
-        Sparepart::create($request->all());
+    $data = $request->all();
 
-        return redirect()->route('sparepart.index')->with('success', 'Data sparepart berhasil ditambahkan.');
+    if ($request->hasFile('gambar')) {
+        // Simpan gambar di folder 'storage/app/public/spareparts'
+        // dan simpan path-nya (mis: 'spareparts/namafile.jpg')
+        $path = $request->file('gambar')->store('spareparts', 'public');
+        $data['gambar'] = $path;
+    }
+
+    Sparepart::create($data);
+
+    return redirect()->route('sparepart.index')->with('success', 'Data sparepart berhasil ditambahkan.');
     }
 
     // Menampilkan form edit sparepart
     public function edit($id)
     {
         $sparepart = Sparepart::findOrFail($id);
-        return view('sparepart.edit', compact('sparepart'));
+        return view('sparepart_edit', compact('sparepart'));
     }
 
-    // Menyimpan perubahan data sparepart
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'namaSparepart' => 'required|string|max:100',
-            'stok' => 'required|integer',
-            'harga' => 'required|numeric'
-        ]);
+    public function update(Request $request, $id){
+    $request->validate([
+        'namaSparepart' => 'required|string|max:100',
+        'stok' => 'required|integer',
+        'harga' => 'required|numeric',
+        'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+    ]);
 
-        $sparepart = Sparepart::findOrFail($id);
-        $sparepart->update($request->all());
+    $sparepart = Sparepart::findOrFail($id);
+    $data = $request->all();
 
-        return redirect()->route('sparepart.index')->with('success', 'Data sparepart berhasil diperbarui.');
+    if ($request->hasFile('gambar')) {
+        // Hapus gambar lama jika ada
+        if ($sparepart->gambar && Storage::disk('public')->exists($sparepart->gambar)) {
+            Storage::disk('public')->delete($sparepart->gambar);
+        }
+
+        // Simpan gambar baru
+        $path = $request->file('gambar')->store('spareparts', 'public');
+        $data['gambar'] = $path;
+    }
+
+    $sparepart->update($data);
+
+    return redirect()->route('sparepart.index')->with('success', 'Data sparepart berhasil diperbarui.');
     }
 
     // Menghapus data sparepart
