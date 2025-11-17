@@ -65,3 +65,6 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 
 Route::get('/formservice', [AuthController::class, 'showFormService'])->name('formservice.form');
 Route::post('/formservice/view', [AuthController::class, 'formService'])->name('formservice.view');
+
+Route::post('/detail-transaksi/store', [DetailTransaksiController::class, 'store'])->name('detail-transaksi.store');
+Route::get('/pembayaran', [DetailTransaksiController::class, 'pembayaran'])->name('pembayaran');

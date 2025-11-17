@@ -28,26 +28,34 @@ class DetailTransaksiController extends Controller
 
     // Menyimpan data baru
     public function store(Request $request)
+{
+    $request->validate([
+        'id_transaksi' => 'required|integer',
+        'id_produk' => 'required|integer',
+        'qty' => 'required|integer|min:1',
+        'subtotal' => 'required|numeric|min:0',
+    ]);
+
+    $detail = DetailTransaksi::create([
+        'id_transaksi' => $request->id_transaksi,
+        'id_produk' => $request->id_produk,
+        'qty' => $request->qty,
+        'subtotal' => $request->subtotal,
+    ]);
+
+    // setelah simpan, langsung ke halaman pembayaran
+    return redirect()->route('pembayaran.index')
+                     ->with('success', 'Produk berhasil ditambahkan ke transaksi!');
+}
+
+
+    public function pembayaran()
     {
-        $request->validate([
-            'id_transaksi' => 'required|integer',
-            'id_produk' => 'required|integer',
-            'qty' => 'required|integer|min:1',
-            'subtotal' => 'required|numeric|min:0',
-        ]);
-
-        $detail = DetailTransaksi::create([
-            'id_transaksi' => $request->id_transaksi,
-            'id_produk' => $request->id_produk,
-            'qty' => $request->qty,
-            'subtotal' => $request->subtotal,
-        ]);
-
-        return response()->json([
-            'message' => 'Data berhasil disimpan',
-            'data' => $detail
-        ]);
+        $details = \App\Models\DetailTransaksi::all();
+        $total = $details->sum('subtotal');
+        return view('pembayaran', compact('details', 'total'));
     }
+
 
     // Mengupdate data detail transaksi
     public function update(Request $request, $id)
