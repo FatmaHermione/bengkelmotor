@@ -6,8 +6,14 @@ use Illuminate\Http\Request;
 
 class OliController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('oli.index'); // arahkan ke resources/views/oli/index.blade.php
+        $search = $request->get('search');
+
+        $olis = Oli::when($search, function ($query, $search) {
+            return $query->where('nama', 'like', "%$search%");
+        })->get();
+
+        return view('oli', compact('olis', 'search'));
     }
 }

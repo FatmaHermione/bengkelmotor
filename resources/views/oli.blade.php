@@ -5,168 +5,402 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AXERA MOTOR - Oli</title>
     <link rel="icon" href="{{ asset('img/logo.png')}} ">
-    <link rel="stylesheet" href="home.css">
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: #fff;
-        }
+    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: #ff9933;
-            padding: 10px 20px;
-            color: #000;
-        }
+<style>
+    body {
+        background: linear-gradient(135deg, #ff9800, #ffb74d);
+        font-family: Arial, sans-serif;
+        min-height: 100vh;
+        margin: 0;
+    }
 
-        .logo {
-            display: flex;
-            align-items: center;
-        }
+    .top-bar {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 25px;
+        align-items: center;
+    }
+    .back-btn {
+        background:#1e88e5;
+        color:white;
+        border:none;
+        padding:8px 18px;
+        border-radius:8px;
+        cursor:pointer;
+    }
+    .menu-btn {
+        background:none;
+        border:none;
+        font-size:28px;
+        color:white;
+        cursor:pointer;
+    }
+    .menu-dropdown {
+        display:none;
+        position:absolute;
+        right:25px;
+        top:60px;
+        background:white;
+        width:180px;
+        border-radius:10px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.3);
+        overflow:hidden;
+    }
+    .menu-dropdown a {
+        display:block;
+        padding:12px;
+        color:black;
+        text-decoration:none;
+    }
+    .menu-dropdown a:hover {
+        background:#f0f0f0;
+    }
 
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
-        }
+    .search-box {
+        text-align:center;
+        margin-bottom:20px;
+    }
+    .search-box input {
+        width:50%;
+        padding:12px;
+        border-radius:10px;
+        border:none;
+        font-size:16px;
+    }
 
-        .logo-text h1 {
-            margin: 0;
-            font-size: 20px;
-        }
+    .container {
+        padding: 20px;
+    }
+    h1 {
+        color: white;
+        text-shadow: 1px 1px 3px black;
+        margin-bottom: 20px;
+    }
 
-        .page-title {
-            font-size: 28px;
-            font-weight: bold;
-        }
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+    }
 
-        .back-container {
-            margin: 20px;
-        }
+    .product-card {
+        background: rgba(255, 255, 255, 0.85);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 152, 0, 0.35);
+        backdrop-filter: blur(5px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.18);
+        padding: 20px;
+        text-align: center;
+        transition: 0.3s;
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.28);
+    }
+    .product-card img {
+        width: 180px;
+        height: 180px;
+        object-fit: contain;
+        margin-bottom: 10px;
+    }
+    .product-name {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .price {
+        color: #d32f2f;
+        font-size: 1.1em;
+        margin-bottom: 10px;
+    }
 
-        .back-btn {
-            text-decoration: none;
-            background-color: #ff9933;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: 0.2s;
-        }
+    .quantity-control {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .quantity-control button {
+        width: 30px;
+        height: 30px;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        background: #555;
+        color: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .quantity-control input {
+        width: 40px;
+        text-align: center;
+        border: none;
+        background: #f0f0f0;
+        margin: 0 5px;
+        font-size: 16px;
+    }
 
-        .back-btn:hover {
-            background-color: #e67e22;
-        }
-
-        .product-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px;
-            padding: 0 20px 40px;
-        }
-
-        .product-card {
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            text-align: center;
-            padding: 10px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .product-card img {
-            width: 100%;
-            height: 150px;
-            object-fit: contain;
-        }
-
-        .product-name {
-            font-weight: bold;
-            margin: 10px 0 5px;
-        }
-
-        .price {
-            color: #e67e22;
-            font-weight: bold;
-        }
-    </style>
+    .buy-btn {
+        background: #1e88e5;
+        color: #fff;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .buy-btn:hover {
+        background: #1565c0;
+    }
+</style>
 </head>
+
 <body>
 
-    <!-- Header -->
-    <header class="navbar">
-        <div class="logo">
-            <img src="{{ asset('img/bike.png') }}" alt="Logo Motor" class="logo-icon">
-            <div class="logo-text">
-                <h1>AXERA MOTOR</h1>
-                <p>Bengkel Servis Motor</p>
-            </div>
-        </div>
-        <h2 class="page-title">OLI</h2>
-    </header>
+<div class="top-bar">
+    <button class="back-btn" onclick="window.history.back()">⬅ Kembali</button>
 
-    <!-- Tombol kembali -->
-    <div class="back-container">
-        <a href="{{ route('home') }}" class="back-btn">⬅ Kembali</a>
+    <button class="menu-btn" id="menuBtn">⋮</button>
+
+    <div class="menu-dropdown" id="menuDropdown">
+        <a href="/produk/tambah">➕ Tambah Produk</a>
+        <a href="/produk/edit">✏ Edit Produk</a>
+        <a href="/produk/hapus">🗑 Hapus Produk</a>
+    </div>
+</div>
+
+<script>
+document.getElementById("menuBtn").onclick = function() {
+    let menu = document.getElementById("menuDropdown");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+};
+</script>
+
+<div class="container">
+    <h1>🛢️ Oli Motor</h1>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Cari produk...">
     </div>
 
-    <!-- Konten produk -->
-    <main class="product-container">
+<script>
+document.getElementById("searchInput").addEventListener("keyup", function() {
+    let filter = this.value.toLowerCase();
+    let cards = document.getElementsByClassName("product-card");
+
+    for (let card of cards) {
+        let name = card.querySelector(".product-name").innerText.toLowerCase();
+        card.style.display = name.includes(filter) ? "" : "none";
+    }
+});
+</script>
+
+    <div class="product-grid">
+
+        <!-- PRODUK 1 -->
         <div class="product-card">
             <img src="{{ asset('img/oli1.png') }}" alt="Oli 1">
             <p class="product-name">OLI MOTOR SHELL ADVANCE AX7 SCOOTER 10W-30 (0.8L)</p>
             <p class="price">Rp64.000</p>
+
+            <div class="quantity-control">
+                <button onclick="changeQty(this, -1)">-</button>
+                <input type="text" value="0" readonly>
+                <button onclick="changeQty(this, 1)">+</button>
+            </div>
+
+            <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
+                @csrf
+                <input type="hidden" name="id_transaksi" value="2">
+                <input type="hidden" name="id_produk" value="201">
+                <input type="hidden" class="qty-input" name="qty" value="0">
+                <input type="hidden" name="subtotal" value="0">
+                <button class="buy-btn">Beli</button>
+            </form>
         </div>
 
+        <!-- PRODUK 2 -->
         <div class="product-card">
             <img src="{{ asset('img/oli2.png') }}" alt="Oli 2">
             <p class="product-name">MOTUL GP POWER 10W-40 4T MANUAL (1L)</p>
             <p class="price">Rp74.000</p>
+
+            <div class="quantity-control">
+                <button onclick="changeQty(this, -1)">-</button>
+                <input type="text" value="0" readonly>
+                <button onclick="changeQty(this, 1)">+</button>
+            </div>
+
+            <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
+                @csrf
+                <input type="hidden" name="id_transaksi" value="2">
+                <input type="hidden" name="id_produk" value="202">
+                <input type="hidden" class="qty-input" name="qty" value="0">
+                <input type="hidden" name="subtotal" value="0">
+                <button class="buy-btn">Beli</button>
+            </form>
         </div>
 
+        <!-- PRODUK 3 -->
         <div class="product-card">
             <img src="{{ asset('img/oli3.png') }}" alt="Oli 3">
-            <p class="product-name">MOTUL OLI MOTOR SCOOTER POWER LE 4T 5W-40 (0.8L)</p>
+            <p class="product-name">MOTUL SCOOTER POWER LE 4T 5W-40 (0.8L)</p>
             <p class="price">Rp82.000</p>
+
+            <div class="quantity-control">
+                <button onclick="changeQty(this, -1)">-</button>
+                <input type="text" value="0" readonly>
+                <button onclick="changeQty(this, 1)">+</button>
+            </div>
+
+            <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
+                @csrf
+                <input type="hidden" name="id_transaksi" value="2">
+                <input type="hidden" name="id_produk" value="203">
+                <input type="hidden" class="qty-input" name="qty" value="0">
+                <input type="hidden" name="subtotal" value="0">
+                <button class="buy-btn">Beli</button>
+            </form>
         </div>
 
+        <!-- PRODUK 4 -->
         <div class="product-card">
             <img src="{{ asset('img/oli4.png') }}" alt="Oli 4">
             <p class="product-name">SHELL ADVANCE AX5 SCOOTER 10W-30 (0.8L)</p>
             <p class="price">Rp46.000</p>
+
+            <div class="quantity-control">
+                <button onclick="changeQty(this, -1)">-</button>
+                <input type="text" value="0" readonly>
+                <button onclick="changeQty(this, 1)">+</button>
+            </div>
+
+            <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
+                @csrf
+                <input type="hidden" name="id_transaksi" value="2">
+                <input type="hidden" name="id_produk" value="204">
+                <input type="hidden" class="qty-input" name="qty" value="0">
+                <input type="hidden" name="subtotal" value="0">
+                <button class="buy-btn">Beli</button>
+            </form>
         </div>
 
+        <!-- PRODUK 5 -->
         <div class="product-card">
             <img src="{{ asset('img/oli5.png') }}" alt="Oli 5">
             <p class="product-name">MOTUL 3100 GOLD 4T 10W-40 (1L)</p>
             <p class="price">Rp63.000</p>
+
+            <div class="quantity-control">
+                <button onclick="changeQty(this, -1)">-</button>
+                <input type="text" value="0" readonly>
+                <button onclick="changeQty(this, 1)">+</button>
+            </div>
+
+            <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
+                @csrf
+                <input type="hidden" name="id_transaksi" value="2">
+                <input type="hidden" name="id_produk" value="205">
+                <input type="hidden" class="qty-input" name="qty" value="0">
+                <input type="hidden" name="subtotal" value="0">
+                <button class="buy-btn">Beli</button>
+            </form>
         </div>
 
+        <!-- PRODUK 6 -->
         <div class="product-card">
             <img src="{{ asset('img/oli6.png') }}" alt="Oli 6">
             <p class="product-name">X-TEN DOUBLE ESTER MATIC BEAT MIO (0.8L)</p>
-            <p class="price">Rp113.500</p>
+            <p the="price">Rp113.500</p>
+
+            <div class="quantity-control">
+                <button onclick="changeQty(this, -1)">-</button>
+                <input type="text" value="0" readonly>
+                <button onclick="changeQty(this, 1)">+</button>
+            </div>
+
+            <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
+                @csrf
+                <input type="hidden" name="id_transaksi" value="2">
+                <input type="hidden" name="id_produk" value="206">
+                <input type="hidden" class="qty-input" name="qty" value="0">
+                <input type="hidden" name="subtotal" value="0">
+                <button class="buy-btn">Beli</button>
+            </form>
         </div>
 
+        <!-- PRODUK 7 -->
         <div class="product-card">
             <img src="{{ asset('img/oli7.png') }}" alt="Oli 7">
             <p class="product-name">CTX REV MAX SPORT 10W-30 SPORT/BEBEK (0.8L)</p>
             <p class="price">Rp120.000</p>
+
+            <div class="quantity-control">
+                <button onclick="changeQty(this, -1)">-</button>
+                <input type="text" value="0" readonly>
+                <button onclick="changeQty(this, 1)">+</button>
+            </div>
+
+            <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
+                @csrf
+                <input type="hidden" name="id_transaksi" value="2">
+                <input type="hidden" name="id_produk" value="207">
+                <input type="hidden" class="qty-input" name="qty" value="0">
+                <input type="hidden" name="subtotal" value="0">
+                <button class="buy-btn">Beli</button>
+            </form>
         </div>
 
+        <!-- PRODUK 8 -->
         <div class="product-card">
             <img src="{{ asset('img/oli8.png') }}" alt="Oli 8">
-            <p class="product-name">CTX REV 2T - OLI SAMPING 2 TAK SINETIK GRADE ESTER (1L)</p>
+            <p class="product-name">CTX REV 2T - OLI SAMPING 2 TAK ESTER (1L)</p>
             <p class="price">Rp147.000</p>
+
+            <div class="quantity-control">
+                <button onclick="changeQty(this, -1)">-</button>
+                <input type="text" value="0" readonly>
+                <button onclick="changeQty(this, 1)">+</button>
+            </div>
+
+            <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
+                @csrf
+                <input type="hidden" name="id_transaksi" value="2">
+                <input type="hidden" name="id_produk" value="208">
+                <input type="hidden" class="qty-input" name="qty" value="0">
+                <input type="hidden" name="subtotal" value="0">
+                <button class="buy-btn">Beli</button>
+            </form>
         </div>
-    </main>
+
+    </div>
+</div>
+
+
+<script>
+function changeQty(button, delta) {
+    const input = button.parentElement.querySelector('input[type="text"]');
+    const hiddenInput = button.parentElement.parentElement.querySelector('.qty-input');
+    let value = parseInt(input.value);
+    value = Math.max(0, value + delta);
+    input.value = value;
+    hiddenInput.value = value;
+
+    const priceText = button.closest('.product-card').querySelector('.price').innerText;
+    const price = parseInt(priceText.replace(/[^0-9]/g, ''));
+    const form = button.closest('.product-card').querySelector('form');
+    form.querySelector('input[name="subtotal"]').value = price * value;
+}
+
+function validateQty(form) {
+    const qty = parseInt(form.querySelector('.qty-input').value);
+    if (qty === 0) {
+        alert('Jumlah barang harus lebih dari 0 sebelum membeli!');
+        return false;
+    }
+    return true;
+}
+</script>
 
 </body>
 </html>
