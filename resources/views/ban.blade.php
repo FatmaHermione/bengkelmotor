@@ -5,168 +5,221 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AXERA MOTOR - Ban</title>
     <link rel="icon" href="{{ asset('img/logo.png')}} ">
-    <link rel="stylesheet" href="home.css">
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: #fff;
-        }
+    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: #ff9933;
-            padding: 10px 20px;
-            color: #000;
-        }
+<style>
+    /* ================= BACKGROUND ORANYE SAMA SEPERTI GEAR ================= */
+    body {
+        background: linear-gradient(135deg, #ff9800, #ffb74d);
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        min-height: 100vh;
+    }
 
-        .logo {
-            display: flex;
-            align-items: center;
-        }
+    /* HEADER */
+    .top-bar {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 25px;
+        align-items: center;
+    }
+    .back-btn {
+        background:#1e88e5;
+        color:white;
+        border:none;
+        padding:8px 18px;
+        border-radius:8px;
+        cursor:pointer;
+    }
+    .menu-btn {
+        background:none;
+        border:none;
+        font-size:28px;
+        color:white;
+        cursor:pointer;
+    }
+    .menu-dropdown {
+        display:none;
+        position:absolute;
+        right:25px;
+        top:60px;
+        background:white;
+        width:180px;
+        border-radius:10px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.3);
+        overflow:hidden;
+    }
+    .menu-dropdown a {
+        display:block;
+        padding:12px;
+        color:black;
+        text-decoration:none;
+    }
+    .menu-dropdown a:hover {
+        background:#f0f0f0;
+    }
 
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
-        }
+    /* SEARCH */
+    .search-box {
+        text-align:center;
+        margin-bottom:20px;
+    }
+    .search-box input {
+        width:50%;
+        padding:12px;
+        border-radius:10px;
+        border:none;
+        font-size:16px;
+    }
 
-        .logo-text h1 {
-            margin: 0;
-            font-size: 20px;
-        }
+    /* PRODUK */
+    .container {
+        padding: 20px;
+    }
+    h1 {
+        color: white;
+        text-shadow: 1px 1px 3px black;
+        margin-bottom: 20px;
+    }
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+    }
 
-        .page-title {
-            font-size: 28px;
-            font-weight: bold;
-        }
+    /* KOTAK PRODUK MIRIP GEAR */
+    .product-card {
+        background: rgba(255, 255, 255, 0.85);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 152, 0, 0.35);
+        backdrop-filter: blur(5px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.18);
+        padding: 20px;
+        text-align: center;
+        transition: 0.3s;
+    }
 
-        .back-container {
-            margin: 20px;
-        }
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.28);
+    }
 
-        .back-btn {
-            text-decoration: none;
-            background-color: #ff9933;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: 0.2s;
-        }
+    .product-card img {
+        width: 180px;
+        height: 180px;
+        object-fit: contain;
+        margin-bottom: 10px;
+    }
+    .product-name {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .price {
+        color: #d32f2f;
+        font-size: 1.1em;
+        margin-bottom: 10px;
+    }
 
-        .back-btn:hover {
-            background-color: #e67e22;
-        }
-
-        .product-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px;
-            padding: 0 20px 40px;
-        }
-
-        .product-card {
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            text-align: center;
-            padding: 10px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .product-card img {
-            width: 100%;
-            height: 150px;
-            object-fit: contain;
-        }
-
-        .product-name {
-            font-weight: bold;
-            margin: 10px 0 5px;
-        }
-
-        .price {
-            color: #e67e22;
-            font-weight: bold;
-        }
-    </style>
+</style>
 </head>
+
 <body>
 
-    <!-- Header -->
-    <header class="navbar">
-        <div class="logo">
-            <img src="{{ asset('img/bike.png') }}" alt="Logo Motor" class="logo-icon">
-            <div class="logo-text">
-                <h1>AXERA MOTOR</h1>
-                <p>Bengkel Servis Motor</p>
-            </div>
-        </div>
-        <h2 class="page-title">BAN</h2>
-    </header>
+<!-- HEADER -->
+<div class="top-bar">
+    <button class="back-btn" onclick="window.history.back()">⬅ Kembali</button>
 
-    <!-- Tombol kembali -->
-    <div class="back-container">
-        <a href="{{ route('home') }}" class="back-btn">⬅ Kembali</a>
+    <button class="menu-btn" id="menuBtn">⋮</button>
+
+    <div class="menu-dropdown" id="menuDropdown">
+        <a href="/produk/tambah">➕ Tambah Produk</a>
+        <a href="/produk/edit">✏ Edit Produk</a>
+        <a href="/produk/hapus">🗑 Hapus Produk</a>
+    </div>
+</div>
+
+<script>
+document.getElementById("menuBtn").onclick = function() {
+    let menu = document.getElementById("menuDropdown");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+};
+</script>
+
+<!-- CONTENT -->
+<div class="container">
+    <h1>🛞 Ban Motor</h1>
+
+    <!-- SEARCH BAR -->
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Cari produk...">
     </div>
 
-    <!-- Konten produk -->
-    <main class="product-container">
+    <script>
+    document.getElementById("searchInput").addEventListener("keyup", function() {
+        let filter = this.value.toLowerCase();
+        let cards = document.getElementsByClassName("product-card");
+
+        for (let card of cards) {
+            let name = card.querySelector(".product-name").innerText.toLowerCase();
+            card.style.display = name.includes(filter) ? "" : "none";
+        }
+    });
+    </script>
+
+    <!-- PRODUK 8 ITEM -->
+    <div class="product-grid">
+
         <div class="product-card">
-            <img src="{{ asset('img/ban1.png') }}" alt="Ban 1">
-            <p class="product-name">FDR TT/TL FLEMMO RING 14 BAN MOTOR TUBE TYPE DAN TUBELESS 80/90-14 TL</p>
+            <img src="{{ asset('img/ban1.png') }}">
+            <p class="product-name">FDR TT/TL FLEMMO RING 14 BAN MOTOR 80/90-14 TL</p>
             <p class="price">Rp225.000</p>
         </div>
 
         <div class="product-card">
-            <img src="{{ asset('img/ban2.png') }}" alt="Ban 2">
-            <p class="product-name">FDR TL SPORT MP27 RING 14 RACING 90/80-14</p>
+            <img src="{{ asset('img/ban2.png') }}">
+            <p class="product-name">FDR TL SPORT MP27 RING 14 90/80-14</p>
             <p class="price">Rp369.000</p>
         </div>
 
         <div class="product-card">
-            <img src="{{ asset('img/ban3.png') }}" alt="Ban 3">
-            <p class="product-name">FDR TT/TL SPARTAX RING 17 TUBELESS 70/90-17 TT</p>
+            <img src="{{ asset('img/ban3.png') }}">
+            <p class="product-name">FDR TT/TL SPARTAX RING 17 70/90-17</p>
             <p class="price">Rp174.000</p>
         </div>
 
         <div class="product-card">
-            <img src="{{ asset('img/ban4.png') }}" alt="Ban 4">
-            <p class="product-name">FDR TL SPORT MP76 RING 17 TUBELESS 90/80-17</p>
+            <img src="{{ asset('img/ban4.png') }}">
+            <p class="product-name">FDR TL SPORT MP76 RING 17 90/80-17</p>
             <p class="price">Rp477.000</p>
         </div>
 
         <div class="product-card">
-            <img src="{{ asset('img/ban5.png') }}" alt="Ban 5">
+            <img src="{{ asset('img/ban5.png') }}">
             <p class="product-name">FDR TL SPORT XR EVO RING 14 80/90-14</p>
             <p class="price">Rp230.000</p>
         </div>
 
         <div class="product-card">
-            <img src="{{ asset('img/ban6.png') }}" alt="Ban 6">
+            <img src="{{ asset('img/ban6.png') }}">
             <p class="product-name">FDR TL GENZI PRO RING 14 80/80-14</p>
             <p class="price">Rp212.000</p>
         </div>
 
         <div class="product-card">
-            <img src="{{ asset('img/ban7.png') }}" alt="Ban 7">
-            <p class="product-name">IRC NF66 TUBELESS MATIC 80/90-14</p>
+            <img src="{{ asset('img/ban7.png') }}">
+            <p class="product-name">IRC NF66 TUBELESS 80/90-14</p>
             <p class="price">Rp221.000</p>
         </div>
 
         <div class="product-card">
-            <img src="{{ asset('img/ban8.png') }}" alt="Ban 8">
-            <p class="product-name">IRC GP5 SEMI TRAIL MATIC RING 14 80/90 & 90/90-14</p>
+            <img src="{{ asset('img/ban8.png') }}">
+            <p class="product-name">IRC GP5 SEMI TRAIL RING 14 80/90 & 90/90</p>
             <p class="price">Rp225.000</p>
         </div>
-    </main>
+
+    </div>
+
+</div>
 
 </body>
 </html>
