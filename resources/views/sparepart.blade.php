@@ -4,19 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AXERA MOTOR - Sparepart</title>
+
     <link rel="icon" href="{{ asset('img/logo.png') }}">
     <link rel="stylesheet" href="{{ asset('css/sparepart.css') }}">
 </head>
 
 <body>
 
+<!-- TOP BAR -->
 <div class="top-bar">
     <button class="back-btn" onclick="window.history.back()">⬅ Kembali</button>
+
+    <!-- Tombol titik tiga -->
+    <button class="menu-btn" id="menuBtn">⋮</button>
+
+    <!-- MENU -->
+    <div class="menu-dropdown" id="menuDropdown">
+        <a href="/sparepart/tambah">➕ Tambah Produk</a>
+        <a href="/sparepart/edit">✏ Edit Produk</a>
+        <a href="/sparepart/hapus">🗑 Hapus Produk</a>
+    </div>
 </div>
 
+<script>
+document.getElementById("menuBtn").onclick = function() {
+    let menu = document.getElementById("menuDropdown");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+};
+</script>
+
+<!-- MAIN CONTENT -->
 <div class="container">
     <h1>🔧 Sparepart</h1>
 
+    <!-- SEARCH -->
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="Cari sparepart...">
     </div>
@@ -33,12 +54,12 @@
     });
     </script>
 
+    <!-- GRID PRODUK -->
     <div class="product-grid">
 
         @foreach ($spareparts as $s)
         <div class="product-card">
 
-            <!-- GAMBAR BERDASARKAN ID -->
             <img src="{{ asset('img/spar' . $s->idSparepart . '.png') }}" alt="gambar">
 
             <p class="product-name">{{ $s->namaSparepart }}</p>
