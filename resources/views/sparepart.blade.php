@@ -13,6 +13,7 @@
         margin: 0;
     }
 
+    /* ================= TOP BAR ================= */
     .top-bar {
         display: flex;
         justify-content: space-between;
@@ -28,6 +29,37 @@
         cursor:pointer;
     }
 
+    /* MENU TITIK 3 */
+    .menu-btn {
+        background:none;
+        border:none;
+        font-size:28px;
+        color:white;
+        cursor:pointer;
+    }
+    .menu-dropdown {
+        display:none;
+        position:absolute;
+        right:25px;
+        top:60px;
+        background:white;
+        width:180px;
+        border-radius:10px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.3);
+        overflow:hidden;
+        z-index: 10;
+    }
+    .menu-dropdown a {
+        display:block;
+        padding:12px;
+        color:black;
+        text-decoration:none;
+    }
+    .menu-dropdown a:hover {
+        background:#f0f0f0;
+    }
+
+    /* SEARCH */
     .search-box {
         text-align:center;
         margin-bottom:20px;
@@ -49,12 +81,14 @@
         margin-bottom: 20px;
     }
 
+    /* PRODUK GRID */
     .product-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 25px;
     }
 
+    /* KARTU PRODUK */
     .product-card {
         background: rgba(255, 255, 255, 0.85);
         border-radius: 15px;
@@ -69,7 +103,6 @@
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(0,0,0,0.28);
     }
-
     .product-card img {
         width: 180px;
         height: 180px;
@@ -81,13 +114,13 @@
         font-weight: bold;
         margin-bottom: 5px;
     }
-
     .price {
         color: #d32f2f;
         font-size: 1.1em;
         margin-bottom: 10px;
     }
 
+    /* QTY CONTROL */
     .quantity-control {
         display: flex;
         justify-content: center;
@@ -131,13 +164,33 @@
 
 <body>
 
+<!-- TOP BAR -->
 <div class="top-bar">
     <button class="back-btn" onclick="window.history.back()">⬅ Kembali</button>
+
+    <!-- Tombol titik tiga -->
+    <button class="menu-btn" id="menuBtn">⋮</button>
+
+    <!-- MENU -->
+    <div class="menu-dropdown" id="menuDropdown">
+        <a href="/sparepart/tambah">➕ Tambah Produk</a>
+        <a href="/sparepart/edit">✏ Edit Produk</a>
+        <a href="/sparepart/hapus">🗑 Hapus Produk</a>
+    </div>
 </div>
 
+<script>
+document.getElementById("menuBtn").onclick = function() {
+    let menu = document.getElementById("menuDropdown");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+};
+</script>
+
+<!-- MAIN CONTENT -->
 <div class="container">
     <h1>🔧 Sparepart</h1>
 
+    <!-- SEARCH -->
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="Cari sparepart...">
     </div>
@@ -154,12 +207,12 @@
     });
     </script>
 
+    <!-- GRID PRODUK -->
     <div class="product-grid">
 
         @foreach ($spareparts as $s)
         <div class="product-card">
 
-            <!-- GAMBAR BERDASARKAN ID -->
             <img src="{{ asset('img/spar' . $s->idSparepart . '.png') }}" alt="gambar">
 
             <p class="product-name">{{ $s->namaSparepart }}</p>
