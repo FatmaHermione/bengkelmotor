@@ -205,34 +205,23 @@ document.getElementById("menuBtn").onclick = function() {
     </script>
 
     <div class="product-grid">
+    @foreach ($spareparts as $s) // Variabel $spareparts sekarang adalah Model Produk
+    <div class="product-card">
+        <img src="{{ asset('img/' . $s->gambar) }}" alt="gambar">
+        <p class="product-name">{{ $s->nama_produk }}</p> 
+        <p class="price">Rp{{ number_format($s->harga,0,',','.') }}</p>
+        <p>Stok: {{ $s->stok }}</p>
 
-        @foreach ($spareparts as $s)
-        <div class="product-card">
-
-            <img src="{{ asset('img/spar' . $s->idSparepart . '.png') }}" alt="gambar">
-
-            <p class="product-name">{{ $s->namaSparepart }}</p>
-            <p class="price">Rp{{ number_format($s->harga,0,',','.') }}</p>
-            <p>Stok: {{ $s->stok }}</p>
-
-            <div class="quantity-control">
-                <button type="button" onclick="changeQty(this, -1)">-</button>
-                <input type="text" value="0" readonly>
-                <button type="button" onclick="changeQty(this, 1)">+</button>
-            </div>
-
-            <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
-                @csrf
-                <input type="hidden" name="id_transaksi" value="4"> 
-                <input type="hidden" name="id_produk" value="{{ $s->idSparepart }}">
-                <input type="hidden" class="qty-input" name="qty" value="0">
-                <input type="hidden" name="subtotal" value="0">
-                <button type="submit" class="buy-btn">Beli</button>
-            </form>
-        </div>
-        @endforeach
-
+        <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
+            @csrf
+            <input type="hidden" name="id_produk" value="{{ $s->id }}"> 
+            <input type="hidden" class="qty-input" name="qty" value="0">
+            <input type="hidden" name="subtotal" value="0">
+            <button type="submit" class="buy-btn">Beli</button>
+        </form>
     </div>
+    @endforeach
+</div>
 </div>
 
 <script>

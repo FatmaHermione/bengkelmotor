@@ -5,6 +5,7 @@ use App\Http\Controllers\DaftarLayananController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SparepartController;
+use App\Http\Controllers\KeranjangController;
 
 Route::get('/', function () {
     return redirect()->route('login.form');
@@ -66,5 +67,5 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::get('/formservice', [AuthController::class, 'showFormService'])->name('formservice.form');
 Route::post('/formservice/view', [AuthController::class, 'formService'])->name('formservice.view');
 
-Route::post('/detail-transaksi/store', [DetailTransaksiController::class, 'store'])->name('detail-transaksi.store');
-Route::get('/pembayaran', [DetailTransaksiController::class, 'pembayaran'])->name('pembayaran');
+Route::post('/detail-transaksi/store', [KeranjangController::class, 'store'])->name('detail-transaksi.store');
+Route::get('/pembayaran', [KeranjangController::class, 'pembayaran'])->name('pembayaran');

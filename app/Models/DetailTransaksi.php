@@ -9,8 +9,7 @@ class DetailTransaksi extends Model
 {
     use HasFactory;
 
-    // PENTING: Mendefinisikan nama tabel secara eksplisit
-    // Karena tabel di migrasi bernama 'detail_transaksi' (singular)
+    // PENTING: Mendefinisikan nama tabel secara eksplisit (sudah benar)
     protected $table = 'detail_transaksi'; 
     
     protected $primaryKey = 'id_detail';
@@ -19,12 +18,14 @@ class DetailTransaksi extends Model
     // Relasi ke Transaksi Induk
     public function transaksi()
     {
-        return $this->belongsTo(Transaksi::class, 'id_transaksi', 'id_transaksi');
+        // KOREKSI 1: FK id_transaksi merujuk ke PK 'id' di model Transaksi
+        return $this->belongsTo(Transaksi::class, 'id_transaksi', 'id');
     }
 
     // Relasi ke Produk (Barang apa yang dibeli)
     public function produk()
     {
-        return $this->belongsTo(Produk::class, 'id_produk', 'id_produk');
+        // KOREKSI 2: FK id_produk merujuk ke PK 'id' di model Produk
+        return $this->belongsTo(Produk::class, 'id_produk', 'id');
     }
 }
