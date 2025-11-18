@@ -4,148 +4,189 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AXERA MOTOR - Sparepart</title>
-    <link rel="stylesheet" href="home.css">
+
     <style>
-        body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: #fff;
-        }
+    body {
+        background: linear-gradient(135deg, #ff9800, #ffb74d);
+        font-family: Arial, sans-serif;
+        min-height: 100vh;
+        margin: 0;
+    }
 
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: #ff9933;
-            padding: 10px 20px;
-            color: #000;
-        }
+    .top-bar {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 25px;
+        align-items: center;
+    }
+    .back-btn {
+        background:#1e88e5;
+        color:white;
+        border:none;
+        padding:8px 18px;
+        border-radius:8px;
+        cursor:pointer;
+    }
 
-        .logo {
-            display: flex;
-            align-items: center;
-        }
+    .search-box {
+        text-align:center;
+        margin-bottom:20px;
+    }
+    .search-box input {
+        width:50%;
+        padding:12px;
+        border-radius:10px;
+        border:none;
+        font-size:16px;
+    }
 
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
-        }
+    .container {
+        padding: 20px;
+    }
+    h1 {
+        color: white;
+        text-shadow: 1px 1px 3px black;
+        margin-bottom: 20px;
+    }
 
-        .logo-text h1 {
-            margin: 0;
-            font-size: 20px;
-        }
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+    }
 
-        .page-title {
-            font-size: 28px;
-            font-weight: bold;
-        }
+    .product-card {
+        background: rgba(255, 255, 255, 0.85);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 152, 0, 0.35);
+        backdrop-filter: blur(5px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.18);
+        padding: 20px;
+        text-align: center;
+        transition: 0.3s;
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.28);
+    }
 
-        .back-container {
-            margin: 20px;
-        }
+    .product-card img {
+        width: 180px;
+        height: 180px;
+        object-fit: contain;
+        margin-bottom: 10px;
+    }
 
-        .back-btn {
-            text-decoration: none;
-            background-color: #ff9933;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: 0.2s;
-        }
+    .product-name {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
 
-        .back-btn:hover {
-            background-color: #e67e22;
-        }
+    .price {
+        color: #d32f2f;
+        font-size: 1.1em;
+        margin-bottom: 10px;
+    }
 
-        .product-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px;
-            padding: 0 20px 40px;
-        }
+    .quantity-control {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .quantity-control button {
+        width: 30px;
+        height: 30px;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        background: #555;
+        color: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .quantity-control input {
+        width: 40px;
+        text-align: center;
+        border: none;
+        background: #f0f0f0;
+        margin: 0 5px;
+        font-size: 16px;
+    }
 
-        .product-card {
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            text-align: center;
-            padding: 10px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .product-card img {
-            width: 100%;
-            height: 150px;
-            object-fit: contain;
-        }
-
-        .product-name {
-            font-weight: bold;
-            margin: 10px 0 5px;
-        }
-
-        .price {
-            color: #e67e22;
-            font-weight: bold;
-        }
+    .buy-btn {
+        background: #1e88e5;
+        color: #fff;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .buy-btn:hover {
+        background: #1565c0;
+    }
     </style>
 </head>
+
 <body>
 
-    <header class="navbar">
-        <div class="logo">
-            <img src="{{ asset('img/bike.png') }}" alt="Logo Motor" class="logo-icon">
-            <div class="logo-text">
-                <h1>AXERA MOTOR</h1>
-                <p>Bengkel Servis Motor</p>
-            </div>
-        </div>
-        <h2 class="page-title">SPAREPART</h2>
-    </header>
+<div class="top-bar">
+    <button class="back-btn" onclick="window.history.back()">⬅ Kembali</button>
+</div>
 
-   <!-- Tombol kembali dan tambah -->
-    <div class="back-container">
-        <a href="{{ route('home') }}" class="back-btn">⬅ Kembali</a>
+<div class="container">
+    <h1>🔧 Sparepart</h1>
 
-        <!-- 🔹 Tombol Tambah Sparepart -->
-        <a href="{{ route('sparepart.create') }}" class="back-btn" style="background-color: #2ecc71;">+ Tambah Sparepart</a>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Cari sparepart...">
     </div>
 
-    <!-- Konten produk -->
-    <main class="product-container">
+    <script>
+    document.getElementById("searchInput").addEventListener("keyup", function() {
+        let filter = this.value.toLowerCase();
+        let cards = document.getElementsByClassName("product-card");
 
-    @foreach ($spareparts as $part)
+        for (let card of cards) {
+            let name = card.querySelector(".product-name").innerText.toLowerCase();
+            card.style.display = name.includes(filter) ? "" : "none";
+        }
+    });
+    </script>
+
+    <div class="product-grid">
+
+        @foreach ($spareparts as $s)
         <div class="product-card">
-            
-            @if ($part->gambar && Storage::disk('public')->exists($part->gambar))
-            <img src="{{ asset('storage/' . $part->gambar) }}" alt="{{ $part->namaSparepart }}">
-            @else
-            <img src="{{ asset('img/spar1.png') }}" alt="Placeholder">
-            @endif
-            
-            <p class="product-name">{{ $part->namaSparepart }}</p>
-            <p class="price">Rp {{ number_format($part->harga, 0, ',', '.') }}</p>
-            <p class="stok">Stok: {{ $part->stok }}</p>
 
-            <div style="margin-top: 10px;">
-                <a href="{{ route('sparepart.edit', $part->idSparepart) }}" class="back-btn" style="background-color: #3498db;">Edit</a>
-                
-                <form action="{{ route('sparepart.destroy', $part->idSparepart) }}" method="POST" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="back-btn" style="background-color: #e74c3c; border:none; cursor:pointer;" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
-                </form>
+            <!-- GAMBAR BERDASARKAN ID -->
+            <img src="{{ asset('img/spar' . $s->idSparepart . '.png') }}" alt="gambar">
+
+            <p class="product-name">{{ $s->namaSparepart }}</p>
+            <p class="price">Rp{{ number_format($s->harga,0,',','.') }}</p>
+            <p>Stok: {{ $s->stok }}</p>
+
+            <div class="quantity-control">
+                <button type="button" onclick="changeQty(this, -1)">-</button>
+                <input type="text" value="0" readonly>
+                <button type="button" onclick="changeQty(this, 1)">+</button>
             </div>
 
+            <button class="buy-btn">Beli</button>
         </div>
-    @endforeach
-    </main>
+        @endforeach
+
+    </div>
+</div>
+
+<script>
+function changeQty(button, delta) {
+    const input = button.parentElement.querySelector('input[type="text"]');
+    let value = parseInt(input.value);
+    value = Math.max(0, value + delta);
+    input.value = value;
+}
+</script>
+
 </body>
 </html>
