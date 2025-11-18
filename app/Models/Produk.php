@@ -9,17 +9,16 @@ class Produk extends Model
 {
     use HasFactory;
 
-    protected $table = 'produk';
+    protected $table = 'produk'; 
     protected $primaryKey = 'id_produk';
+    protected $guarded = [];
 
-    public $timestamps = true;
+    // JANGAN ADA BARIS public $timestamps = false; di sini!
 
-    protected $fillable = [
-        'id_kategori',
-        'nama_produk',
-        'harga',
-        'stok',
-        'deskripsi',
-        'gambar',
-    ];
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class, 'id_kategori', 'id_kategori');
+    }
+    
+    // ... (relasi lain)
 }

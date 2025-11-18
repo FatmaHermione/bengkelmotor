@@ -8,18 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Kategori extends Model
 {
     use HasFactory;
-
-    // Nama tabel di database
     protected $table = 'kategori';
-    
     protected $primaryKey = 'id_kategori';
+    
+    // Harus FALSE karena di migrasi tabel kategori tidak ada timestamps
+    public $timestamps = false; 
 
-    public $timestamps = true;
+    protected $guarded = [];
 
-    // Kolom yang boleh diisi (mass assignment)
-    protected $fillable = [
-        'nama_kategori',
-        'keterangan',
-        'deskripsi',
-    ];
+    public function produk()
+    {
+        return $this->hasMany(Produk::class, 'id_kategori', 'id_kategori');
+    }
 }
