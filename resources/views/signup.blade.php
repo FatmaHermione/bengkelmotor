@@ -33,16 +33,15 @@
                 </div>
 
                 <form action="{{ route('signup') }}" method="POST" class="login-form">
-                    @csrf
-                    <input type="text" name="username" placeholder="ENTER YOUR USERNAME" required>
-                    <input type="password" name="password" placeholder="ENTER YOUR PASSWORD" required>
-                    <input type="password" name="password_confirmation" placeholder="CONFIRM YOUR PASSWORD" required>
-                    <button type="submit">Sign Up</button>
-
-                    @if ($errors->any())
-                        <div class="error">{{ $errors->first() }}</div>
-                    @endif
-                </form>
+    @csrf
+    <input type="text" name="name" placeholder="ENTER YOUR NAME" required value="{{ old('name') }}">
+    
+    <input type="text" name="username" placeholder="ENTER YOUR USERNAME" required value="{{ old('username') }}">
+    
+    <input type="password" name="password" placeholder="ENTER YOUR PASSWORD" required>
+    <input type="password" name="password_confirmation" placeholder="CONFIRM YOUR PASSWORD" required>
+    <button type="submit">Sign Up</button>
+    </form>
             </div>
         </div>
     </div>

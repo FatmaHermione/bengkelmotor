@@ -6,19 +6,171 @@
     <title>AXERA MOTOR - Sparepart</title>
 
     <link rel="icon" href="{{ asset('img/logo.png') }}">
-    <link rel="stylesheet" href="{{ asset('css/sparepart.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+    
+    <style>
+    /* Tambahan Style dari oli.blade.php untuk quantity control dan buy button */
+    
+    /* ================= BACKGROUND ORANYE SAMA SEPERTI HOME ================= */
+    body {
+        background: linear-gradient(135deg, #ff9800, #ffb74d);
+        font-family: Arial, sans-serif;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    /* HEADER */
+    .top-bar {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 25px;
+        align-items: center;
+    }
+    .back-btn {
+        background:#1e88e5;
+        color:white;
+        border:none;
+        padding:8px 18px;
+        border-radius:8px;
+        cursor:pointer;
+    }
+    .menu-btn {
+        background:none;
+        border:none;
+        font-size:28px;
+        color:white;
+        cursor:pointer;
+    }
+    .menu-dropdown {
+        display:none;
+        position:absolute;
+        right:25px;
+        top:60px;
+        background:white;
+        width:180px;
+        border-radius:10px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.3);
+        overflow:hidden;
+    }
+    .menu-dropdown a {
+        display:block;
+        padding:12px;
+        color:black;
+        text-decoration:none;
+    }
+    .menu-dropdown a:hover {
+        background:#f0f0f0;
+    }
+
+    /* SEARCH */
+    .search-box {
+        text-align:center;
+        margin-bottom:20px;
+    }
+    .search-box input {
+        width:50%;
+        padding:12px;
+        border-radius:10px;
+        border:none;
+        font-size:16px;
+    }
+
+    /* PRODUK */
+    .container {
+        padding: 20px;
+    }
+    h1 {
+        color: white;
+        text-shadow: 1px 1px 3px black;
+        margin-bottom: 20px;
+    }
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+    }
+
+    /* KOTAK PRODUK MIRIP GEAR */
+    .product-card {
+        background: rgba(255, 255, 255, 0.85); /* putih lembut transparan */
+        border-radius: 15px;
+        border: 1px solid rgba(255, 152, 0, 0.35); /* oranye tipis */
+        backdrop-filter: blur(5px); /* efek modern */
+        box-shadow: 0 6px 15px rgba(0,0,0,0.18);
+        padding: 20px;
+        text-align: center;
+        transition: 0.3s;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.28);
+    }
+
+    .product-card img {
+        width: 180px;
+        height: 180px;
+        object-fit: contain;
+        margin-bottom: 10px;
+    }
+    .product-name {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .price {
+        color: #d32f2f;
+        font-size: 1.1em;
+        margin-bottom: 10px;
+    }
+
+    .quantity-control {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .quantity-control button {
+        width: 30px;
+        height: 30px;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        background: #555;
+        color: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .quantity-control input {
+        width: 40px;
+        text-align: center;
+        border: none;
+        background: #f0f0f0;
+        margin: 0 5px;
+        font-size: 16px;
+    }
+
+    .buy-btn {
+        background: #1e88e5;
+        color: #fff;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .buy-btn:hover {
+        background: #1565c0;
+    }
+    </style>
 </head>
 
 <body>
 
-<!-- TOP BAR -->
 <div class="top-bar">
     <button class="back-btn" onclick="window.history.back()">⬅ Kembali</button>
 
-    <!-- Tombol titik tiga -->
     <button class="menu-btn" id="menuBtn">⋮</button>
 
-    <!-- MENU -->
     <div class="menu-dropdown" id="menuDropdown">
         <a href="/sparepart/tambah">➕ Tambah Produk</a>
         <a href="/sparepart/edit">✏ Edit Produk</a>
@@ -33,11 +185,9 @@ document.getElementById("menuBtn").onclick = function() {
 };
 </script>
 
-<!-- MAIN CONTENT -->
 <div class="container">
     <h1>🔧 Sparepart</h1>
 
-    <!-- SEARCH -->
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="Cari sparepart...">
     </div>
@@ -54,7 +204,6 @@ document.getElementById("menuBtn").onclick = function() {
     });
     </script>
 
-    <!-- GRID PRODUK -->
     <div class="product-grid">
 
         @foreach ($spareparts as $s)
@@ -72,7 +221,14 @@ document.getElementById("menuBtn").onclick = function() {
                 <button type="button" onclick="changeQty(this, 1)">+</button>
             </div>
 
-            <button class="buy-btn">Beli</button>
+            <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
+                @csrf
+                <input type="hidden" name="id_transaksi" value="4"> 
+                <input type="hidden" name="id_produk" value="{{ $s->idSparepart }}">
+                <input type="hidden" class="qty-input" name="qty" value="0">
+                <input type="hidden" name="subtotal" value="0">
+                <button type="submit" class="buy-btn">Beli</button>
+            </form>
         </div>
         @endforeach
 
@@ -82,9 +238,29 @@ document.getElementById("menuBtn").onclick = function() {
 <script>
 function changeQty(button, delta) {
     const input = button.parentElement.querySelector('input[type="text"]');
+    // Cari form dan hidden input di dalamnya
+    const form = button.closest('.product-card').querySelector('form');
+    const hiddenInput = form.querySelector('.qty-input');
+    
     let value = parseInt(input.value);
     value = Math.max(0, value + delta);
     input.value = value;
+    hiddenInput.value = value;
+
+    // Hitung Subtotal
+    const priceText = button.closest('.product-card').querySelector('.price').innerText;
+    // Hapus karakter non-angka (Rp, titik) untuk mendapatkan harga
+    const price = parseInt(priceText.replace(/[^0-9]/g, ''));
+    form.querySelector('input[name="subtotal"]').value = price * value;
+}
+
+function validateQty(form) {
+    const qty = parseInt(form.querySelector('.qty-input').value);
+    if (qty === 0) {
+        alert('Jumlah barang harus lebih dari 0 sebelum membeli!');
+        return false;
+    }
+    return true;
 }
 </script>
 

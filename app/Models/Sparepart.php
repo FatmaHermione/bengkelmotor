@@ -9,8 +9,6 @@ class Sparepart extends Model
 {
     use HasFactory;
 
-    protected $table = 'sparepart';
-
     // Primary key
     protected $primaryKey = 'idSparepart';
 

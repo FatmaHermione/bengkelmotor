@@ -14,7 +14,13 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
+            
+            // PERBAIKAN: Tambahkan username sebagai field unik untuk login
+            $table->string('username')->unique(); 
+            
+            // PERBAIKAN: Ubah email menjadi nullable karena tidak digunakan untuk pendaftaran
+            $table->string('email')->nullable(); 
+            
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

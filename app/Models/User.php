@@ -14,6 +14,7 @@ class User extends Authenticatable
      * Kolom yang bisa diisi (mass assignable).
      */
     protected $fillable = [
+        'name',  // <-- TAMBAHKAN KOLOM NAME
         'username',
         'password',
     ];

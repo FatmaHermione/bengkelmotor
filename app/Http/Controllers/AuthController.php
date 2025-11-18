@@ -48,11 +48,13 @@ class AuthController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'name' => 'required|string|max:255', // <-- TAMBAHKAN VALIDASI NAME
             'username' => 'required|string|max:50|unique:users,username',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
         User::create([
+            'name'     => $request->name, // <-- TAMBAHKAN KOLOM NAME
             'username' => $request->username,
             'password' => bcrypt($request->password),
         ]);

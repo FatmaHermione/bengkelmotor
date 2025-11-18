@@ -8,6 +8,7 @@ use App\Models\Produk;
 use App\Models\Pelanggan;
 use App\Models\Transaksi;
 use App\Models\DetailTransaksi;
+use App\Models\Sparepart;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
@@ -20,8 +21,9 @@ class DatabaseSeeder extends Seeder
         $user = User::create([
             'name' => 'Estha Gusti',
             'username' => 'estha',
-            'email' => 'estha@example.com',
-            'password' => Hash::make('password'), // password login
+            // PERBAIKAN: Kolom 'email' dihapus karena tidak wajib (nullable)
+            // 'email' => 'estha@example.com', 
+            'password' => Hash::make('password'), // password login: password
         ]);
 
         // Buat data profil pelanggan untuk user ini
@@ -74,6 +76,16 @@ class DatabaseSeeder extends Seeder
             'gambar' => 'icon_service.jpg'
         ]);
 
+        for ($i = 1; $i <= 8; $i++) {
+    \App\Models\Sparepart::create([ // Pastikan Anda menggunakan Model Sparepart yang benar
+        'id_kategori' => $katSparepart->id_kategori,
+        'namaSparepart' => 'Suku Cadang Motor Generik ' . $i,
+        'stok' => 15,
+        'harga' => 50000 + ($i * 10000), // Harga bervariasi
+        'gambar' => 'spar' . $i . '.png'
+    ]);
+}
+
         // Tambah produk lain buat pemanis katalog
         Produk::create([
             'id_kategori' => $katGear->id_kategori,
@@ -84,15 +96,11 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 4. BUAT TRANSAKSI DUMMY (Supaya halaman Nota & Detail tidak kosong)
-        // Total di gambar: 62.000 + 212.000 + 14.000 + 1.000 (admin) = 289.000 
-        // (Catatan: Di screenshot "Payment" totalnya 308.000, tapi di detail item beda. 
-        // Saya ikutin hitungan item di gambar Detail saja: 62+212+14 = 288rb + 1rb admin = 289rb)
-        
         $transaksi = Transaksi::create([
             'user_id' => $user->id,
             'tanggal_transaksi' => Carbon::now(),
-            'total_harga' => 289000, // Total belanja + admin
-            'biaya_admin' => 1000,   // Sesuai gambar "Biaya Layanan"
+            'total_harga' => 289000, 
+            'biaya_admin' => 1000, 
             'metode_pembayaran' => 'BCA Virtual Account',
             'status_pembayaran' => 'lunas', // Status selesai/lunas
         ]);
