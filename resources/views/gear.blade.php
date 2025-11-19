@@ -183,7 +183,7 @@ document.getElementById("menuBtn").onclick = function() {
 </script>
 
 <div class="container">
-    <h1>🛠️ Gear & Sparepart</h1>
+    <h1>🛠️ Gear</h1>
 
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="Cari produk...">
