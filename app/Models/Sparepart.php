@@ -9,6 +9,9 @@ class Sparepart extends Model
 {
     use HasFactory;
 
+    // Pastikan sesuai dengan nama tabel yang kamu punya
+    protected $table = 'sparepart';   // ← WAJIB DITAMBAHKAN
+
     // Primary key
     protected $primaryKey = 'idSparepart';
 
@@ -19,6 +22,6 @@ class Sparepart extends Model
         'gambar'
     ];
 
-    // Menonaktifkan timestamps karena di tabel tidak ada created_at dan updated_at
+    // Jika tidak ada created_at dan updated_at
     public $timestamps = false;
 }

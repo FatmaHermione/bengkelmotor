@@ -5,13 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AXERA MOTOR - Sparepart</title>
 
-    <link rel="icon" href="{{ asset('img/logo.png') }}">
-    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
-    
     <style>
-    /* Tambahan Style dari oli.blade.php untuk quantity control dan buy button */
-    
-    /* ================= BACKGROUND ORANYE SAMA SEPERTI HOME ================= */
     body {
         background: linear-gradient(135deg, #ff9800, #ffb74d);
         font-family: Arial, sans-serif;
@@ -19,7 +13,7 @@
         margin: 0;
     }
 
-    /* HEADER */
+    /* ================= TOP BAR ================= */
     .top-bar {
         display: flex;
         justify-content: space-between;
@@ -34,6 +28,8 @@
         border-radius:8px;
         cursor:pointer;
     }
+
+    /* MENU TITIK 3 */
     .menu-btn {
         background:none;
         border:none;
@@ -51,6 +47,7 @@
         border-radius:10px;
         box-shadow:0 4px 12px rgba(0,0,0,0.3);
         overflow:hidden;
+        z-index: 10;
     }
     .menu-dropdown a {
         display:block;
@@ -75,7 +72,6 @@
         font-size:16px;
     }
 
-    /* PRODUK */
     .container {
         padding: 20px;
     }
@@ -84,35 +80,36 @@
         text-shadow: 1px 1px 3px black;
         margin-bottom: 20px;
     }
+
+    /* PRODUK GRID */
     .product-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 25px;
     }
 
-    /* KOTAK PRODUK MIRIP GEAR */
+    /* KARTU PRODUK */
     .product-card {
-        background: rgba(255, 255, 255, 0.85); /* putih lembut transparan */
+        background: rgba(255, 255, 255, 0.85);
         border-radius: 15px;
-        border: 1px solid rgba(255, 152, 0, 0.35); /* oranye tipis */
-        backdrop-filter: blur(5px); /* efek modern */
+        border: 1px solid rgba(255, 152, 0, 0.35);
+        backdrop-filter: blur(5px);
         box-shadow: 0 6px 15px rgba(0,0,0,0.18);
         padding: 20px;
         text-align: center;
         transition: 0.3s;
     }
-
     .product-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(0,0,0,0.28);
     }
-
     .product-card img {
         width: 180px;
         height: 180px;
         object-fit: contain;
         margin-bottom: 10px;
     }
+
     .product-name {
         font-weight: bold;
         margin-bottom: 5px;
@@ -123,6 +120,7 @@
         margin-bottom: 10px;
     }
 
+    /* QTY CONTROL */
     .quantity-control {
         display: flex;
         justify-content: center;
@@ -166,11 +164,14 @@
 
 <body>
 
+<!-- TOP BAR -->
 <div class="top-bar">
     <button class="back-btn" onclick="window.history.back()">⬅ Kembali</button>
 
+    <!-- Tombol titik tiga -->
     <button class="menu-btn" id="menuBtn">⋮</button>
 
+    <!-- MENU -->
     <div class="menu-dropdown" id="menuDropdown">
         <a href="/sparepart/tambah">➕ Tambah Produk</a>
         <a href="/sparepart/edit">✏ Edit Produk</a>
@@ -185,9 +186,11 @@ document.getElementById("menuBtn").onclick = function() {
 };
 </script>
 
+<!-- MAIN CONTENT -->
 <div class="container">
     <h1>🔧 Sparepart</h1>
 
+    <!-- SEARCH -->
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="Cari sparepart...">
     </div>
@@ -204,52 +207,37 @@ document.getElementById("menuBtn").onclick = function() {
     });
     </script>
 
+    <!-- GRID PRODUK -->
     <div class="product-grid">
-    @foreach ($spareparts as $s) // Variabel $spareparts sekarang adalah Model Produk
-    <div class="product-card">
-        <img src="{{ asset('img/' . $s->gambar) }}" alt="gambar">
-        <p class="product-name">{{ $s->nama_produk }}</p> 
-        <p class="price">Rp{{ number_format($s->harga,0,',','.') }}</p>
-        <p>Stok: {{ $s->stok }}</p>
 
-        <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
-            @csrf
-            <input type="hidden" name="id_produk" value="{{ $s->id }}"> 
-            <input type="hidden" class="qty-input" name="qty" value="0">
-            <input type="hidden" name="subtotal" value="0">
-            <button type="submit" class="buy-btn">Beli</button>
-        </form>
+        @foreach ($spareparts as $s)
+        <div class="product-card">
+
+            <img src="{{ asset('img/spar' . $s->idSparepart . '.png') }}" alt="gambar">
+
+            <p class="product-name">{{ $s->namaSparepart }}</p>
+            <p class="price">Rp{{ number_format($s->harga,0,',','.') }}</p>
+            <p>Stok: {{ $s->stok }}</p>
+
+            <div class="quantity-control">
+                <button type="button" onclick="changeQty(this, -1)">-</button>
+                <input type="text" value="0" readonly>
+                <button type="button" onclick="changeQty(this, 1)">+</button>
+            </div>
+
+            <button class="buy-btn">Beli</button>
+        </div>
+        @endforeach
+
     </div>
-    @endforeach
-</div>
 </div>
 
 <script>
 function changeQty(button, delta) {
     const input = button.parentElement.querySelector('input[type="text"]');
-    // Cari form dan hidden input di dalamnya
-    const form = button.closest('.product-card').querySelector('form');
-    const hiddenInput = form.querySelector('.qty-input');
-    
     let value = parseInt(input.value);
     value = Math.max(0, value + delta);
     input.value = value;
-    hiddenInput.value = value;
-
-    // Hitung Subtotal
-    const priceText = button.closest('.product-card').querySelector('.price').innerText;
-    // Hapus karakter non-angka (Rp, titik) untuk mendapatkan harga
-    const price = parseInt(priceText.replace(/[^0-9]/g, ''));
-    form.querySelector('input[name="subtotal"]').value = price * value;
-}
-
-function validateQty(form) {
-    const qty = parseInt(form.querySelector('.qty-input').value);
-    if (qty === 0) {
-        alert('Jumlah barang harus lebih dari 0 sebelum membeli!');
-        return false;
-    }
-    return true;
 }
 </script>
 
