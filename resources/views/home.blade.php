@@ -46,8 +46,11 @@
     </div>
 
     <nav class="nav-links">
-        <a href="{{ route('service.form') }}">Form Service</a>
-        <a href="{{ route('pegawai.index') }}">Data Pegawai</a>
+<nav class="nav-links">
+    <a href="{{ route('service.form') }}">Form Service</a>
+    <a href="{{ route('pegawai.index') }}">Data Pegawai</a>
+</nav>
+
     </nav>
 
     <div class="user-section">

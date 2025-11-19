@@ -1,0 +1,30 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #fafafa;
+    padding: 20px;
+}
+
+.cart-container {
+    max-width: 600px;
+    margin: auto;
+}
+
+.cart-item {
+    display: flex;
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.cart-img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.info {
+    margin-left: 20px;
+}
