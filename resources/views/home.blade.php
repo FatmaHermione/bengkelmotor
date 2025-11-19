@@ -24,7 +24,6 @@
 <nav class="nav-links">
     <a href="{{ route('service.form') }}">Form Service</a>
     <a href="{{ route('pegawai.index') }}">Data Pegawai</a>
-    <a href="{{ route('cart.index') }}">Keranjang</a>
 </nav>
 
     </nav>
