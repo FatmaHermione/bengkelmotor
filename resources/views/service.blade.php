@@ -9,6 +9,11 @@
 <body>
 
     <header>
+        <!-- Tombol kembali sesuai template kamu -->
+        <div class="back-container">
+            <a href="{{ route('home') }}" class="back-btn">⬅ Kembali</a>
+        </div>
+
         <div class="header-left">
             <img src="{{ asset('img/bike.png') }}" alt="Logo Motor" class="logo-icon">
             <div class="judul">
@@ -24,7 +29,7 @@
     </header>
 
     <main>
-   <a href="{{ route('home') }}" class="ikon-kembali" title="Kembali ke Home">←</a>
+
         <div class="form-container">
             <h3>Form berikut untuk melakukan service ya!</h3>
             <form id="serviceForm">
@@ -87,7 +92,6 @@
             e.preventDefault();
             notif.classList.add('show');
 
-            // Hilangkan otomatis setelah 3 detik
             setTimeout(() => {
                 notif.classList.remove('show');
             }, 3000);

@@ -9,34 +9,14 @@
 </head>
 <body>
 
-    <header class="header-container">
-        <nav class="navbar">
-            <div class="logo">
-                <img src="{{ asset('img/bike.png') }}" alt="Logo Motor" class="logo-icon">
-                <div class="logo-text">
-                    <h1>AXERA MOTOR</h1>
-                    <p>Bengkel Servis Motor</p>
-                </div>
-            </div>
-            
-            <div class="user-section">
-                <div class="user-icon">👤</div>
-                <div class="user-info">
-                    <p class="role">{{ Auth::user()->username ?? 'Kasir' }}</p>
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="logout-button">Log out</button>
-                    </form>
-                </div>
-            </div>
-        </nav>
-        
-<!-- Tombol kembali -->
-<div class="back-container">
-  <a href="{{ route('home') }}" class="back-btn">⬅ Kembali</a>
-</div>
-
+    <!-- ======= HEADER SAMA PERSIS DENGAN DATA PEGAWAI ======= -->
+    <header>
+        <div class="back-container">
+            <a href="{{ route('home') }}" class="back-btn">⬅ Kembali</a>
+        </div>
+        <h1>Form Service</h1>
     </header>
+    <!-- ======================================================== -->
 
     <main>
         <h2 class="form-title">form berikut untuk melakukan service ya!</h2>

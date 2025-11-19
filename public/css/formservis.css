@@ -1,180 +1,100 @@
-/* --- Global & Body --- */
+/* ====== Gaya Umum ====== */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background-color: #383838; /* Latar belakang abu-abu tua */
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background-color: #f5f7fa;
 }
 
-/* --- Header --- */
-.header-container {
-    background: linear-gradient(to right, #f9a825, #ef6c00); /* Gradient oranye */
-    padding: 15px 30px;
-    color: #000;
+/* ====== Header ====== */
+header {
+  position: relative;
+  background-color: #ff8113;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* ====== Tombol Kembali ====== */
+.back-container {
+  position: absolute;
+  left: 20px;
+  bottom: -40px;
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+.back-btn {
+  text-decoration: none;
+  background-color: #ff9933;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: 0.2s;
+  box-shadow: 0 3px 5px rgba(0,0,0,0.2);
 }
 
-.logo-icon {
-    height: 45px;
+.back-btn:hover {
+  background-color: #e67e22;
 }
 
-.logo-text h1 {
-    margin: 0;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.logo-text p {
-    margin: 0;
-    font-size: 14px;
-}
-
-.user-section {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.user-icon {
-    font-size: 30px; /* Sesuaikan ukuran ikon user */
-    border: 2px solid #000;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.user-info {
-    text-align: center;
-}
-
-.user-info .role {
-    margin: 0;
-    font-weight: bold;
-    font-size: 18px;
-}
-
-.user-info .logout-button {
-    background: none;
-    border: none;
-    color: #000;
-    text-decoration: underline;
-    cursor: pointer;
-    padding: 0;
-    font-size: 14px;
-}
-
-.action-bar {
-    margin-top: 10px;
-}
-
-.back-arrow {
-    display: inline-block;
-    font-size: 28px;
-    font-weight: bold;
-    text-decoration: none;
-    color: white;
-    background-color: #333;
-    padding: 0px 10px 4px 10px;
-    border-radius: 5px;
-    line-height: 1;
-}
-
-.back-arrow:hover {
-    background-color: #000;
-}
-
-/* --- Main Content & Form --- */
+/* ====== Form ====== */
 main {
-    padding: 20px;
+  padding: 80px 20px; /* TAMBAHAN AGAR TOMBOL KEMBALI TIDAK NIMPA FORM */
 }
 
 .form-title {
-    color: white;
-    text-align: center;
-    font-weight: normal;
-    font-size: 1.2em;
-    margin-bottom: 20px;
+  text-align: center;
+  font-size: 22px;
+  color: #333;
+  margin-bottom: 25px;
 }
 
 .form-container {
-    max-width: 900px;
-    margin: 0 auto;
-    background-color: #E0E0E0; /* Latar belakang form abu-abu muda */
-    border: 5px solid #6c9dcf; /* Border biru di sekeliling form */
-    border-radius: 15px;
-    padding: 30px 40px;
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  padding: 30px 40px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .form-row {
-    display: grid;
-    grid-template-columns: 200px 1fr; /* Kolom 1 (label), Kolom 2 (input) */
-    align-items: center;
-    margin-bottom: 15px;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  margin-bottom: 15px;
 }
 
 .form-row label {
-    font-weight: bold;
-    color: #333;
-    font-size: 1.1em;
+  font-weight: bold;
+  color: #333;
 }
 
-/* --- Input & Select Styling --- */
-.form-row input[type="text"],
-.form-row input[type="tel"],
-.form-row input[type="date"],
+.form-row input,
 .form-row select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-sizing: border-box; /* Penting agar padding tidak merusak layout */
-    font-size: 1em;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
-/* Khusus untuk dropdown Jam & Menit */
 .time-select {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
-.time-select select {
-    width: 50%;
-}
-
-/* --- Tombol Kirim --- */
 .submit-row {
-    /* Mendorong tombol ke kanan */
-    grid-column: 2 / 3;
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 10px;
+  grid-column: 2 / 3;
+  text-align: right;
 }
 
 .btn-kirim {
-    background-color: #6c9dcf; /* Warna biru sesuai border */
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 25px;
-    font-size: 1.1em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  background-color: #4a8dcc;
+  color: white;
+  padding: 12px 25px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
 }
 
 .btn-kirim:hover {
-    background-color: #4a8dcc;
+  background-color: #3b78b8;
 }
