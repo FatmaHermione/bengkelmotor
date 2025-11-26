@@ -36,7 +36,7 @@
 <body>
 
 <!-- ========== NAVBAR ========== -->
-<header class="navbar">
+<<header class="navbar">
     <div class="logo">
         <img src="{{ asset('img/bike.png') }}" alt="Logo Motor" class="logo-icon">
         <div class="logo-text">
@@ -45,14 +45,31 @@
         </div>
     </div>
 
+    <!-- Menu utama -->
     <nav class="nav-links">
-<nav class="nav-links">
-    <a href="{{ route('service.form') }}">Form Service</a>
-    <a href="{{ route('pegawai.index') }}">Data Pegawai</a>
-</nav>
+        <a href="{{ route('service.form') }}">Form Service</a>
+        <a href="{{ route('pegawai.index') }}">Data Pegawai</a>
 
+        <!-- CART ICON MASUK DIDALAM NAVBAR -->
+        <a href="{{ route('cart.show') }}" class="cart-link" style="position: relative; font-size: 20px;">
+            🛒
+            <span class="cart-count" 
+                style="
+                    position: absolute;
+                    top: -8px;
+                    right: -10px;
+                    background: red;
+                    color: white;
+                    padding: 1px 6px;
+                    border-radius: 50%;
+                    font-size: 11px;
+                ">
+                {{ session('cart') ? count(session('cart')) : 0 }}
+            </span>
+        </a>
     </nav>
 
+    <!-- User -->
     <div class="user-section">
         <div class="user-icon">👤</div>
         <div class="user-info">
@@ -64,6 +81,7 @@
         </div>
     </div>
 </header>
+
 
 
 <!-- ========== HERO SECTION ========== -->

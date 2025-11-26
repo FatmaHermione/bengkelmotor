@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    public function index()
+    public function show()
     {
         $cart = session()->get('cart', []);
         return view('cart', compact('cart'));
@@ -14,48 +14,48 @@ class CartController extends Controller
 
     public function add(Request $request, $id)
     {
-        $olis = [
-            1 => ['id'=>1,'nama'=>'SHELL ADVANCE AX7 SCOOTER','harga'=>64000,'gambar'=>'img/oli1.png'],
-            2 => ['id'=>2,'nama'=>'MOTUL GP POWER','harga'=>74000,'gambar'=>'img/oli2.png'],
-            3 => ['id'=>3,'nama'=>'MOTUL SCOOTER POWER','harga'=>82000,'gambar'=>'img/oli3.png'],
-            4 => ['id'=>4,'nama'=>'SHELL ADVANCE AX5','harga'=>46000,'gambar'=>'img/oli4.png'],
+        $product = [
+            'id'    => $id,
+            'nama'  => $request->nama,
+            'harga' => $request->harga,
+            'qty'   => 1
         ];
-
-        $oli = $olis[$id];
 
         $cart = session()->get('cart', []);
 
         if (isset($cart[$id])) {
             $cart[$id]['qty']++;
         } else {
-            $cart[$id] = [
-                'id' => $oli['id'],
-                'nama' => $oli['nama'],
-                'harga' => $oli['harga'],
-                'gambar' => $oli['gambar'],
-                'qty' => 1
-            ];
+            $cart[$id] = $product;
         }
 
         session()->put('cart', $cart);
 
-        return redirect()->route('cart.index')
-            ->with('success', 'Oli berhasil ditambahkan ke keranjang!');
+        return redirect()->route('cart.show')->with('success', 'Produk ditambahkan ke keranjang!');
     }
 
-    public function remove(Request $request)
+    public function update(Request $request, $id)
     {
-        $id = $request->id;
+        $cart = session()->get('cart');
 
-        $cart = session()->get('cart', []);
+        if (isset($cart[$id])) {
+            $cart[$id]['qty'] = $request->qty;
+            session()->put('cart', $cart);
+        }
+
+        return back()->with('success', 'Jumlah di keranjang diperbarui.');
+    }
+
+    public function remove($id)
+    {
+        $cart = session()->get('cart');
 
         if (isset($cart[$id])) {
             unset($cart[$id]);
+            session()->put('cart', $cart);
         }
 
-        session()->put('cart', $cart);
-
-        return back()->with('success', 'Produk berhasil dihapus.');
+        return back()->with('success', 'Produk dihapus dari keranjang.');
     }
 
     public function clear()

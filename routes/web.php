@@ -5,6 +5,7 @@ use App\Http\Controllers\DaftarLayananController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SparepartController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\ProdukController;
 
@@ -30,6 +31,7 @@ Route::post('/process-payment', [AuthController::class, 'processPayment'])->name
 Route::get('/payment-success', [AuthController::class, 'paymentSuccess'])->name('payment.success')->middleware('auth');
 Route::get('/payment-method', [AuthController::class, 'paymentMethod'])->name('payment.method')->middleware('auth');
 Route::post('/choose-payment-method', [AuthController::class, 'choosePaymentMethod'])->name('choose.payment.method')->middleware('auth');
+
 
 Route::get('/oli', function () {
     return view('oli');
@@ -60,11 +62,30 @@ Route::get('/pegawai', function () {
     return view('pegawai');
 })->name('pegawai.index');
 
+Route::get('/oli', fn() => view('oli'))->name('oli');
+Route::get('/gear', fn() => view('gear'))->name('gear');
+Route::get('/ban', fn() => view('ban'))->name('ban');
+
+Route::resource('sparepart', SparepartController::class);
+
+Route::get('/home', fn() => view('home'))->name('home');
+
+Route::get('/service', fn() => view('service'))->name('service.form');
+Route::get('/pegawai', fn() => view('pegawai'))->name('pegawai.index');
+
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register.form');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 
 Route::get('/formservice', [AuthController::class, 'showFormService'])->name('formservice.form');
 Route::post('/formservice/view', [AuthController::class, 'formService'])->name('formservice.view');
 
+// Keranjang Transaksi (yang lama)
 Route::post('/detail-transaksi/store', [KeranjangController::class, 'store'])->name('detail-transaksi.store');
 Route::get('/pembayaran', [KeranjangController::class, 'pembayaran'])->name('pembayaran');
+
+// Cart (session)
+Route::get('/cart', [CartController::class, 'show'])->name('cart.show');
+Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
