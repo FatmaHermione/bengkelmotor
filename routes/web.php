@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SparepartController;
 use App\Http\Controllers\KeranjangController;
+use App\Http\Controllers\ProdukController; // <-- BARU: Import ProdukController
 
 Route::get('/', function () {
     return redirect()->route('login.form');
@@ -42,11 +43,13 @@ Route::get('/ban', function () {
     return view('ban');
 })->name('ban');
 
-// Route::get('/sparepart', function () {
-//     return view('sparepart');
-// })->name('sparepart');
-
 Route::resource('sparepart', SparepartController::class);
+
+// 1. Definisikan Route Tambah SECARA MANUAL (Wajib ditaruh DI ATAS resource)
+Route::get('/produk/tambah', [ProdukController::class, 'create'])->name('produk.create');
+
+// 2. Baru kemudian Route Resource (untuk store, index, edit, destroy, dll)
+Route::resource('produk', ProdukController::class)->except(['create']); 
 
 Route::get('/home', function () {
     return view('home');

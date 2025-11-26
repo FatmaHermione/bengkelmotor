@@ -12,13 +12,16 @@ class Produk extends Model
     protected $table = 'produk'; 
     protected $primaryKey = 'id_produk';
     protected $guarded = [];
-
-    // JANGAN ADA BARIS public $timestamps = false; di sini!
-
-    public function kategori()
-    {
-        return $this->belongsTo(Kategori::class, 'id_kategori', 'id_kategori');
-    }
+// Sesuaikan dengan nama tabel di database jika tidak standar (opsional)
+    // protected $table = 'produks'; 
     
-    // ... (relasi lain)
+
+    // IZINKAN KOLOM INI DIISI OLEH CONTROLLER
+    protected $fillable = [
+        'nama_produk',
+        'id_kategori',
+        'harga',
+        'stok',
+        'gambar'
+    ];
 }
