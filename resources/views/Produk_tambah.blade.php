@@ -10,7 +10,8 @@
 <body>
 
 <div class="container">
-    <h2>➕ Tambah Produk Baru</h2>
+    <a href="{{ route('produk.create', ['id_kategori' => 4]) }}">➕ Tambah Sparepart</a>
+
 
     {{-- Tampilkan error validasi --}}
     @if ($errors->any())

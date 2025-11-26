@@ -8,21 +8,28 @@ use Illuminate\Support\Facades\Storage;
 
 class SparepartController extends Controller
 {
-    // 🟧 Menampilkan semua data sparepart
+    // 🟧 Menampilkan semua data + form tambah dalam 1 halaman saja
     public function index()
     {
         $spareparts = Sparepart::all();
         return view('sparepart', compact('spareparts'));
     }
 
-    // 🟩 Menampilkan form tambah data sparepart
-    public function create()
+    // 🟦 DITAMBAHKAN: show (dibutuhkan oleh Route::resource)
+    public function show($id)
     {
-        // sesuai nama file: resources/views/sparepart_tambah.blade.php
-        return view('sparepart_tambah');
+        // Tidak pakai halaman show → langsung kembali ke index
+        return redirect()->route('sparepart.index');
     }
 
-    // 🟦 Menyimpan data sparepart baru
+    // 🟩 DITAMBAHKAN: edit (jika suatu saat ingin popup edit)
+    public function edit($id)
+    {
+        $sparepart = Sparepart::findOrFail($id);
+        return view('sparepart_edit', compact('sparepart'));
+    }
+
+    // 🟦 Menyimpan data baru (form di halaman index)
     public function store(Request $request)
     {
         $request->validate([
@@ -32,10 +39,10 @@ class SparepartController extends Controller
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $data = $request->all();
+        $data = $request->only(['namaSparepart', 'stok', 'harga']);
 
         if ($request->hasFile('gambar')) {
-            // Simpan gambar di storage/app/public/spareparts
+            // Simpan gambar
             $path = $request->file('gambar')->store('spareparts', 'public');
             $data['gambar'] = $path;
         }
@@ -45,15 +52,7 @@ class SparepartController extends Controller
         return redirect()->route('sparepart.index')->with('success', 'Data sparepart berhasil ditambahkan.');
     }
 
-    // 🟨 Menampilkan form edit sparepart
-    public function edit($id)
-    {
-        $sparepart = Sparepart::findOrFail($id);
-        // sesuai nama file: resources/views/sparepart_edit.blade.php
-        return view('sparepart_edit', compact('sparepart'));
-    }
-
-    // 🟫 Memperbarui data sparepart
+    // 🟫 Update data tanpa membuat view edit baru
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -64,10 +63,12 @@ class SparepartController extends Controller
         ]);
 
         $sparepart = Sparepart::findOrFail($id);
-        $data = $request->all();
+
+        $data = $request->only(['namaSparepart', 'stok', 'harga']);
 
         if ($request->hasFile('gambar')) {
-            // Hapus gambar lama jika ada
+
+            // Hapus gambar lama
             if ($sparepart->gambar && Storage::disk('public')->exists($sparepart->gambar)) {
                 Storage::disk('public')->delete($sparepart->gambar);
             }
@@ -82,7 +83,7 @@ class SparepartController extends Controller
         return redirect()->route('sparepart.index')->with('success', 'Data sparepart berhasil diperbarui.');
     }
 
-    // 🟥 Menghapus data sparepart
+    // 🟥 Menghapus sparepart
     public function destroy($id)
     {
         $sparepart = Sparepart::findOrFail($id);
