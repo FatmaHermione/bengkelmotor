@@ -3,11 +3,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Oli extends Model
+class Ban extends Model
 {
     use HasFactory;
-    protected $table = 'oli';
-    protected $primaryKey = 'idOli';
+    protected $table = 'ban';
+    protected $primaryKey = 'idBan';
     public $timestamps = false;
-    protected $fillable = ['namaOli', 'stok', 'harga', 'gambar'];
+    protected $fillable = ['namaBan', 'stok', 'harga', 'gambar'];
 }

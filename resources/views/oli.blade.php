@@ -6,163 +6,142 @@
     <title>AXERA MOTOR - Oli</title>
     <link rel="icon" href="{{ asset('img/logo.png')}} ">
     <link rel="stylesheet" href="{{ asset('css/oli.css') }}">
+    
+    <style>
+        /* CSS KHUSUS MODE ADMIN */
+        .action-mode-admin, .cancel-mode-btn { display: none; }
+        .admin-buttons-container { display: flex; gap: 10px; justify-content: center; }
+        .btn-edit-card { flex: 1; background: #ff9800; color: white; text-decoration: none; padding: 8px 0; border-radius: 8px; font-weight: bold; font-size: 14px; text-align: center; transition: 0.3s; }
+        .btn-edit-card:hover { background: #e65100; }
+        .btn-delete-card { flex: 1; background: #d32f2f; color: white; border: none; padding: 8px 0; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.3s; }
+        .btn-delete-card:hover { background: #b71c1c; }
+        .mode-active-banner { background-color: #333; color: white; text-align: center; padding: 10px; display: none; position: sticky; top: 0; z-index: 100; }
+    </style>
 </head>
 
 <body>
 
+{{-- BANNER ADMIN --}}
+<div id="modeBanner" class="mode-active-banner">
+    <span id="modeText">🔧 MODE ADMIN AKTIF</span>
+    <button onclick="switchMode('buy')" style="margin-left:10px; cursor:pointer; background:white; border:none; padding:2px 8px; border-radius:4px; font-weight:bold;">Selesai / Keluar</button>
+</div>
+
 <div class="top-bar">
-    <button class="back-btn" onclick="window.history.back()">⬅ Kembali</button>
-
+    <a href="{{ route('home') }}" class="back-btn" style="text-decoration:none;">⬅ Kembali</a>
     <button class="menu-btn" id="menuBtn">⋮</button>
-
     <div class="menu-dropdown" id="menuDropdown">
         <a href="/produk/tambah">➕ Tambah Produk</a>
-        <a href="/produk/edit">✏ Edit Produk</a>
-        <a href="/produk/hapus">🗑 Hapus Produk</a>
+        <a href="#" onclick="switchMode('admin'); return false;">⚙️ Atur Produk (Edit & Hapus)</a>
+        <a href="#" onclick="switchMode('buy'); return false;" class="cancel-mode-btn" style="color: red; border-top: 1px solid #ddd;">❌ Keluar Mode Admin</a>
     </div>
 </div>
 
 <div class="container">
     <h1>🛢️ Oli Motor</h1>
-
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="Cari produk...">
     </div>
 
     <div class="product-grid">
+        @if($olis->isEmpty())
+             <p style="color:white; text-align:center; width:100%; grid-column: 1/-1;">Belum ada data Oli di database.</p>
+        @else
+            @foreach ($olis as $o)
+            <div class="product-card">
+                <img src="{{ asset('img/' . ($o->gambar ? $o->gambar : 'no-image.jpg')) }}" 
+                     alt="{{ $o->namaOli }}" style="object-fit: contain; width: 100%; height: 150px;">
 
-        <!-- PRODUK 1 -->
-        <div class="product-card">
-            <img src="{{ asset('img/oli1.png') }}" alt="Oli 1">
-            <p class="product-name">OLI MOTOR SHELL ADVANCE AX7 SCOOTER 10W-30 (0.8L)</p>
-            <p class="price">Rp64.000</p>
+                <p class="product-name">{{ $o->namaOli }}</p>
+                <p class="price">Rp{{ number_format($o->harga, 0, ',', '.') }}</p>
 
-            <div class="quantity-control">
-                <button onclick="changeQty(this, -1)">-</button>
-                <input type="text" value="0" readonly>
-                <button onclick="changeQty(this, 1)">+</button>
+                {{-- MODE BELI --}}
+                <div class="quantity-control action-mode-buy">
+                    <button onclick="changeQty(this, -1)">-</button>
+                    <input type="text" value="0" readonly>
+                    <button onclick="changeQty(this, 1)">+</button>
+                </div>
+                <div class="action-mode-buy">
+                    <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
+                        @csrf
+                        <input type="hidden" name="id_transaksi" value="2">
+                        <input type="hidden" name="id_produk" value="{{ $o->idOli }}">
+                        <input type="hidden" name="jenis_barang" value="oli"> 
+                        <input type="hidden" class="qty-input" name="qty" value="0">
+                        <input type="hidden" name="subtotal" value="0">
+                        <button class="buy-btn">Beli</button>
+                    </form>
+                </div>
+
+                {{-- MODE ADMIN --}}
+                <div class="action-mode-admin">
+                    <div class="admin-buttons-container">
+                        <a href="{{ route('produk.edit', ['kategori' => 'oli', 'id' => $o->idOli]) }}" class="btn-edit-card">✏ Edit</a>
+                        <form action="{{ route('produk.destroy', ['kategori' => 'oli', 'id' => $o->idOli]) }}" method="POST" 
+                              onsubmit="return confirm('Yakin hapus {{ $o->namaOli }}?');" style="flex:1;">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn-delete-card">🗑 Hapus</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-
-            <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
-                @csrf
-                <input type="hidden" name="id_transaksi" value="2">
-                <input type="hidden" name="id_produk" value="201">
-                <input type="hidden" class="qty-input" name="qty" value="0">
-                <input type="hidden" name="subtotal" value="0">
-                <button class="buy-btn">Beli</button>
-            </form>
-        </div>
-
-        <!-- PRODUK 2 -->
-        <div class="product-card">
-            <img src="{{ asset('img/oli2.png') }}" alt="Oli 2">
-            <p class="product-name">MOTUL GP POWER 10W-40 4T MANUAL (1L)</p>
-            <p class="price">Rp74.000</p>
-
-            <div class="quantity-control">
-                <button onclick="changeQty(this, -1)">-</button>
-                <input type="text" value="0" readonly>
-                <button onclick="changeQty(this, 1)">+</button>
-            </div>
-
-            <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
-                @csrf
-                <input type="hidden" name="id_transaksi" value="2">
-                <input type="hidden" name="id_produk" value="202">
-                <input type="hidden" class="qty-input" name="qty" value="0">
-                <input type="hidden" name="subtotal" value="0">
-                <button class="buy-btn">Beli</button>
-            </form>
-        </div>
-
-        <!-- PRODUK 3 -->
-        <div class="product-card">
-            <img src="{{ asset('img/oli3.png') }}" alt="Oli 3">
-            <p class="product-name">MOTUL SCOOTER POWER LE 4T 5W-40 (0.8L)</p>
-            <p class="price">Rp82.000</p>
-
-            <div class="quantity-control">
-                <button onclick="changeQty(this, -1)">-</button>
-                <input type="text" value="0" readonly>
-                <button onclick="changeQty(this, 1)">+</button>
-            </div>
-
-            <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
-                @csrf
-                <input type="hidden" name="id_transaksi" value="2">
-                <input type="hidden" name="id_produk" value="203">
-                <input type="hidden" class="qty-input" name="qty" value="0">
-                <input type="hidden" name="subtotal" value="0">
-                <button class="buy-btn">Beli</button>
-            </form>
-        </div>
-
-        <!-- PRODUK 4 -->
-        <div class="product-card">
-            <img src="{{ asset('img/oli4.png') }}" alt="Oli 4">
-            <p class="product-name">SHELL ADVANCE AX5 SCOOTER 10W-30 (0.8L)</p>
-            <p class="price">Rp46.000</p>
-
-            <div class="quantity-control">
-                <button onclick="changeQty(this, -1)">-</button>
-                <input type="text" value="0" readonly>
-                <button onclick="changeQty(this, 1)">+</button>
-            </div>
-
-            <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
-                @csrf
-                <input type="hidden" name="id_transaksi" value="2">
-                <input type="hidden" name="id_produk" value="204">
-                <input type="hidden" class="qty-input" name="qty" value="0">
-                <input type="hidden" name="subtotal" value="0">
-                <button class="buy-btn">Beli</button>
-            </form>
-        </div>
-
+            @endforeach
+        @endif
     </div>
 </div>
 
 <script>
+// Logic JS sama persis dengan Gear
 document.getElementById("menuBtn").onclick = function() {
     let menu = document.getElementById("menuDropdown");
     menu.style.display = menu.style.display === "block" ? "none" : "block";
 };
-
 document.getElementById("searchInput").addEventListener("keyup", function() {
     let filter = this.value.toLowerCase();
     let cards = document.getElementsByClassName("product-card");
-
     for (let card of cards) {
         let name = card.querySelector(".product-name").innerText.toLowerCase();
         card.style.display = name.includes(filter) ? "" : "none";
     }
 });
-</script>
+function switchMode(mode) {
+    let buyElements = document.querySelectorAll('.action-mode-buy');
+    let adminElements = document.querySelectorAll('.action-mode-admin');
+    let menuDropdown = document.getElementById("menuDropdown");
+    let banner = document.getElementById("modeBanner");
+    let cancelBtns = document.querySelectorAll('.cancel-mode-btn');
 
-<script>
+    buyElements.forEach(el => el.style.display = 'none');
+    adminElements.forEach(el => el.style.display = 'none');
+    banner.style.display = 'none';
+    cancelBtns.forEach(el => el.style.display = 'none');
+
+    if (mode === 'buy') {
+        buyElements.forEach(el => el.style.display = 'block');
+        menuDropdown.style.display = 'none';
+    } else if (mode === 'admin') {
+        adminElements.forEach(el => el.style.display = 'block');
+        banner.style.display = 'block';
+        cancelBtns.forEach(el => el.style.display = 'block');
+        menuDropdown.style.display = 'none';
+    }
+}
 function changeQty(button, delta) {
     const input = button.parentElement.querySelector('input[type="text"]');
-    const hiddenInput = button.parentElement.parentElement.querySelector('.qty-input');
+    const form = button.closest('.product-card').querySelector('form');
     let value = parseInt(input.value);
     value = Math.max(0, value + delta);
     input.value = value;
-    hiddenInput.value = value;
-
+    form.querySelector('.qty-input').value = value;
     const priceText = button.closest('.product-card').querySelector('.price').innerText;
     const price = parseInt(priceText.replace(/[^0-9]/g, ''));
-    const form = button.closest('.product-card').querySelector('form');
     form.querySelector('input[name="subtotal"]').value = price * value;
 }
-
 function validateQty(form) {
     const qty = parseInt(form.querySelector('.qty-input').value);
-    if (qty === 0) {
-        alert('Jumlah barang harus lebih dari 0 sebelum membeli!');
-        return false;
-    }
+    if (qty === 0) { alert('Jumlah barang harus lebih dari 0 sebelum membeli!'); return false; }
     return true;
 }
 </script>
-
 </body>
 </html>

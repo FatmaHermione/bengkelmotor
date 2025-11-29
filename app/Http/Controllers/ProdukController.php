@@ -3,138 +3,161 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Produk;
-use App\Models\Kategori;
-use Illuminate\Support\Facades\Storage;
+use App\Models\Oli;
+use App\Models\Ban;
+use App\Models\Gear;
+use App\Models\Sparepart;
 
 class ProdukController extends Controller
 {
-    /**
-     * Menampilkan daftar produk.
-     */
-    public function index()
-    {
-        // Mengambil semua data produk
-        $produks = Produk::all();
-        
-        // Kembalikan ke view list (atau bisa redirect ke route 'oli' jika tidak pakai list admin)
-        return view('produk_list', compact('produks'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Menampilkan Form Tambah
     public function create()
     {
-        $kategoris = Kategori::all(); 
-        return view('produk_tambah', compact('kategoris'));
+        return view('produk_tambah'); 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Menyimpan Data Baru
     public function store(Request $request)
     {
         $request->validate([
             'nama_produk' => 'required|string|max:100',
-            // Pastikan nama tabel di database adalah 'kategori'
-            'id_kategori' => 'required|exists:kategori,id_kategori', 
-            'stok'        => 'required|integer|min:0',
-            'harga'       => 'required|numeric|min:0',
-            'gambar'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'deskripsi'   => 'nullable|string'
+            'kategori'    => 'required|in:oli,ban,gear,sparepart',
+            'harga'       => 'required|numeric',
+            'stok'        => 'required|integer',
+            'gambar'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $data = $request->all();
-
-        // Hapus token agar tidak ikut tersimpan (walaupun fillable melindunginya, ini best practice)
-        unset($data['_token']); 
-
+        // Upload Gambar
+        $filename = null;
         if ($request->hasFile('gambar')) {
-            $path = $request->file('gambar')->store('produks', 'public');
-            $data['gambar'] = $path;
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            
+            $destinationPath = public_path('img');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0777, true);
+            }
+            $file->move($destinationPath, $filename);
         }
-        
-        Produk::create($data);
 
-        // Redirect ke halaman OLI setelah simpan
-        return redirect()->route('oli')->with('success', 'Produk berhasil ditambahkan.');
+        $kategori = $request->kategori;
+
+        // Simpan Data
+        if ($kategori == 'oli') {
+            Oli::create(['namaOli' => $request->nama_produk, 'harga' => $request->harga, 'stok' => $request->stok, 'gambar' => $filename]);
+            return redirect()->route('oli')->with('success', 'Produk Oli Berhasil Ditambahkan');
+
+        } elseif ($kategori == 'ban') {
+            Ban::create(['namaBan' => $request->nama_produk, 'harga' => $request->harga, 'stok' => $request->stok, 'gambar' => $filename]);
+            return redirect()->route('ban')->with('success', 'Produk Ban Berhasil Ditambahkan');
+
+        } elseif ($kategori == 'gear') {
+            Gear::create(['namaGear' => $request->nama_produk, 'harga' => $request->harga, 'stok' => $request->stok, 'gambar' => $filename]);
+            return redirect()->route('gear')->with('success', 'Produk Gear Berhasil Ditambahkan');
+
+        } elseif ($kategori == 'sparepart') {
+            Sparepart::create(['namaSparepart' => $request->nama_produk, 'harga' => $request->harga, 'stok' => $request->stok, 'gambar' => $filename]);
+            return redirect()->route('sparepart.index')->with('success', 'Sparepart Berhasil Ditambahkan');
+        }
+
+        return redirect()->back()->with('error', 'Kategori tidak valid');
     }
 
-    /**
-     * Display the specified resource.
-     * FUNGSI INI DITAMBAHKAN UNTUK MENCEGAH ERROR "Method show does not exist"
-     */
-    public function show($id)
+    // Menampilkan Form Edit
+    public function edit($kategori, $id)
     {
-        // Jika ada link salah (misal /produk/edit tanpa ID), Laravel akan lari ke sini.
-        // Kita lempar balik user ke halaman utama agar tidak error.
-        return redirect()->route('oli');
+        $produk = null;
+        $nama_produk = '';
+
+        if ($kategori == 'oli') {
+            $produk = Oli::findOrFail($id);
+            $nama_produk = $produk->namaOli;
+        } elseif ($kategori == 'ban') {
+            $produk = Ban::findOrFail($id);
+            $nama_produk = $produk->namaBan;
+        } elseif ($kategori == 'gear') {
+            $produk = Gear::findOrFail($id);
+            $nama_produk = $produk->namaGear;
+        } elseif ($kategori == 'sparepart') {
+            $produk = Sparepart::findOrFail($id);
+            $nama_produk = $produk->namaSparepart;
+        } else {
+            return redirect()->back()->with('error', 'Kategori tidak ditemukan');
+        }
+
+        return view('produk_edit', compact('produk', 'kategori', 'nama_produk'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        $produk = Produk::findOrFail($id);
-        $kategoris = Kategori::all();
-        return view('produk_edit', compact('produk', 'kategoris'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
+    // Update Data
+    public function update(Request $request, $kategori, $id)
     {
         $request->validate([
             'nama_produk' => 'required|string|max:100',
-            'id_kategori' => 'required|exists:kategori,id_kategori',
-            'harga'       => 'required|numeric|min:0',
-            'stok'        => 'required|integer|min:0',
-            'gambar'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'deskripsi'   => 'nullable|string'
+            'harga'       => 'required|numeric',
+            'stok'        => 'required|integer',
+            'gambar'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $produk = Produk::findOrFail($id);
+        $model = null;
+        if ($kategori == 'oli') $model = Oli::findOrFail($id);
+        elseif ($kategori == 'ban') $model = Ban::findOrFail($id);
+        elseif ($kategori == 'gear') $model = Gear::findOrFail($id);
+        elseif ($kategori == 'sparepart') $model = Sparepart::findOrFail($id);
 
-        $data = [
-            'nama_produk' => $request->nama_produk,
-            'id_kategori' => $request->id_kategori,
-            'harga'       => $request->harga,
-            'stok'        => $request->stok,
-            'deskripsi'   => $request->deskripsi,
+        $dataUpdate = [
+            'harga' => $request->harga,
+            'stok'  => $request->stok,
         ];
 
+        // Mapping Nama Kolom
+        if ($kategori == 'oli') $dataUpdate['namaOli'] = $request->nama_produk;
+        elseif ($kategori == 'ban') $dataUpdate['namaBan'] = $request->nama_produk;
+        elseif ($kategori == 'gear') $dataUpdate['namaGear'] = $request->nama_produk;
+        elseif ($kategori == 'sparepart') $dataUpdate['namaSparepart'] = $request->nama_produk;
+
+        // Update Gambar
         if ($request->hasFile('gambar')) {
-            // Hapus gambar lama jika ada
-            if ($produk->gambar && Storage::disk('public')->exists($produk->gambar)) {
-                Storage::disk('public')->delete($produk->gambar);
+            if ($model->gambar && file_exists(public_path('img/' . $model->gambar))) {
+                unlink(public_path('img/' . $model->gambar));
             }
-            $path = $request->file('gambar')->store('produks', 'public');
-            $data['gambar'] = $path;
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('img'), $filename);
+            $dataUpdate['gambar'] = $filename;
         }
 
-        $produk->update($data);
+        $model->update($dataUpdate);
 
-        // Redirect ke halaman OLI setelah update
-        return redirect()->route('oli')->with('success', 'Data produk berhasil diperbarui.');
+        // 🔥 LOGIKA REDIRECT YANG BENAR (Konsisten dengan Destroy)
+        $routeRedirect = $kategori;
+        if ($kategori == 'sparepart') {
+            $routeRedirect = 'sparepart.index';
+        }
+
+        return redirect()->route($routeRedirect)->with('success', 'Produk berhasil diperbarui!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    // Hapus Data
+    public function destroy($kategori, $id)
     {
-        $produk = Produk::findOrFail($id);
-        
-        // Hapus gambar dari penyimpanan jika ada
-        if ($produk->gambar && Storage::disk('public')->exists($produk->gambar)) {
-            Storage::disk('public')->delete($produk->gambar);
+        $model = null;
+        if ($kategori == 'oli') $model = Oli::findOrFail($id);
+        elseif ($kategori == 'ban') $model = Ban::findOrFail($id);
+        elseif ($kategori == 'gear') $model = Gear::findOrFail($id);
+        elseif ($kategori == 'sparepart') $model = Sparepart::findOrFail($id);
+
+        if ($model->gambar && file_exists(public_path('img/' . $model->gambar))) {
+            unlink(public_path('img/' . $model->gambar));
         }
 
-        $produk->delete();
+        $model->delete();
 
-        return redirect()->route('oli')->with('success', 'Produk berhasil dihapus.');
+        // 🔥 LOGIKA REDIRECT YANG BENAR
+        $routeRedirect = $kategori;
+        if ($kategori == 'sparepart') {
+            $routeRedirect = 'sparepart.index';
+        }
+
+        return redirect()->route($routeRedirect)->with('success', 'Produk berhasil dihapus!');
     }
 }

@@ -5,114 +5,139 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AXERA MOTOR - Sparepart</title>
     <link rel="icon" href="{{ asset('img/logo.png')}} ">
-    <link rel="stylesheet" href="{{ asset('css/oli.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/sparepart.css') }}">
+    
+    <style>
+        /* CSS KHUSUS MODE ADMIN */
+        .action-mode-admin, .cancel-mode-btn { display: none; }
+        .admin-buttons-container { display: flex; gap: 10px; justify-content: center; }
+        .btn-edit-card { flex: 1; background: #ff9800; color: white; text-decoration: none; padding: 8px 0; border-radius: 8px; font-weight: bold; font-size: 14px; text-align: center; transition: 0.3s; }
+        .btn-edit-card:hover { background: #e65100; }
+        .btn-delete-card { flex: 1; background: #d32f2f; color: white; border: none; padding: 8px 0; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.3s; }
+        .btn-delete-card:hover { background: #b71c1c; }
+        .mode-active-banner { background-color: #333; color: white; text-align: center; padding: 10px; display: none; position: sticky; top: 0; z-index: 100; }
+    </style>
 </head>
 
 <body>
 
-{{-- ===== TOP BAR SEPERTI OLI ===== --}}
+<div id="modeBanner" class="mode-active-banner">
+    <span id="modeText">🔧 MODE ADMIN AKTIF</span>
+    <button onclick="switchMode('buy')" style="margin-left:10px; cursor:pointer; background:white; border:none; padding:2px 8px; border-radius:4px; font-weight:bold;">Selesai / Keluar</button>
+</div>
+
 <div class="top-bar">
-    <button class="back-btn" onclick="window.history.back()">⬅ Kembali</button>
-
+    <a href="{{ route('home') }}" class="back-btn" style="text-decoration:none;">⬅ Kembali</a>
     <button class="menu-btn" id="menuBtn">⋮</button>
-
     <div class="menu-dropdown" id="menuDropdown">
         <a href="/produk/tambah">➕ Tambah Produk</a>
-        <a href="/produk/edit">✏ Edit Produk</a>
-        <a href="/produk/hapus">🗑 Hapus Produk</a>
+        <a href="#" onclick="switchMode('admin'); return false;">⚙️ Atur Produk (Edit & Hapus)</a>
+        <a href="#" onclick="switchMode('buy'); return false;" class="cancel-mode-btn" style="color: red; border-top: 1px solid #ddd;">❌ Keluar Mode Admin</a>
     </div>
 </div>
 
 <div class="container">
-
     <h1>🔧 Sparepart Motor</h1>
-
-    {{-- SEARCH SAMA DENGAN OLI --}}
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="Cari produk...">
     </div>
 
-    {{-- GRID PRODUK SPAREPART --}}
     <div class="product-grid">
-
         @foreach ($spareparts as $s)
         <div class="product-card">
+            <img src="{{ asset('img/' . ($s->gambar ? $s->gambar : 'no-image.jpg')) }}" 
+                 alt="{{ $s->namaSparepart }}" style="object-fit: contain; width: 100%; height: 150px;">
 
-            {{-- GAMBAR (DIPERBAIKI SUPAYA TIDAK HILANG) --}}
-            <img src="{{ asset('img/' . $s->gambar) }}" alt="{{ $s->nama }}">
-
-            {{-- NAMA --}}
-            <p class="product-name">{{ $s->nama }}</p>
-
-            {{-- HARGA --}}
+            <p class="product-name">{{ $s->namaSparepart }}</p>
             <p class="price">Rp{{ number_format($s->harga, 0, ',', '.') }}</p>
 
-            {{-- KONTROL JUMLAH --}}
-            <div class="quantity-control">
+            {{-- MODE BELI --}}
+            <div class="quantity-control action-mode-buy">
                 <button onclick="changeQty(this, -1)">-</button>
                 <input type="text" value="0" readonly>
                 <button onclick="changeQty(this, 1)">+</button>
             </div>
+            <div class="action-mode-buy">
+                <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
+                    @csrf
+                    <input type="hidden" name="id_transaksi" value="2">
+                    <input type="hidden" name="id_produk" value="{{ $s->idSparepart }}">
+                    {{-- Di sini tidak perlu hidden jenis_barang karena controller sparepart mungkin belum pakai sistem itu jika belum diupdate, 
+                         tapi kalau sudah seragam, tambahkan: <input type="hidden" name="jenis_barang" value="sparepart"> --}}
+                    <input type="hidden" class="qty-input" name="qty" value="0">
+                    <input type="hidden" name="subtotal" value="0">
+                    <button class="buy-btn">Beli</button>
+                </form>
+            </div>
 
-            {{-- BELI --}}
-            <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
-                @csrf
-                <input type="hidden" name="id_transaksi" value="2">
-                <input type="hidden" name="id_produk" value="{{ $s->id }}">
-                <input type="hidden" class="qty-input" name="qty" value="0">
-                <input type="hidden" name="subtotal" value="0">
-                <button class="buy-btn">Beli</button>
-            </form>
-
+            {{-- MODE ADMIN --}}
+            <div class="action-mode-admin">
+                <div class="admin-buttons-container">
+                    <a href="{{ route('produk.edit', ['kategori' => 'sparepart', 'id' => $s->idSparepart]) }}" class="btn-edit-card">✏ Edit</a>
+                    <form action="{{ route('produk.destroy', ['kategori' => 'sparepart', 'id' => $s->idSparepart]) }}" method="POST" 
+                          onsubmit="return confirm('Yakin hapus {{ $s->namaSparepart }}?');" style="flex:1;">
+                        @csrf @method('DELETE')
+                        <button type="submit" class="btn-delete-card">🗑 Hapus</button>
+                    </form>
+                </div>
+            </div>
         </div>
         @endforeach
-
     </div>
 </div>
 
-{{-- ===== SCRIPT DROPDOWN ===== --}}
 <script>
+// JS SAMA SEPERTI DI ATAS
 document.getElementById("menuBtn").onclick = function() {
     let menu = document.getElementById("menuDropdown");
     menu.style.display = menu.style.display === "block" ? "none" : "block";
 };
-
 document.getElementById("searchInput").addEventListener("keyup", function() {
     let filter = this.value.toLowerCase();
     let cards = document.getElementsByClassName("product-card");
-
     for (let card of cards) {
         let name = card.querySelector(".product-name").innerText.toLowerCase();
         card.style.display = name.includes(filter) ? "" : "none";
     }
 });
-</script>
+function switchMode(mode) {
+    let buyElements = document.querySelectorAll('.action-mode-buy');
+    let adminElements = document.querySelectorAll('.action-mode-admin');
+    let menuDropdown = document.getElementById("menuDropdown");
+    let banner = document.getElementById("modeBanner");
+    let cancelBtns = document.querySelectorAll('.cancel-mode-btn');
 
-{{-- ===== SCRIPT QTY ===== --}}
-<script>
+    buyElements.forEach(el => el.style.display = 'none');
+    adminElements.forEach(el => el.style.display = 'none');
+    banner.style.display = 'none';
+    cancelBtns.forEach(el => el.style.display = 'none');
+
+    if (mode === 'buy') {
+        buyElements.forEach(el => el.style.display = 'block');
+        menuDropdown.style.display = 'none';
+    } else if (mode === 'admin') {
+        adminElements.forEach(el => el.style.display = 'block');
+        banner.style.display = 'block';
+        cancelBtns.forEach(el => el.style.display = 'block');
+        menuDropdown.style.display = 'none';
+    }
+}
 function changeQty(button, delta) {
     const input = button.parentElement.querySelector('input[type="text"]');
-    const hiddenInput = button.parentElement.parentElement.querySelector('.qty-input');
+    const form = button.closest('.product-card').querySelector('form');
     let value = parseInt(input.value);
     value = Math.max(0, value + delta);
     input.value = value;
-    hiddenInput.value = value;
-
+    form.querySelector('.qty-input').value = value;
     const priceText = button.closest('.product-card').querySelector('.price').innerText;
     const price = parseInt(priceText.replace(/[^0-9]/g, ''));
-    const form = button.closest('.product-card').querySelector('form');
     form.querySelector('input[name="subtotal"]').value = price * value;
 }
-
 function validateQty(form) {
     const qty = parseInt(form.querySelector('.qty-input').value);
-    if (qty === 0) {
-        alert('Jumlah barang harus lebih dari 0 sebelum membeli!');
-        return false;
-    }
+    if (qty === 0) { alert('Jumlah barang harus lebih dari 0 sebelum membeli!'); return false; }
     return true;
 }
 </script>
-
 </body>
 </html>

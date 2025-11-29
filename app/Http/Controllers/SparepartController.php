@@ -4,47 +4,50 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Sparepart;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File; // Ganti Storage dengan File untuk manipulasi folder public
 
 class SparepartController extends Controller
 {
-    // 🟧 Menampilkan semua data + form tambah dalam 1 halaman saja
     public function index()
     {
         $spareparts = Sparepart::all();
         return view('sparepart', compact('spareparts'));
     }
 
-    // 🟦 DITAMBAHKAN: show (dibutuhkan oleh Route::resource)
     public function show($id)
     {
-        // Tidak pakai halaman show → langsung kembali ke index
         return redirect()->route('sparepart.index');
     }
 
-    // 🟩 DITAMBAHKAN: edit (jika suatu saat ingin popup edit)
     public function edit($id)
     {
         $sparepart = Sparepart::findOrFail($id);
         return view('sparepart_edit', compact('sparepart'));
     }
 
-    // 🟦 Menyimpan data baru (form di halaman index)
+    // 🟦 SIMPAN DATA BARU
     public function store(Request $request)
     {
         $request->validate([
             'namaSparepart' => 'required|string|max:100',
-            'stok' => 'required|integer',
-            'harga' => 'required|numeric',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'stok'          => 'required|integer',
+            'harga'         => 'required|numeric',
+            'gambar'        => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         $data = $request->only(['namaSparepart', 'stok', 'harga']);
 
+        // LOGIKA BARU UNTUK GAMBAR
         if ($request->hasFile('gambar')) {
-            // Simpan gambar
-            $path = $request->file('gambar')->store('spareparts', 'public');
-            $data['gambar'] = $path;
+            $file = $request->file('gambar');
+            // Buat nama unik: waktu_namaasli.jpg (misal: 171999_ban.jpg)
+            $filename = time() . '_' . $file->getClientOriginalName();
+            
+            // Pindahkan file ke folder public/img
+            $file->move(public_path('img'), $filename);
+            
+            // Simpan nama file saja ke database
+            $data['gambar'] = $filename;
         }
 
         Sparepart::create($data);
@@ -52,30 +55,31 @@ class SparepartController extends Controller
         return redirect()->route('sparepart.index')->with('success', 'Data sparepart berhasil ditambahkan.');
     }
 
-    // 🟫 Update data tanpa membuat view edit baru
+    // 🟫 UPDATE DATA
     public function update(Request $request, $id)
     {
         $request->validate([
             'namaSparepart' => 'required|string|max:100',
-            'stok' => 'required|integer',
-            'harga' => 'required|numeric',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'stok'          => 'required|integer',
+            'harga'         => 'required|numeric',
+            'gambar'        => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         $sparepart = Sparepart::findOrFail($id);
-
         $data = $request->only(['namaSparepart', 'stok', 'harga']);
 
         if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
 
-            // Hapus gambar lama
-            if ($sparepart->gambar && Storage::disk('public')->exists($sparepart->gambar)) {
-                Storage::disk('public')->delete($sparepart->gambar);
+            // Hapus gambar lama jika ada di folder public/img
+            if ($sparepart->gambar && File::exists(public_path('img/' . $sparepart->gambar))) {
+                File::delete(public_path('img/' . $sparepart->gambar));
             }
 
-            // Simpan gambar baru
-            $path = $request->file('gambar')->store('spareparts', 'public');
-            $data['gambar'] = $path;
+            // Upload gambar baru ke public/img
+            $file->move(public_path('img'), $filename);
+            $data['gambar'] = $filename;
         }
 
         $sparepart->update($data);
@@ -83,14 +87,13 @@ class SparepartController extends Controller
         return redirect()->route('sparepart.index')->with('success', 'Data sparepart berhasil diperbarui.');
     }
 
-    // 🟥 Menghapus sparepart
     public function destroy($id)
     {
         $sparepart = Sparepart::findOrFail($id);
 
-        // Hapus gambar jika ada
-        if ($sparepart->gambar && Storage::disk('public')->exists($sparepart->gambar)) {
-            Storage::disk('public')->delete($sparepart->gambar);
+        // Hapus gambar dari folder public/img
+        if ($sparepart->gambar && File::exists(public_path('img/' . $sparepart->gambar))) {
+            File::delete(public_path('img/' . $sparepart->gambar));
         }
 
         $sparepart->delete();

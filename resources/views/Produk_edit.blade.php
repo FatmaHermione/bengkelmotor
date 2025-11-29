@@ -2,115 +2,71 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Produk - AXERA MOTOR</title>
-    <link rel="icon" href="{{ asset('img/logo.png') }}">
+    <title>Edit Produk - {{ ucfirst($kategori) }}</title>
     <link rel="stylesheet" href="{{ asset('css/produk-tambah.css') }}">
     <style>
-        /* Tambahan style khusus untuk preview gambar di halaman edit */
-        .img-preview {
-            margin-top: 10px;
-            max-width: 150px;
-            border: 1px solid #ccc;
-            padding: 5px;
-            border-radius: 5px;
-        }
-        .btn-submit {
-            background-color: #ffc107; /* Warna kuning khas tombol Edit */
-            color: black;
-        }
-        .btn-submit:hover {
-            background-color: #e0a800;
-        }
+        /* CSS Tambahan sama seperti form tambah */
+        body { font-family: sans-serif; background: #f4f4f4; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        .btn-submit { width: 100%; padding: 12px; background: #ff9800; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px;}
+        .btn-submit:hover { background: #e68900; }
+        .img-preview { margin-top: 10px; max-width: 150px; border: 1px solid #ccc; padding: 5px; border-radius: 5px;}
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>✏️ Edit Produk</h2>
+    {{-- LOGIKA TOMBOL KEMBALI YANG BENAR --}}
+@php
+    $routeKembali = $kategori;
+    if ($kategori == 'sparepart') {
+        $routeKembali = 'sparepart.index';
+    }
+@endphp
 
-    {{-- Tampilkan error validasi --}}
-    @if ($errors->any())
-        <div class="alert-error">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+<a href="{{ route($routeKembali) }}" style="text-decoration: none; color: #007bff;">⬅ Batal & Kembali</a>
+    
+    <h2 style="text-align: center;">✏ Edit Produk {{ ucfirst($kategori) }}</h2>
 
-    {{-- 
-        PERUBAHAN 1: Action diarahkan ke route update
-        PERUBAHAN 2: Menambahkan ID produk di dalam route
-    --}}
-    <form action="{{ route('produk.update', $produk->id) }}" method="POST" enctype="multipart/form-data">
+    {{-- Form mengarah ke route UPDATE --}}
+    <form action="{{ route('produk.update', ['kategori' => $kategori, 'id' => $produk->getKey()]) }}" method="POST" enctype="multipart/form-data">
         @csrf
-        {{-- PERUBAHAN 3: Tambahkan method PUT karena HTML form standar tidak mendukung PUT --}}
-        @method('PUT')
+        @method('PUT') {{-- PENTING: Mengubah method POST menjadi PUT untuk Update --}}
 
         {{-- Nama Produk --}}
         <div class="form-group">
-            <label for="nama_produk">Nama Produk</label>
-            {{-- PERUBAHAN 4: value diisi dengan data lama ($produk->nama_produk) --}}
-            <input type="text" class="form-control" id="nama_produk" name="nama_produk" 
-                   value="{{ old('nama_produk', $produk->nama_produk) }}" required>
-        </div>
-
-        {{-- Kategori --}}
-        <div class="form-group">
-            <label for="id_kategori">Kategori</label>
-            <select class="form-select" id="id_kategori" name="id_kategori" required>
-                <option value="">Pilih Kategori</option>
-                @foreach ($kategoris as $kategori)
-                    <option value="{{ $kategori->id_kategori }}" 
-                        {{-- PERUBAHAN 5: Logika untuk memilih otomatis kategori yang sudah tersimpan --}}
-                        {{ old('id_kategori', $produk->id_kategori) == $kategori->id_kategori ? 'selected' : '' }}>
-                        {{ $kategori->nama_kategori }}
-                    </option>
-                @endforeach
-            </select>
+            <label>Nama Produk</label>
+            {{-- $nama_produk dikirim dari controller --}}
+            <input type="text" name="nama_produk" value="{{ $nama_produk }}" required>
         </div>
         
         {{-- Harga --}}
         <div class="form-group">
-            <label for="harga">Harga (Rp)</label>
-            <input type="number" class="form-control" id="harga" name="harga" 
-                   value="{{ old('harga', $produk->harga) }}" required min="0">
+            <label>Harga (Rp)</label>
+            <input type="number" name="harga" value="{{ $produk->harga }}" required>
         </div>  
 
         {{-- Stok --}}
         <div class="form-group">
-            <label for="stok">Stok</label>
-            <input type="number" class="form-control" id="stok" name="stok" 
-                   value="{{ old('stok', $produk->stok) }}" required min="0">
-        </div>
-
-        {{-- Deskripsi (Jika ada di database) --}}
-        <div class="form-group">
-            <label for="deskripsi">Deskripsi (Opsional)</label>
-            <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3">{{ old('deskripsi', $produk->deskripsi) }}</textarea>
+            <label>Stok</label>
+            <input type="number" name="stok" value="{{ $produk->stok }}" required>
         </div>
 
         {{-- Gambar --}}
         <div class="form-group">
-            <label for="gambar">Gambar (Biarkan kosong jika tidak ingin mengganti)</label>
-            <input type="file" class="form-control" id="gambar" name="gambar">
-
-            {{-- PERUBAHAN 6: Menampilkan preview gambar saat ini --}}
+            <label>Ganti Gambar (Opsional)</label>
+            <input type="file" name="gambar" accept="image/*">
+            
             @if($produk->gambar)
-                <div style="margin-top: 10px;">
-                    <small>Gambar Saat Ini:</small><br>
-                    <img src="{{ asset('storage/' . $produk->gambar) }}" alt="Preview Gambar" class="img-preview">
-                </div>
+                <p style="font-size: 12px; color: #666;">Gambar Saat Ini:</p>
+                <img src="{{ asset('img/' . $produk->gambar) }}" class="img-preview">
             @endif
         </div>
 
         <button type="submit" class="btn-submit">Simpan Perubahan</button>
-        
-        <div style="text-align: center; margin-top: 15px;">
-            <a href="{{ route('oli') }}" style="text-decoration: none; color: #666;">Batal</a>
-        </div>
     </form>
 </div>
 

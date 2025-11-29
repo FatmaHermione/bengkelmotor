@@ -5,182 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AXERA MOTOR - Gear</title>
     <link rel="icon" href="{{ asset('img/logo.png')}} ">
-    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('css/gear.css') }}">
+    
     <style>
-    /* ================= BACKGROUND ORANYE SAMA SEPERTI HOME ================= */
-    body {
-        background: linear-gradient(135deg, #ff9800, #ffb74d);
-        font-family: Arial, sans-serif;
-        min-height: 100vh;
-        margin: 0;
-    }
+        /* CSS KHUSUS MODE ADMIN */
+        
+        /* Sembunyikan mode admin secara default */
+        .action-mode-admin, 
+        .cancel-mode-btn {
+            display: none;
+        }
 
-    /* HEADER */
-    .top-bar {
-        display: flex;
-        justify-content: space-between;
-        padding: 15px 25px;
-        align-items: center;
-    }
-    .back-btn {
-        background:#1e88e5;
-        color:white;
-        border:none;
-        padding:8px 18px;
-        border-radius:8px;
-        cursor:pointer;
-    }
-    .menu-btn {
-        background:none;
-        border:none;
-        font-size:28px;
-        color:white;
-        cursor:pointer;
-    }
-    .menu-dropdown {
-        display:none;
-        position:absolute;
-        right:25px;
-        top:60px;
-        background:white;
-        width:180px;
-        border-radius:10px;
-        box-shadow:0 4px 12px rgba(0,0,0,0.3);
-        overflow:hidden;
-    }
-    .menu-dropdown a {
-        display:block;
-        padding:12px;
-        color:black;
-        text-decoration:none;
-    }
-    .menu-dropdown a:hover {
-        background:#f0f0f0;
-    }
+        /* Container tombol Admin (Supaya Edit & Hapus sejajar) */
+        .admin-buttons-container {
+            display: flex;
+            gap: 10px; /* Jarak antar tombol */
+            justify-content: center;
+        }
 
-    /* SEARCH */
-    .search-box {
-        text-align:center;
-        margin-bottom:20px;
-    }
-    .search-box input {
-        width:50%;
-        padding:12px;
-        border-radius:10px;
-        border:none;
-        font-size:16px;
-    }
+        /* Tombol Edit (Kecil) */
+        .btn-edit-card {
+            flex: 1; /* Lebar otomatis */
+            background: #ff9800;
+            color: white;
+            text-decoration: none;
+            padding: 8px 0;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .btn-edit-card:hover {
+            background: #e65100;
+        }
 
-    /* PRODUK */
-    .container {
-        padding: 20px;
-    }
-    h1 {
-        color: white;
-        text-shadow: 1px 1px 3px black;
-        margin-bottom: 20px;
-    }
-    .product-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 25px;
-    }
+        /* Tombol Hapus (Kecil) */
+        .btn-delete-card {
+            flex: 1; /* Lebar otomatis */
+            background: #d32f2f;
+            color: white;
+            border: none;
+            padding: 8px 0;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-delete-card:hover {
+            background: #b71c1c;
+        }
 
-    /* ========= 🎨 KOTAK PRODUK DIGANTI WARNA YG LEBIH COCOK ========= */
-    .product-card {
-        background: rgba(255, 255, 255, 0.85); /* putih lembut transparan */
-        border-radius: 15px;
-        border: 1px solid rgba(255, 152, 0, 0.35); /* oranye tipis */
-        backdrop-filter: blur(5px); /* efek modern */
-        box-shadow: 0 6px 15px rgba(0,0,0,0.18);
-        padding: 20px;
-        text-align: center;
-        transition: 0.3s;
-    }
-
-    .product-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.28);
-    }
-
-    .product-card img {
-        width: 180px;
-        height: 180px;
-        object-fit: contain;
-        margin-bottom: 10px;
-    }
-    .product-name {
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-    .price {
-        color: #d32f2f;
-        font-size: 1.1em;
-        margin-bottom: 10px;
-    }
-
-    .quantity-control {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-    .quantity-control button {
-        width: 30px;
-        height: 30px;
-        font-size: 18px;
-        font-weight: bold;
-        border: none;
-        background: #555;
-        color: #fff;
-        border-radius: 50%;
-        cursor: pointer;
-    }
-    .quantity-control input {
-        width: 40px;
-        text-align: center;
-        border: none;
-        background: #f0f0f0;
-        margin: 0 5px;
-        font-size: 16px;
-    }
-
-    .buy-btn {
-        background: #1e88e5;
-        color: #fff;
-        border: none;
-        padding: 10px 25px;
-        border-radius: 25px;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-    .buy-btn:hover {
-        background: #1565c0;
-    }
-</style>
+        /* Banner Mode Aktif */
+        .mode-active-banner {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            display: none;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="top-bar">
-    <button class="back-btn" onclick="window.history.back()">⬅ Kembali</button>
-
-    <button class="menu-btn" id="menuBtn">⋮</button>
-
-    <div class="menu-dropdown" id="menuDropdown">
-        <a href="/produk/tambah">➕ Tambah Produk</a>
-        <a href="/produk/edit">✏ Edit Produk</a>
-        <a href="/produk/hapus">🗑 Hapus Produk</a>
-    </div>
+{{-- BANNER INFORMASI MODE --}}
+<div id="modeBanner" class="mode-active-banner">
+    <span id="modeText">🔧 MODE ADMIN AKTIF</span>
+    <button onclick="switchMode('buy')" style="margin-left:10px; cursor:pointer; background:white; border:none; padding:2px 8px; border-radius:4px; font-weight:bold;">Selesai / Keluar</button>
 </div>
 
-<script>
-document.getElementById("menuBtn").onclick = function() {
-    let menu = document.getElementById("menuDropdown");
-    menu.style.display = menu.style.display === "block" ? "none" : "block";
-};
-</script>
+{{-- TOP BAR --}}
+<div class="top-bar">
+    <a href="{{ route('home') }}" class="back-btn" style="text-decoration:none;">⬅ Kembali</a>
+
+    {{-- MENU GLOBAL --}}
+    <button class="menu-btn" id="menuBtn">⋮</button>
+    <div class="menu-dropdown" id="menuDropdown">
+        {{-- Link Tambah --}}
+        <a href="/produk/tambah">➕ Tambah Produk</a>
+        
+        {{-- Link Mode Admin (GABUNGAN EDIT & HAPUS) --}}
+        <a href="#" onclick="switchMode('admin'); return false;">⚙️ Atur Produk (Edit & Hapus)</a>
+        
+        {{-- Tombol Batal --}}
+        <a href="#" onclick="switchMode('buy'); return false;" class="cancel-mode-btn" style="color: red; border-top: 1px solid #ddd;">❌ Keluar Mode Admin</a>
+    </div>
+</div>
 
 <div class="container">
     <h1>🛠️ Gear</h1>
@@ -189,123 +104,135 @@ document.getElementById("menuBtn").onclick = function() {
         <input type="text" id="searchInput" placeholder="Cari produk...">
     </div>
 
-    <script>
-    document.getElementById("searchInput").addEventListener("keyup", function() {
-        let filter = this.value.toLowerCase();
-        let cards = document.getElementsByClassName("product-card");
-
-        for (let card of cards) {
-            let name = card.querySelector(".product-name").innerText.toLowerCase();
-            card.style.display = name.includes(filter) ? "" : "none";
-        }
-    });
-    </script>
-
     <div class="product-grid">
 
-        <!-- PRODUK 1 -->
-        <div class="product-card">
-            <img src="{{ asset('img/gear1.png') }}" alt="Gear 1">
-            <p class="product-name">GEAR SET RANTAI MEGA PRO VERZA SONIC CB150R KYE</p>
-            <p class="price">Rp126.500</p>
+        @if($gears->isEmpty())
+             <p style="color:white; text-align:center; width:100%; grid-column: 1/-1;">Belum ada data Gear di database.</p>
+        @else
+            @foreach ($gears as $g)
+            <div class="product-card">
 
-            <div class="quantity-control">
-                <button type="button" onclick="changeQty(this, -1)">-</button>
-                <input type="text" value="0" readonly>
-                <button type="button" onclick="changeQty(this, 1)">+</button>
+                {{-- GAMBAR --}}
+                <img src="{{ asset('img/' . ($g->gambar ? $g->gambar : 'no-image.jpg')) }}" 
+                     alt="{{ $g->namaGear }}"
+                     style="object-fit: contain; width: 100%; height: 150px;">
+
+                {{-- NAMA --}}
+                <p class="product-name">{{ $g->namaGear }}</p>
+
+                {{-- HARGA --}}
+                <p class="price">Rp{{ number_format($g->harga, 0, ',', '.') }}</p>
+
+                {{-- KONTROL JUMLAH (Hanya Muncul di Mode Beli) --}}
+                <div class="quantity-control action-mode-buy">
+                    <button onclick="changeQty(this, -1)">-</button>
+                    <input type="text" value="0" readonly>
+                    <button onclick="changeQty(this, 1)">+</button>
+                </div>
+
+                {{-- ========== 1. MODE BELI (DEFAULT) ========== --}}
+                <div class="action-mode-buy">
+                    <form action="{{ route('detail-transaksi.store') }}" method="POST" onsubmit="return validateQty(this)">
+                        @csrf
+                        <input type="hidden" name="id_transaksi" value="2">
+                        <input type="hidden" name="id_produk" value="{{ $g->idGear }}">
+                        <input type="hidden" name="jenis_barang" value="gear"> 
+                        <input type="hidden" class="qty-input" name="qty" value="0">
+                        <input type="hidden" name="subtotal" value="0">
+                        <button class="buy-btn">Beli</button>
+                    </form>
+                </div>
+
+                {{-- ========== 2. MODE ADMIN (GABUNGAN EDIT & HAPUS) ========== --}}
+                <div class="action-mode-admin">
+                    <div class="admin-buttons-container">
+                        
+                        {{-- Tombol Edit --}}
+                        <a href="{{ route('produk.edit', ['kategori' => 'gear', 'id' => $g->idGear]) }}" class="btn-edit-card">
+                            ✏ Edit
+                        </a>
+
+                        {{-- Tombol Hapus --}}
+                        <form action="{{ route('produk.destroy', ['kategori' => 'gear', 'id' => $g->idGear]) }}" method="POST" 
+                              onsubmit="return confirm('Yakin ingin menghapus {{ $g->namaGear }}?');" style="flex:1;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn-delete-card">
+                                🗑 Hapus
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+                {{-- END MODE ADMIN --}}
+
             </div>
-
-            <form action="{{ route('detail-transaksi.store') }}" method="POST" class="buy-form" onsubmit="return validateQty(this)">
-                @csrf
-                <input type="hidden" name="id_transaksi" value="1">
-                <input type="hidden" name="id_produk" value="101">
-                <input type="hidden" class="qty-input" name="qty" value="0">
-                <input type="hidden" name="subtotal" value="0">
-                <button type="submit" class="buy-btn">Beli</button>
-            </form>
-        </div>
-
-        <!-- PRODUK 2 -->
-        <div class="product-card">
-            <img src="{{ asset('img/gear2.png') }}" alt="Gear 2">
-            <p class="product-name">GEAR BELAKANG HONDA TIGER REVO TDR</p>
-            <p class="price">Rp98.000</p>
-
-            <div class="quantity-control">
-                <button type="button" onclick="changeQty(this, -1)">-</button>
-                <input type="text" value="0" readonly>
-                <button type="button" onclick="changeQty(this, 1)">+</button>
-            </div>
-
-            <form action="{{ route('detail-transaksi.store') }}" method="POST" class="buy-form" onsubmit="return validateQty(this)">
-                @csrf
-                <input type="hidden" name="id_transaksi" value="1">
-                <input type="hidden" name="id_produk" value="102">
-                <input type="hidden" class="qty-input" name="qty" value="0">
-                <input type="hidden" name="subtotal" value="0">
-                <button type="submit" class="buy-btn">Beli</button>
-            </form>
-        </div>
-
-        <!-- PRODUK 3 -->
-        <div class="product-card">
-            <img src="{{ asset('img/gear3.png') }}" alt="Gear 3">
-            <p class="product-name">GEAR DEPAN YAMAHA VIXION R15</p>
-            <p class="price">Rp85.000</p>
-
-            <div class="quantity-control">
-                <button type="button" onclick="changeQty(this, -1)">-</button>
-                <input type="text" value="0" readonly>
-                <button type="button" onclick="changeQty(this, 1)">+</button>
-            </div>
-
-            <form action="{{ route('detail-transaksi.store') }}" method="POST" class="buy-form" onsubmit="return validateQty(this)">
-                @csrf
-                <input type="hidden" name="id_transaksi" value="1">
-                <input type="hidden" name="id_produk" value="103">
-                <input type="hidden" class="qty-input" name="qty" value="0">
-                <input type="hidden" name="subtotal" value="0">
-                <button type="submit" class="buy-btn">Beli</button>
-            </form>
-        </div>
-
-        <!-- PRODUK 4 -->
-        <div class="product-card">
-            <img src="{{ asset('img/gear4.png') }}" alt="Gear 4">
-            <p class="product-name">GEAR DEPAN SUPRA FIT</p>
-            <p class="price">Rp65.000</p>
-
-            <div class="quantity-control">
-                <button type="button" onclick="changeQty(this, -1)">-</button>
-                <input type="text" value="0" readonly>
-                <button type="button" onclick="changeQty(this, 1)">+</button>
-            </div>
-
-            <form action="{{ route('detail-transaksi.store') }}" method="POST" class="buy-form" onsubmit="return validateQty(this)">
-                @csrf
-                <input type="hidden" name="id_transaksi" value="1">
-                <input type="hidden" name="id_produk" value="104">
-                <input type="hidden" class="qty-input" name="qty" value="0">
-                <input type="hidden" name="subtotal" value="0">
-                <button type="submit" class="buy-btn">Beli</button>
-            </form>
-        </div>
+            @endforeach
+        @endif
 
     </div>
 </div>
 
+{{-- JAVASCRIPT --}}
 <script>
+// 1. Script Dropdown
+document.getElementById("menuBtn").onclick = function() {
+    let menu = document.getElementById("menuDropdown");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+};
+
+// 2. Script Search
+document.getElementById("searchInput").addEventListener("keyup", function() {
+    let filter = this.value.toLowerCase();
+    let cards = document.getElementsByClassName("product-card");
+    for (let card of cards) {
+        let name = card.querySelector(".product-name").innerText.toLowerCase();
+        card.style.display = name.includes(filter) ? "" : "none";
+    }
+});
+
+// 3. SCRIPT MODE SWITCHER (SIMPEL: HANYA BELI atau ADMIN)
+function switchMode(mode) {
+    let buyElements = document.querySelectorAll('.action-mode-buy');
+    let adminElements = document.querySelectorAll('.action-mode-admin');
+    
+    let menuDropdown = document.getElementById("menuDropdown");
+    let banner = document.getElementById("modeBanner");
+    let cancelBtns = document.querySelectorAll('.cancel-mode-btn');
+
+    // Reset Tampilan
+    buyElements.forEach(el => el.style.display = 'none');
+    adminElements.forEach(el => el.style.display = 'none');
+    banner.style.display = 'none';
+    cancelBtns.forEach(el => el.style.display = 'none');
+
+    if (mode === 'buy') {
+        // Mode Beli (Default)
+        buyElements.forEach(el => el.style.display = 'block');
+        menuDropdown.style.display = 'none';
+
+    } else if (mode === 'admin') {
+        // Mode Admin (Edit & Hapus Muncul Bersamaan)
+        adminElements.forEach(el => el.style.display = 'block');
+        
+        banner.style.display = 'block';
+        cancelBtns.forEach(el => el.style.display = 'block');
+        menuDropdown.style.display = 'none';
+    }
+}
+
+// 4. Script Qty
 function changeQty(button, delta) {
     const input = button.parentElement.querySelector('input[type="text"]');
-    const hiddenInput = button.parentElement.parentElement.querySelector('.qty-input');
+    const form = button.closest('.product-card').querySelector('form');
+    
     let value = parseInt(input.value);
     value = Math.max(0, value + delta);
     input.value = value;
-    hiddenInput.value = value;
+    form.querySelector('.qty-input').value = value;
 
     const priceText = button.closest('.product-card').querySelector('.price').innerText;
     const price = parseInt(priceText.replace(/[^0-9]/g, ''));
-    const form = button.closest('.product-card').querySelector('form');
     form.querySelector('input[name="subtotal"]').value = price * value;
 }
 
