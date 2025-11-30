@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+// Import Model
 use App\Models\Oli;
 use App\Models\Ban;
 use App\Models\Gear;
@@ -10,13 +11,13 @@ use App\Models\Sparepart;
 
 class ProdukController extends Controller
 {
-    // Menampilkan Form Tambah
+    // ================== CREATE (FORM TAMBAH) ==================
     public function create()
     {
         return view('produk_tambah'); 
     }
 
-    // Menyimpan Data Baru
+    // ================== STORE (SIMPAN DATA BARU) ==================
     public function store(Request $request)
     {
         $request->validate([
@@ -33,37 +34,44 @@ class ProdukController extends Controller
             $file = $request->file('gambar');
             $filename = time() . '_' . $file->getClientOriginalName();
             
-            $destinationPath = public_path('img');
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
-            }
-            $file->move($destinationPath, $filename);
+            // Simpan ke folder public/img
+            $file->move(public_path('img'), $filename);
         }
 
         $kategori = $request->kategori;
 
-        // Simpan Data
+        // Simpan Data Sesuai Kategori
         if ($kategori == 'oli') {
-            Oli::create(['namaOli' => $request->nama_produk, 'harga' => $request->harga, 'stok' => $request->stok, 'gambar' => $filename]);
+            // Asumsi id_kategori oli = 1
+            Oli::create(['namaOli' => $request->nama_produk, 'harga' => $request->harga, 'stok' => $request->stok, 'gambar' => $filename]); // Oli biasanya tidak punya kolom id_kategori di migrasi baru, tapi jika ada error serupa, tambahkan 'id_kategori' => 1
             return redirect()->route('oli')->with('success', 'Produk Oli Berhasil Ditambahkan');
 
         } elseif ($kategori == 'ban') {
-            Ban::create(['namaBan' => $request->nama_produk, 'harga' => $request->harga, 'stok' => $request->stok, 'gambar' => $filename]);
+            // Asumsi id_kategori ban = 2
+            Ban::create(['namaBan' => $request->nama_produk, 'harga' => $request->harga, 'stok' => $request->stok, 'gambar' => $filename]); 
             return redirect()->route('ban')->with('success', 'Produk Ban Berhasil Ditambahkan');
 
         } elseif ($kategori == 'gear') {
+            // Asumsi id_kategori gear = 3
             Gear::create(['namaGear' => $request->nama_produk, 'harga' => $request->harga, 'stok' => $request->stok, 'gambar' => $filename]);
             return redirect()->route('gear')->with('success', 'Produk Gear Berhasil Ditambahkan');
 
         } elseif ($kategori == 'sparepart') {
-            Sparepart::create(['namaSparepart' => $request->nama_produk, 'harga' => $request->harga, 'stok' => $request->stok, 'gambar' => $filename]);
+            // 🔥 PERBAIKAN DISINI: Menambahkan 'id_kategori' => 4 secara manual
+            Sparepart::create([
+                'namaSparepart' => $request->nama_produk, 
+                'harga'         => $request->harga, 
+                'stok'          => $request->stok, 
+                'gambar'        => $filename,
+                'id_kategori'   => 1 // <--- INI SOLUSINYA (Nilai dummy agar database tidak menolak)
+            ]);
             return redirect()->route('sparepart.index')->with('success', 'Sparepart Berhasil Ditambahkan');
         }
 
         return redirect()->back()->with('error', 'Kategori tidak valid');
     }
 
-    // Menampilkan Form Edit
+    // ================== EDIT (FORM EDIT) ==================
     public function edit($kategori, $id)
     {
         $produk = null;
@@ -88,7 +96,7 @@ class ProdukController extends Controller
         return view('produk_edit', compact('produk', 'kategori', 'nama_produk'));
     }
 
-    // Update Data
+    // ================== UPDATE (SIMPAN PERUBAHAN) ==================
     public function update(Request $request, $kategori, $id)
     {
         $request->validate([
@@ -117,9 +125,12 @@ class ProdukController extends Controller
 
         // Update Gambar
         if ($request->hasFile('gambar')) {
+            // Hapus gambar lama pakai fungsi PHP native (lebih aman dari error class not found)
             if ($model->gambar && file_exists(public_path('img/' . $model->gambar))) {
                 unlink(public_path('img/' . $model->gambar));
             }
+
+            // Simpan gambar baru
             $file = $request->file('gambar');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('img'), $filename);
@@ -128,7 +139,7 @@ class ProdukController extends Controller
 
         $model->update($dataUpdate);
 
-        // 🔥 LOGIKA REDIRECT YANG BENAR (Konsisten dengan Destroy)
+        // Redirect yang Konsisten
         $routeRedirect = $kategori;
         if ($kategori == 'sparepart') {
             $routeRedirect = 'sparepart.index';
@@ -137,7 +148,7 @@ class ProdukController extends Controller
         return redirect()->route($routeRedirect)->with('success', 'Produk berhasil diperbarui!');
     }
 
-    // Hapus Data
+    // ================== DESTROY (HAPUS DATA) ==================
     public function destroy($kategori, $id)
     {
         $model = null;
@@ -146,13 +157,14 @@ class ProdukController extends Controller
         elseif ($kategori == 'gear') $model = Gear::findOrFail($id);
         elseif ($kategori == 'sparepart') $model = Sparepart::findOrFail($id);
 
+        // Hapus file gambar
         if ($model->gambar && file_exists(public_path('img/' . $model->gambar))) {
             unlink(public_path('img/' . $model->gambar));
         }
 
         $model->delete();
 
-        // 🔥 LOGIKA REDIRECT YANG BENAR
+        // Redirect yang Konsisten
         $routeRedirect = $kategori;
         if ($kategori == 'sparepart') {
             $routeRedirect = 'sparepart.index';

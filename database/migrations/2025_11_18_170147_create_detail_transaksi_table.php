@@ -6,22 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
+   public function up(): void
 {
     Schema::create('detail_transaksi', function (Blueprint $table) {
-        $table->id('id_detail');
+        $table->id();
         
-        // Kunci asing ke tabel transaksi
-        // KOREKSI: Merujuk ke kolom 'id' di tabel 'transaksi'
-        $table->unsignedBigInteger('id_transaksi');
-        $table->foreign('id_transaksi')->references('id')->on('transaksi')->onDelete('cascade');
+        // Relasi ke tabel transaksi utama
+        // Kita gunakan unsignedBigInteger saja biar aman dari error 1215
+        $table->unsignedBigInteger('id_transaksi'); 
         
-        // Kunci asing ke tabel produk (Asumsi PK produk adalah 'id')
-        $table->unsignedBigInteger('id_produk');
-        $table->foreign('id_produk')->references('id')->on('produk'); 
+        // PERBAIKAN DI SINI:
+        // Jangan pakai foreign key ke 'produk'. Cukup simpan ID-nya saja.
+        $table->unsignedBigInteger('id_produk'); 
+        
+        // Tambahkan kolom ini agar tahu barangnya diambil dari tabel mana (oli/ban/gear/sparepart)
+        $table->string('jenis_produk')->default('sparepart'); 
         
         $table->integer('jumlah');
-        $table->decimal('harga_satuan', 10, 2); 
+        $table->decimal('harga_saat_transaksi', 12, 2);
         $table->decimal('subtotal', 12, 2);
         
         $table->timestamps();

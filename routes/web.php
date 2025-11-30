@@ -10,6 +10,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\OliController; // <--- Tambah ini
 use App\Http\Controllers\BanController; // <--- Tambah ini
+use App\Http\Controllers\BookingServisController;
 
 // ===== HALAMAN UTAMA & AUTH =====
 Route::get('/', function () {
@@ -87,12 +88,25 @@ Route::middleware('auth')->group(function () {
 });
 
 // Keranjang Transaksi (Lama)
-Route::post('/detail-transaksi/store', [KeranjangController::class, 'store'])->name('detail-transaksi.store');
-Route::get('/pembayaran', [KeranjangController::class, 'pembayaran'])->name('pembayaran');
+// ===== KERANJANG BELANJA (CART) =====
 
-// Cart Session
+// 1. Route untuk Tombol "Beli" di Halaman Produk
+// Mengarah ke CartController@store (Logika Database)
+Route::post('/detail-transaksi/store', [CartController::class, 'store'])->name('detail-transaksi.store');
+
+// 2. Halaman Keranjang & Aksi Lainnya
 Route::get('/cart', [CartController::class, 'show'])->name('cart.show');
-Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+
+// Route sisa yang tidak terpakai sebaiknya dihapus agar tidak bingung:
+// Route::post('/cart/add/{id}', ... ); // Hapus ini karena sudah diganti detail-transaksi.store
+// Route::get('/pembayaran', ... ); // Hapus ini jika method pembayaran tidak ada di controller
+// Halaman Form
+Route::get('/service', [BookingServisController::class, 'create'])->name('service.form');
+Route::post('/service/store', [BookingServisController::class, 'store'])->name('service.store');
+
+// Halaman Riwayat
+Route::get('/riwayat-service', [BookingServisController::class, 'index'])->name('service.riwayat');
+Route::post('/riwayat-service/update/{id}', [BookingServisController::class, 'updateStatus'])->name('service.update');

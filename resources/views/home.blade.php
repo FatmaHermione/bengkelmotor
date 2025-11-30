@@ -24,8 +24,8 @@
         }
 
         /* Panah tidak terlalu pinggir, dekat gambar */
-        #prevBtn { left: 5px; }    /* sebelumnya -35px → sekarang 5px agar terlihat */
-        #nextBtn { right: 5px; }   /* sebelumnya -35px → sekarang 5px */
+        #prevBtn { left: 5px; }    
+        #nextBtn { right: 5px; }   
 
         /* Area gambar tetap seperti tampilan awal */
         .hero-image {
@@ -35,8 +35,7 @@
 </head>
 <body>
 
-<!-- ========== NAVBAR ========== -->
-<<header class="navbar">
+<header class="navbar">
     <div class="logo">
         <img src="{{ asset('img/bike.png') }}" alt="Logo Motor" class="logo-icon">
         <div class="logo-text">
@@ -45,13 +44,11 @@
         </div>
     </div>
 
-    <!-- Menu utama -->
     <nav class="nav-links">
         <a href="{{ route('service.form') }}">Form Service</a>
         <a href="{{ route('pegawai.index') }}">Data Pegawai</a>
 
-        <!-- CART ICON MASUK DIDALAM NAVBAR -->
-        <a href="{{ route('cart.show') }}" class="cart-link" style="position: relative; font-size: 20px;">
+        <a href="{{ route('cart.show') }}" class="cart-link" style="position: relative; font-size: 20px; text-decoration: none;">
             🛒
             <span class="cart-count" 
                 style="
@@ -64,27 +61,35 @@
                     border-radius: 50%;
                     font-size: 11px;
                 ">
-                {{ session('cart') ? count(session('cart')) : 0 }}
+                {{-- PERBAIKAN: Hitung langsung dari database jika login --}}
+                @auth
+                    {{ \App\Models\Cart::where('user_id', Auth::id())->count() }}
+                @else
+                    0
+                @endauth
             </span>
         </a>
     </nav>
 
-    <!-- User -->
     <div class="user-section">
         <div class="user-icon">👤</div>
         <div class="user-info">
-            <p class="role">{{ Auth::user()->username ?? 'Kasir' }}</p>
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="logout">Log out</button>
-            </form>
+            <p class="role">{{ Auth::user()->username ?? 'Tamu' }}</p>
+            
+            @auth
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="logout" style="cursor: pointer;">Log out</button>
+                </form>
+            @else
+                <a href="{{ route('login.form') }}" style="color: white; font-size: 14px;">Log in</a>
+            @endauth
         </div>
     </div>
 </header>
 
 
 
-<!-- ========== HERO SECTION ========== -->
 <section class="hero">
     <div class="hero-content">
 
@@ -94,13 +99,10 @@
         </div>
 
         <div class="hero-image">
-            <!-- Panah kiri -->
             <button id="prevBtn" class="slide-btn">&#10094;</button>
 
-            <!-- Gambar -->
-            <img id="heroSlide" src="{{ asset('img/home1.jpg') }}" alt="Gambar">
+            <img id="heroSlide" src="{{ asset('img/home1.jpg') }}" alt="Gambar" style="width: 100%; border-radius: 10px;">
 
-            <!-- Panah kanan -->
             <button id="nextBtn" class="slide-btn">&#10095;</button>
         </div>
 
@@ -108,7 +110,6 @@
 </section>
 
 
-<!-- ========== MAIN CONTENT ========== -->
 <main>
     <h2 class="section-title">Servis</h2>
 
@@ -119,7 +120,8 @@
         </a>
 
         <a href="{{ route('oli') }}" class="service-box">
-            <img src="https://cdn-icons-png.flaticon.com/512/798/798867.png" alt="Oli Mesin / Pelumas">
+            {{-- Menggunakan asset() untuk konsistensi --}}
+            <img src="{{ asset('img/oli4.png') }}" alt="Oli Mesin / Pelumas" onerror="this.src='https://cdn-icons-png.flaticon.com/512/798/798867.png'">
             <p>Oli</p>
         </a>
 
@@ -128,6 +130,7 @@
             <p>Ban</p>
         </a>
 
+        {{-- Perbaikan link sparepart --}}
         <a href="{{ route('sparepart.index') }}" class="service-box">
             <img src="{{ asset('img/crankshaft.png') }}" alt="Sparepart / Perlengkapan">
             <p>Sparepart</p>
@@ -137,7 +140,6 @@
 </main>
 
 
-<!-- ========== SCRIPT SLIDESHOW ========== -->
 <script>
     let index = 0;
     const images = [

@@ -9,17 +9,26 @@
 </head>
 <body>
 
-    <!-- ======= HEADER SAMA PERSIS DENGAN DATA PEGAWAI ======= -->
     <header>
         <div class="back-container">
             <a href="{{ route('home') }}" class="back-btn">⬅ Kembali</a>
         </div>
         <h1>Form Service</h1>
+        {{-- Tombol Lihat Riwayat di Pojok Kanan --}}
+        <div style="position: absolute; right: 20px;">
+            <a href="{{ route('service.riwayat') }}" style="color: white; text-decoration: none; font-weight: bold; border: 1px solid white; padding: 5px 10px; border-radius: 5px;">📂 Lihat Riwayat</a>
+        </div>
     </header>
-    <!-- ======================================================== -->
 
     <main>
-        <h2 class="form-title">form berikut untuk melakukan service ya!</h2>
+        <h2 class="form-title">Silakan isi formulir untuk melakukan servis!</h2>
+
+        {{-- Notifikasi Sukses dari Controller --}}
+        @if(session('success'))
+            <div style="background-color: #d4edda; color: #155724; padding: 15px; margin: 20px auto; max-width: 600px; border-radius: 5px; text-align: center;">
+                ✅ {{ session('success') }}
+            </div>
+        @endif
 
         <div class="form-container">
             <form action="{{ route('service.store') }}" method="POST">
@@ -55,15 +64,9 @@
                     <div class="time-select">
                         <select name="jam" id="jam" required>
                             <option value="">Jam</option>
-                            <option value="08">08</option>
-                            <option value="09">09</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                            <option value="13">13</option>
-                            <option value="14">14</option>
-                            <option value="15">15</option>
-                            <option value="16">16</option>
+                            @for ($i = 8; $i <= 17; $i++)
+                                <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}</option>
+                            @endfor
                         </select>
                         <select name="menit" id="menit" required>
                             <option value="">Menit</option>

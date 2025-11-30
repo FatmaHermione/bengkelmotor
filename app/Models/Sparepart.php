@@ -10,7 +10,7 @@ class Sparepart extends Model
     use HasFactory;
 
     // Pastikan sesuai dengan nama tabel yang kamu punya
-    protected $table = 'sparepart';   // ← WAJIB DITAMBAHKAN
+    protected $table = 'spareparts';   // ← WAJIB DITAMBAHKAN
 
     // Primary key
     protected $primaryKey = 'idSparepart';
