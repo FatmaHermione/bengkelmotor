@@ -4,47 +4,36 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-// Import semua model barang
-use App\Models\Oli;
-use App\Models\Ban;
-use App\Models\Gear;
-use App\Models\Sparepart;
 
 class DetailTransaksi extends Model
 {
     use HasFactory;
 
-    protected $table = 'detail_transaksi'; 
-    
-    // PERBAIKAN 1: Primary Key standar Laravel adalah 'id' (kecuali Anda ubah di migrasi)
-    protected $primaryKey = 'id'; 
+    protected $table = 'detail_transaksi';
 
-    // Guarded kosong agar semua bisa diisi (mass assignment)
-    protected $guarded = [];
+    protected $fillable = [
+        'id_transaksi',
+        'id_produk',
+        'jenis_produk',
+        'jumlah',
+        'harga_saat_transaksi',
+        'subtotal',
+    ];
 
-    // Relasi ke Transaksi Induk (SUDAH BENAR)
+    /**
+     * Relasi ke tabel transaksi
+     * Setiap detail transaksi pasti milik 1 transaksi
+     */
     public function transaksi()
     {
-        return $this->belongsTo(Transaksi::class, 'id_transaksi', 'id');
+        return $this->belongsTo(Transaksi::class, 'id_transaksi');
     }
 
-    // PERBAIKAN 2: Relasi Produk Dinamis
-    // Karena tabelnya pisah, kita buat fungsi khusus untuk mengambil data barangnya
-    public function getBarangAttribute()
+    /**
+     * Relasi ke produk (opsional, jika tabel produk ada)
+     */
+    public function produk()
     {
-        // Cek kolom 'jenis_produk' di database
-        if ($this->jenis_produk == 'oli') {
-            return Oli::find($this->id_produk);
-        } 
-        elseif ($this->jenis_produk == 'ban') {
-            return Ban::find($this->id_produk);
-        } 
-        elseif ($this->jenis_produk == 'gear') {
-            return Gear::find($this->id_produk);
-        } 
-        else {
-            // Default ke Sparepart
-            return Sparepart::find($this->id_produk);
-        }
+        return $this->belongsTo(Produk::class, 'id_produk');
     }
 }
