@@ -28,13 +28,17 @@
 </div>
 
 <div class="top-bar">
-    <a href="{{ route('home') }}" class="back-btn" style="text-decoration:none;">⬅ Kembali</a>
-    <button class="menu-btn" id="menuBtn">⋮</button>
-    <div class="menu-dropdown" id="menuDropdown">
-        <a href="/produk/tambah">➕ Tambah Produk</a>
-        <a href="#" onclick="switchMode('admin'); return false;">⚙️ Atur Produk (Edit & Hapus)</a>
-        <a href="#" onclick="switchMode('buy'); return false;" class="cancel-mode-btn" style="color: red; border-top: 1px solid #ddd;">❌ Keluar Mode Admin</a>
-    </div>
+    <a href="{{ route('home') }}" class="back-btn" style="text-decoration:none; display:inline-block; text-align:center;">⬅ Kembali</a>
+
+    {{-- MENU GLOBAL (HANYA ADMIN) --}}
+    @if(Auth::user()->role == 'admin')
+        <button class="menu-btn" id="menuBtn">⋮</button>
+        <div class="menu-dropdown" id="menuDropdown">
+            <a href="/produk/tambah">➕ Tambah Produk</a>
+            <a href="#" onclick="switchMode('admin'); return false;">⚙️ Atur Produk (Edit & Hapus)</a>
+            <a href="#" onclick="switchMode('buy'); return false;" class="cancel-mode-btn" style="color: red; border-top: 1px solid #ddd;">❌ Keluar Mode Admin</a>
+        </div>
+    @endif
 </div>
 
 <div class="container">
@@ -73,7 +77,8 @@
                     </form>
                 </div>
 
-                {{-- MODE ADMIN --}}
+                {{-- MODE ADMIN (HANYA RENDER DI SINI JIKA ADMIN, TAPI LOGIKA CSS MENYEMBUNYIKANNYA) --}}
+                @if(Auth::user()->role == 'admin')
                 <div class="action-mode-admin">
                     <div class="admin-buttons-container">
                         <a href="{{ route('produk.edit', ['kategori' => 'oli', 'id' => $o->idOli]) }}" class="btn-edit-card">✏ Edit</a>
@@ -84,6 +89,7 @@
                         </form>
                     </div>
                 </div>
+                @endif
             </div>
             @endforeach
         @endif
@@ -91,11 +97,15 @@
 </div>
 
 <script>
-// Logic JS sama persis dengan Gear
-document.getElementById("menuBtn").onclick = function() {
-    let menu = document.getElementById("menuDropdown");
-    menu.style.display = menu.style.display === "block" ? "none" : "block";
-};
+// Script Menu Hanya Jalan Jika Tombol Ada
+const menuBtn = document.getElementById("menuBtn");
+if(menuBtn){
+    menuBtn.onclick = function() {
+        let menu = document.getElementById("menuDropdown");
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+    };
+}
+
 document.getElementById("searchInput").addEventListener("keyup", function() {
     let filter = this.value.toLowerCase();
     let cards = document.getElementsByClassName("product-card");
@@ -104,6 +114,7 @@ document.getElementById("searchInput").addEventListener("keyup", function() {
         card.style.display = name.includes(filter) ? "" : "none";
     }
 });
+
 function switchMode(mode) {
     let buyElements = document.querySelectorAll('.action-mode-buy');
     let adminElements = document.querySelectorAll('.action-mode-admin');
@@ -113,19 +124,20 @@ function switchMode(mode) {
 
     buyElements.forEach(el => el.style.display = 'none');
     adminElements.forEach(el => el.style.display = 'none');
-    banner.style.display = 'none';
+    if(banner) banner.style.display = 'none';
     cancelBtns.forEach(el => el.style.display = 'none');
 
     if (mode === 'buy') {
         buyElements.forEach(el => el.style.display = 'block');
-        menuDropdown.style.display = 'none';
+        if(menuDropdown) menuDropdown.style.display = 'none';
     } else if (mode === 'admin') {
         adminElements.forEach(el => el.style.display = 'block');
-        banner.style.display = 'block';
+        if(banner) banner.style.display = 'block';
         cancelBtns.forEach(el => el.style.display = 'block');
-        menuDropdown.style.display = 'none';
+        if(menuDropdown) menuDropdown.style.display = 'none';
     }
 }
+
 function changeQty(button, delta) {
     const input = button.parentElement.querySelector('input[type="text"]');
     const form = button.closest('.product-card').querySelector('form');

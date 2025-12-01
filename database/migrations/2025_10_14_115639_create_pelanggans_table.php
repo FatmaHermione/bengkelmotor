@@ -9,15 +9,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pelanggans', function (Blueprint $table) {
-            $table->id('id_pelanggan');
-            // Menghubungkan ke tabel users (akun login)
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('no_hp', 15)->nullable();
-            $table->text('alamat')->nullable();
-            // Menyimpan data motor default user (opsional)
-            $table->string('jenis_motor_default')->nullable();
-            $table->string('no_polisi_default')->nullable();
+            $table->id();
+            // Kita hubungkan dengan tabel users
+            $table->unsignedBigInteger('user_id'); 
+            
+            $table->string('no_hp');
+            $table->text('alamat');
+            
+            // TAMBAHKAN DUA KOLOM INI AGAR TIDAK ERROR
+            $table->string('jenis_motor')->nullable(); 
+            $table->string('no_polisi')->nullable();
+            
             $table->timestamps();
+
+            // Foreign key (Opsional, biar aman)
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

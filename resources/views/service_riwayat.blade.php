@@ -16,6 +16,7 @@
         .status-menunggu { background-color: #f39c12; }
         .status-selesai { background-color: #28a745; }
         .btn-selesai { background-color: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        .btn-selesai:hover { background-color: #218838; }
     </style>
 </head>
 <body>
@@ -40,7 +41,7 @@
                     <th>Jadwal</th>
                     <th>Keluhan / Request</th>
                     <th>Status</th>
-                    <th>Aksi Admin</th>
+                    <th>Aksi Admin</th> {{-- Kolom ini judulnya tetap Aksi Admin --}}
                 </tr>
             </thead>
             <tbody>
@@ -60,19 +61,31 @@
                         <small>Jam {{ $b->jam_servis }}</small>
                     </td>
                     <td>{{ $b->keluhan ?? '-' }}</td>
+                    
+                    {{-- STATUS BADGE --}}
                     <td>
                         <span class="status-label {{ $b->status == 'Selesai' ? 'status-selesai' : 'status-menunggu' }}">
                             {{ $b->status }}
                         </span>
                     </td>
+
+                    {{-- AKSI ADMIN (LOGIKA BARU DI SINI) --}}
                     <td>
-                        @if($b->status == 'Menunggu')
-                            <form action="{{ route('service.update', $b->id) }}" method="POST">
-                                @csrf
-                                <button class="btn-selesai" onclick="return confirm('Tandai servis ini selesai?')">✅ Selesai</button>
-                            </form>
+                        @if(Auth::user()->role == 'admin')
+                            {{-- Jika Login sebagai ADMIN --}}
+                            @if($b->status == 'Menunggu')
+                                <form action="{{ route('service.update', $b->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn-selesai" onclick="return confirm('Tandai servis ini selesai?')">✅ Selesai</button>
+                                </form>
+                            @else
+                                <span style="color: grey; font-size: 12px;">Sudah Selesai</span>
+                            @endif
                         @else
-                            <span style="color: grey; font-size: 12px;">Sudah Selesai</span>
+                            {{-- Jika Login sebagai USER BIASA --}}
+                            <span style="font-size: 12px; color: #555;">
+                                {{ $b->status == 'Menunggu' ? 'Sedang Diproses' : 'Selesai Dikerjakan' }}
+                            </span>
                         @endif
                     </td>
                 </tr>

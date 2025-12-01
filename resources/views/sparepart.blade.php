@@ -6,9 +6,7 @@
     <title>AXERA MOTOR - Sparepart</title>
     <link rel="icon" href="{{ asset('img/logo.png')}} ">
     <link rel="stylesheet" href="{{ asset('css/sparepart.css') }}">
-    
     <style>
-        /* CSS KHUSUS MODE ADMIN */
         .action-mode-admin, .cancel-mode-btn { display: none; }
         .admin-buttons-container { display: flex; gap: 10px; justify-content: center; }
         .btn-edit-card { flex: 1; background: #ff9800; color: white; text-decoration: none; padding: 8px 0; border-radius: 8px; font-weight: bold; font-size: 14px; text-align: center; transition: 0.3s; }
@@ -18,7 +16,6 @@
         .mode-active-banner { background-color: #333; color: white; text-align: center; padding: 10px; display: none; position: sticky; top: 0; z-index: 100; }
     </style>
 </head>
-
 <body>
 
 <div id="modeBanner" class="mode-active-banner">
@@ -28,12 +25,15 @@
 
 <div class="top-bar">
     <a href="{{ route('home') }}" class="back-btn" style="text-decoration:none;">⬅ Kembali</a>
-    <button class="menu-btn" id="menuBtn">⋮</button>
-    <div class="menu-dropdown" id="menuDropdown">
-        <a href="/produk/tambah">➕ Tambah Produk</a>
-        <a href="#" onclick="switchMode('admin'); return false;">⚙️ Atur Produk (Edit & Hapus)</a>
-        <a href="#" onclick="switchMode('buy'); return false;" class="cancel-mode-btn" style="color: red; border-top: 1px solid #ddd;">❌ Keluar Mode Admin</a>
-    </div>
+    
+    @if(Auth::user()->role == 'admin')
+        <button class="menu-btn" id="menuBtn">⋮</button>
+        <div class="menu-dropdown" id="menuDropdown">
+            <a href="/produk/tambah">➕ Tambah Produk</a>
+            <a href="#" onclick="switchMode('admin'); return false;">⚙️ Atur Produk (Edit & Hapus)</a>
+            <a href="#" onclick="switchMode('buy'); return false;" class="cancel-mode-btn" style="color: red; border-top: 1px solid #ddd;">❌ Keluar Mode Admin</a>
+        </div>
+    @endif
 </div>
 
 <div class="container">
@@ -41,17 +41,14 @@
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="Cari produk...">
     </div>
-
     <div class="product-grid">
         @foreach ($spareparts as $s)
         <div class="product-card">
             <img src="{{ asset('img/' . ($s->gambar ? $s->gambar : 'no-image.jpg')) }}" 
                  alt="{{ $s->namaSparepart }}" style="object-fit: contain; width: 100%; height: 150px;">
-
             <p class="product-name">{{ $s->namaSparepart }}</p>
             <p class="price">Rp{{ number_format($s->harga, 0, ',', '.') }}</p>
 
-            {{-- MODE BELI --}}
             <div class="quantity-control action-mode-buy">
                 <button onclick="changeQty(this, -1)">-</button>
                 <input type="text" value="0" readonly>
@@ -62,15 +59,15 @@
                     @csrf
                     <input type="hidden" name="id_transaksi" value="2">
                     <input type="hidden" name="id_produk" value="{{ $s->idSparepart }}">
-                    {{-- Di sini tidak perlu hidden jenis_barang karena controller sparepart mungkin belum pakai sistem itu jika belum diupdate, 
-                         tapi kalau sudah seragam, tambahkan: <input type="hidden" name="jenis_barang" value="sparepart"> --}}
+                    {{-- Wajib Tambahkan jenis_barang agar masuk ke tabel carts dengan benar --}}
+                    <input type="hidden" name="jenis_barang" value="sparepart">
                     <input type="hidden" class="qty-input" name="qty" value="0">
                     <input type="hidden" name="subtotal" value="0">
                     <button class="buy-btn">Beli</button>
                 </form>
             </div>
 
-            {{-- MODE ADMIN --}}
+            @if(Auth::user()->role == 'admin')
             <div class="action-mode-admin">
                 <div class="admin-buttons-container">
                     <a href="{{ route('produk.edit', ['kategori' => 'sparepart', 'id' => $s->idSparepart]) }}" class="btn-edit-card">✏ Edit</a>
@@ -81,17 +78,20 @@
                     </form>
                 </div>
             </div>
+            @endif
         </div>
         @endforeach
     </div>
 </div>
 
 <script>
-// JS SAMA SEPERTI DI ATAS
-document.getElementById("menuBtn").onclick = function() {
-    let menu = document.getElementById("menuDropdown");
-    menu.style.display = menu.style.display === "block" ? "none" : "block";
-};
+const menuBtn = document.getElementById("menuBtn");
+if(menuBtn){
+    menuBtn.onclick = function() {
+        let menu = document.getElementById("menuDropdown");
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+    };
+}
 document.getElementById("searchInput").addEventListener("keyup", function() {
     let filter = this.value.toLowerCase();
     let cards = document.getElementsByClassName("product-card");
@@ -106,20 +106,18 @@ function switchMode(mode) {
     let menuDropdown = document.getElementById("menuDropdown");
     let banner = document.getElementById("modeBanner");
     let cancelBtns = document.querySelectorAll('.cancel-mode-btn');
-
     buyElements.forEach(el => el.style.display = 'none');
     adminElements.forEach(el => el.style.display = 'none');
-    banner.style.display = 'none';
+    if(banner) banner.style.display = 'none';
     cancelBtns.forEach(el => el.style.display = 'none');
-
     if (mode === 'buy') {
         buyElements.forEach(el => el.style.display = 'block');
-        menuDropdown.style.display = 'none';
+        if(menuDropdown) menuDropdown.style.display = 'none';
     } else if (mode === 'admin') {
         adminElements.forEach(el => el.style.display = 'block');
-        banner.style.display = 'block';
+        if(banner) banner.style.display = 'block';
         cancelBtns.forEach(el => el.style.display = 'block');
-        menuDropdown.style.display = 'none';
+        if(menuDropdown) menuDropdown.style.display = 'none';
     }
 }
 function changeQty(button, delta) {
