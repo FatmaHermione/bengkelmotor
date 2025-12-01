@@ -68,6 +68,7 @@ Route::put('/produk/update/{kategori}/{id}', [ProdukController::class, 'update']
 // 3. Proses Hapus Data
 Route::delete('/produk/hapus/{kategori}/{id}', [ProdukController::class, 'destroy'])->name('produk.destroy');
 
+
 // ===== LAYANAN & PEGAWAI =====
 Route::resource('daftar-layanan', DaftarLayananController::class);
 Route::get('/service', fn() => view('service'))->name('service.form');

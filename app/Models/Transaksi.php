@@ -10,20 +10,29 @@ class Transaksi extends Model
     use HasFactory;
 
     protected $table = 'transaksi';
-    // KOREKSI: Hapus baris primaryKey ini atau ubah menjadi 'id'
-    // protected $primaryKey = 'id_transaksi'; 
-    protected $guarded = [];
 
-    // Relasi: Transaksi milik satu User
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
+    protected $fillable = [
+        'user_id',
+        'tanggal_transaksi',
+        'total_harga',
+        'biaya_admin',
+        'metode_pembayaran',
+        'status_pembayaran',
+    ];
 
-    // Relasi: Transaksi punya banyak detail barang
+    /**
+     * Relasi ke detail transaksi (1 transaksi punya banyak detail)
+     */
     public function detail()
     {
-        // Tetap menggunakan 'id_transaksi' sebagai Foreign Key di tabel anak
-        return $this->hasMany(DetailTransaksi::class, 'id_transaksi', 'id'); // Referensi PK 'id' di model Transaksi
+        return $this->hasMany(DetailTransaksi::class, 'id_transaksi');
+    }
+
+    /**
+     * Relasi ke user (setiap transaksi milik 1 user)
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
