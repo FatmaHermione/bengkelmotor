@@ -1,0 +1,66 @@
+/* ====== RESET & FONT ====== */
+body {
+    margin: 0;
+    font-family: sans-serif; 
+    background-color: #f5f7fa;
+}
+
+/* ====== HEADER ====== */
+header {
+    position: relative;
+    background-color: #ff8113;
+    color: white;
+    text-align: center;
+    padding: 46px 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+/* ====== TOMBOL KEMBALI ====== */
+.back-container {
+    position: absolute;
+    left: 20px;
+    bottom: -40px;
+    z-index: 15;
+}
+
+.back-btn {
+    text-decoration: none;
+    background-color: #ff9933;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 20px;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.2); /* Shadow Halus */
+    transition: all 0.2s;
+}
+
+.back-btn:hover {
+    background-color: #e67e22;
+}
+
+/* ====== CONTAINER TABEL ====== */
+.container {
+    max-width: 1000px;
+    margin: 80px auto 40px;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* ====== STYLE TABEL ====== */
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 15px; border-bottom: 1px solid #eee; text-align: left; vertical-align: middle; }
+th { background-color: #f9f9f9; color: #555; font-weight: 700; }
+.status-badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; color: white; display: inline-block;}
+.bg-wait { background-color: #f39c12; }
+.bg-done { background-color: #28a745; }
+.btn-action { background-color: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: 600; }
+.alert { background-color: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; border: 1px solid #c3e6cb;}

@@ -1,23 +1,74 @@
+/* ====== 1. RESET & BASIC ====== */
 body {
     margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: #f3f4f6;
+    font-family: sans-serif;
+    background: #f5f7fa;
 }
 
-/* Page */
+/* ====== 2. HEADER ORANYE ====== */
+header {
+    position: relative; /* Wajib relative agar menjadi patokan */
+    background-color: #ff8113;
+    color: white;
+    text-align: center;
+    padding: 35px 0;
+    /* Memberi jarak margin bawah agar tombol tidak menutupi konten keranjang */
+    margin-bottom: 50px; 
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+header h2 {
+    margin: 0;
+    font-size: 42px;
+    font-weight: 700;
+}
+
+/* ====== 3. TOMBOL KEMBALI (MENGGANTUNG) ====== */
+.back-container {
+    position: absolute;
+    left: 20px; /* Jarak dari kiri */
+    
+    /* KUNCI PEMISAH: 
+       bottom: -20px membuat tombol turun setengah keluar dari header.
+       Semakin besar angkanya (misal -30px), semakin turun tombolnya. */
+    bottom: -40px; 
+    
+    z-index: 15; /* Pastikan tombol di atas segalanya */
+}
+
+.back-btn {
+    text-decoration: none;
+    background-color: #ff9933; /* Warna tombol sedikit lebih terang dari header */
+    color: white;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    display: inline-block;
+    
+    /* SHADOW TEBAL (EFEK 3D) */
+    /* Ini memberikan garis batas tegas antara tombol dan header */
+    box-shadow: 0 4px 0px #d6812b; 
+    border: 1px solid rgba(255,255,255,0.2); /* Garis tipis pemisah */
+    
+    transition: all 0.2s;
+}
+
+.back-btn:hover {
+    background-color: #e67e22;
+    box-shadow: 0 2px 0px #bf6a1a;
+    transform: translateY(2px);
+}
+
+/* ====== 4. HALAMAN KERANJANG ====== */
 .cart-page {
     max-width: 1050px;
-    margin: 25px auto;
+    /* Margin top disesuaikan karena header punya margin-bottom */
+    margin: 40px auto; 
     padding: 10px;
 }
 
-.title {
-    font-size: 28px;
-    margin-bottom: 20px;
-    font-weight: 600;
-}
-
-/* Layout */
+/* ====== 5. LAYOUT GRID ====== */
 .cart-container {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -33,138 +84,37 @@ body {
     border-radius: 14px;
     align-items: center;
     box-shadow: 0 4px 12px rgba(0,0,0,0.07);
-    transition: 0.2s;
+    margin-bottom: 15px;
 }
 
-.cart-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.10);
-}
+/* Elemen Produk (Gambar, Nama, Harga) */
+.check-item { width: 20px; height: 20px; cursor: pointer; }
+.item-img { width: 95px; height: 95px; object-fit: cover; border-radius: 12px; }
+.item-info { flex: 1; }
+.item-name { font-size: 17px; font-weight: 600; margin: 0; color: #333; }
+.item-price { margin: 6px 0; color: #1e7b48; font-weight: 600; font-size: 16px; }
 
-/* Checkbox */
-.check-item {
-    width: 20px;
-    height: 20px;
-}
+/* Qty Box */
+.qty-box { display: flex; align-items: center; gap: 10px; }
+.qty-input { width: 50px; padding: 5px; border-radius: 5px; border: 1px solid #ccc; text-align: center; }
+.update-btn { background: #e8ecf5; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; }
+.delete-btn { background: transparent; border: none; font-size: 20px; color: #d44; cursor: pointer; }
 
-/* Product image */
-.item-img {
-    width: 95px;
-    height: 95px;
-    object-fit: cover;
-    border-radius: 12px;
-}
-
-/* Info */
-.item-info {
-    flex: 1;
-}
-
-.item-name {
-    font-size: 17px;
-    font-weight: 600;
-    margin: 0;
-}
-
-.item-price {
-    margin: 6px 0;
-    color: #1e7b48;
-    font-weight: 600;
-    font-size: 16px;
-}
-
-/* Qty box */
-.qty-box {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.qty-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 10px;
-    background: #e8ecf5;
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
-    transition: 0.15s;
-}
-
-.qty-btn:hover {
-    background: #d9e3ff;
-}
-
-.qty {
-    font-size: 16px;
-    font-weight: 600;
-}
-
-/* Delete button */
-.delete-btn {
-    background: transparent;
-    border: none;
-    font-size: 20px;
-    color: #d44;
-    cursor: pointer;
-}
-
-/* SUMMARY BOX */
+/* SUMMARY BOX (KANAN) */
 .summary-box {
     background: white;
     padding: 20px;
     border-radius: 16px;
     box-shadow: 0 6px 14px rgba(0,0,0,0.07);
+    height: fit-content;
 }
-
-.summary-box h3 {
-    font-size: 20px;
-    margin-bottom: 20px;
-}
-
-.summary-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 12px;
-    font-size: 15px;
-}
-
-/* Buttons */
-.clear-btn {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    background: #b1b1b1;
-    color: white;
-    margin-top: 15px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.clear-btn:hover {
-    background: #9c9c9c;
-}
-
-.checkout-btn {
-    display: block;
-    margin-top: 15px;
-    text-align: center;
-    padding: 14px;
-    background: #4d6cff;
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-    border-radius: 10px;
-}
-
-.checkout-btn:hover {
-    background: #3e55d8;
-}
+.summary-box h3 { font-size: 20px; margin: 0 0 20px 0; }
+.summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; color: #555; }
+.checkout-btn { display: block; margin-top: 15px; text-align: center; padding: 14px; background: #ff8113; color: white; text-decoration: none; font-weight: 600; border-radius: 10px; box-shadow: 0 4px 6px rgba(255, 129, 19, 0.3); transition: 0.2s; }
+.checkout-btn:hover { background: #e67e22; }
+.clear-btn { background: none; color: red; border: none; cursor: pointer; text-decoration: underline; width: 100%; font-size: 13px; margin-top: 10px;}
 
 /* Responsive */
 @media (max-width: 780px) {
-    .cart-container {
-        grid-template-columns: 1fr;
-    }
+    .cart-container { grid-template-columns: 1fr; }
 }
