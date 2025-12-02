@@ -3,13 +3,36 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Pegawai;
 
 class PegawaiController extends Controller
 {
+    private $pegawai = [
+        [
+            'id' => 1,
+            'nama' => 'Yola Valery',
+            'jabatan' => 'CEO AXERA MOTOR',
+            'email' => 'yola@example.com',
+            'foto' => 'img/marsya.jpeg'
+        ],
+        [
+            'id' => 2,
+            'nama' => 'Rian Saputra',
+            'jabatan' => 'Montir',
+            'email' => 'rian@example.com',
+            'foto' => 'img/jcwk.jpeg'
+        ],
+        [
+            'id' => 3,
+            'nama' => 'Intan Ayu',
+            'jabatan' => 'Kasir',
+            'email' => 'intan@example.com',
+            'foto' => 'img/putri.jpeg'
+        ],
+    ];
+
     public function index()
     {
-        $pegawai = Pegawai::all();
+        $pegawai = $this->pegawai;
         return view('pegawai.index', compact('pegawai'));
     }
 
@@ -20,50 +43,28 @@ class PegawaiController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nama' => 'required',
-            'jabatan' => 'required',
-            'email' => 'required|email',
-            'foto' => 'nullable|image|max:2048',
-        ]);
-
-        $data = $request->only(['nama', 'jabatan', 'email']);
-
-        if ($request->hasFile('foto')) {
-            $data['foto'] = $request->file('foto')->store('foto_pegawai', 'public');
-        }
-
-        Pegawai::create($data);
-        return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil ditambahkan');
+        // sementara hanya redirect
+        return redirect()->route('pegawai.index')->with('success', 'Fitur tambah aktif (statis)');
     }
 
-    public function edit(Pegawai $pegawai)
+    public function edit($id)
     {
+        $pegawai = collect($this->pegawai)->firstWhere('id', $id);
+
+        if (!$pegawai) {
+            abort(404);
+        }
+
         return view('pegawai.edit', compact('pegawai'));
     }
 
-    public function update(Request $request, Pegawai $pegawai)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'nama' => 'required',
-            'jabatan' => 'required',
-            'email' => 'required|email',
-            'foto' => 'nullable|image|max:2048',
-        ]);
-
-        $data = $request->only(['nama', 'jabatan', 'email']);
-
-        if ($request->hasFile('foto')) {
-            $data['foto'] = $request->file('foto')->store('foto_pegawai', 'public');
-        }
-
-        $pegawai->update($data);
-        return redirect()->route('pegawai.index')->with('success', 'Data pegawai berhasil diperbarui');
+        return redirect()->route('pegawai.index')->with('success', 'Fitur edit aktif (statis)');
     }
 
-    public function destroy(Pegawai $pegawai)
+    public function destroy($id)
     {
-        $pegawai->delete();
-        return redirect()->route('pegawai.index')->with('success', 'Data pegawai berhasil dihapus');
+        return redirect()->route('pegawai.index')->with('success', 'Fitur hapus aktif (statis)');
     }
 }
