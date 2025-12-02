@@ -101,6 +101,17 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // ---- CRUD LAYANAN ----
     Route::resource('daftar-layanan', DaftarLayananController::class)->except(['index']);
+
+    // 1. Route untuk menampilkan form tambah (BARU)
+    Route::get('/pegawai/tambah', [PegawaiController::class, 'create'])->name('pegawai.create');
+
+    // 2. Route untuk menyimpan data ke database (BARU)
+    Route::post('/pegawai/simpan', [PegawaiController::class, 'store'])->name('pegawai.store');
+
+    // Route edit, update, delete yang sudah ada sebelumnya...
+    Route::get('/pegawai/edit/{id}', [PegawaiController::class, 'edit'])->name('pegawai.edit');
+    Route::put('/pegawai/update/{id}', [PegawaiController::class, 'update'])->name('pegawai.update');
+    Route::delete('/pegawai/hapus/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
 });
 
 
