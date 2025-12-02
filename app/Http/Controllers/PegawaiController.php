@@ -33,38 +33,31 @@ class PegawaiController extends Controller
     public function index()
     {
         $pegawai = $this->pegawai;
-        return view('pegawai.index', compact('pegawai'));
+        return view('pegawai', compact('pegawai'));
     }
 
     public function create()
     {
-        return view('pegawai.create');
+        return "Form create tidak dibuat karena hanya memakai 1 view.";
     }
 
     public function store(Request $request)
     {
-        // sementara hanya redirect
-        return redirect()->route('pegawai.index')->with('success', 'Fitur tambah aktif (statis)');
+        return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil ditambah (statis).');
     }
 
     public function edit($id)
     {
-        $pegawai = collect($this->pegawai)->firstWhere('id', $id);
-
-        if (!$pegawai) {
-            abort(404);
-        }
-
-        return view('pegawai.edit', compact('pegawai'));
+        return "Form edit tidak dibuat karena hanya memakai 1 view.";
     }
 
     public function update(Request $request, $id)
     {
-        return redirect()->route('pegawai.index')->with('success', 'Fitur edit aktif (statis)');
+        return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil diedit (statis).');
     }
 
     public function destroy($id)
     {
-        return redirect()->route('pegawai.index')->with('success', 'Fitur hapus aktif (statis)');
+        return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil dihapus (statis).');
     }
 }

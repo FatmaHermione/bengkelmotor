@@ -1,53 +1,44 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Data Pegawai</title>
-  <link rel="stylesheet" href="{{ asset('css/dataPegawai.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Pegawai</title>
+    <link rel="stylesheet" href="{{ asset('css/dataPegawai.css') }}">
 </head>
 <body>
-  <header>
-    <!-- Tombol kembali -->
+
+<header>
     <div class="back-container">
-      <a href="{{ route('home') }}" class="back-btn">⬅ Kembali</a>
+        <a href="{{ route('home') }}" class="back-btn">⬅ Kembali</a>
     </div>
     <h1>Data Pegawai</h1>
-  </header>
+</header>
 
-  <main class="pegawai-container">
-    <div class="pegawai-card">
-      <div class="foto">
-        <img src="{{ asset(path: 'img/marsya.jpeg') }}" alt="Pegawai 1">
-      </div>
-      <div class="info">
-        <h2>Yola Valery</h2>
-        <p><strong>Jabatan:</strong> CEO AXERA MOTOR</p>
-        <p><strong>Email:</strong> yola@example.com</p>
-      </div>
-    </div>
+<main class="pegawai-container">
 
+    @foreach ($pegawai as $p)
     <div class="pegawai-card">
-      <div class="foto">
-        <img src="{{ asset('img/jcwk.jpeg') }}" alt="Pegawai 2">
-      </div>
-      <div class="info">
-        <h2>Rian Saputra</h2>
-        <p><strong>Jabatan:</strong> Montir</p>
-        <p><strong>Email:</strong> rian@example.com</p>
-      </div>
-    </div>
 
-    <div class="pegawai-card">
-      <div class="foto">
-        <img src="{{ asset('img/putri.jpeg') }}" alt="Pegawai 3">
-      </div>
-      <div class="info">
-        <h2>Intan Ayu</h2>
-        <p><strong>Jabatan:</strong> Kasir</p>
-        <p><strong>Email:</strong> intan@example.com</p>
-      </div>
+        <div class="foto">
+            <img src="{{ asset($p['foto']) }}" alt="{{ $p['nama'] }}">
+        </div>
+
+        <div class="info">
+            <h2>{{ $p['nama'] }}</h2>
+            <p><strong>Jabatan:</strong> {{ $p['jabatan'] }}</p>
+            <p><strong>Email:</strong> {{ $p['email'] }}</p>
+
+            <div class="aksi">
+                <button class="btn-edit" onclick="alert('Fitur edit belum dibuat (statis).')">Edit</button>
+                <button class="btn-hapus" onclick="confirm('Yakin hapus?') ? alert('Dihapus (statis).') : null">Hapus</button>
+            </div>
+        </div>
+
     </div>
-  </main>
+    @endforeach
+
+</main>
+
 </body>
 </html>
