@@ -9,9 +9,10 @@ class Cart extends Model
 {
     use HasFactory;
 
-    // Pastikan terhubung ke tabel 'carts'
+    // Pastikan nama tabel benar (biasanya 'carts')
     protected $table = 'carts';
 
+    // WAJIB ADA: Agar data bisa diisi lewat Controller
     protected $fillable = [
         'user_id',
         'product_id',

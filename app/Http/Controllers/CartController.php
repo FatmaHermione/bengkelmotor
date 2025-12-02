@@ -55,36 +55,47 @@ class CartController extends Controller
      * 2. TAMBAH PRODUK
      */
     public function store(Request $request)
-    {
-        if (!Auth::check()) {
-            return redirect()->route('login.form')
-                ->with('error', 'Silakan login dahulu');
-        }
-
-        $userId = Auth::id();
-        $idProduk = $request->id_produk;
-        $jenis = $request->jenis_barang ?? 'sparepart';
-        $qty = $request->qty ?? 1;
-
-        $cek = Cart::where('user_id', $userId)
-            ->where('product_id', $idProduk)
-            ->where('product_type', $jenis)
-            ->first();
-
-        if ($cek) {
-            $cek->qty += $qty;
-            $cek->save();
-        } else {
-            Cart::create([
-                'user_id' => $userId,
-                'product_id' => $idProduk,
-                'product_type' => $jenis,
-                'qty' => $qty
-            ]);
-        }
-
-        return redirect()->route('cart.show')->with('success', 'Berhasil ditambahkan!');
+{
+    // Cek Login
+    if (!Auth::check()) {
+        return redirect()->route('login.form')->with('error', 'Silakan login dahulu untuk belanja.');
     }
+
+    $userId = Auth::id();
+    
+    // Validasi data masuk agar tidak error 'null'
+    $request->validate([
+        'id_produk' => 'required',
+        'jenis_barang' => 'required',
+        'qty' => 'required|integer|min:1'
+    ]);
+
+    $idProduk = $request->id_produk;
+    $jenis = $request->jenis_barang; // Tidak perlu default 'sparepart' jika form sudah benar
+    $qty = $request->qty;
+
+    // ... sisa kode Anda (Logika update/create Cart) ...
+    // Kode Anda di bawah ini sudah benar:
+    
+    $cek = Cart::where('user_id', $userId)
+        ->where('product_id', $idProduk)
+        ->where('product_type', $jenis)
+        ->first();
+
+    if ($cek) {
+        $cek->qty += $qty;
+        $cek->save();
+    } else {
+        Cart::create([
+            'user_id' => $userId,
+            'product_id' => $idProduk,
+            'product_type' => $jenis,
+            'qty' => $qty
+        ]);
+    }
+
+    return redirect()->route('cart.show')->with('success', 'Berhasil ditambahkan!');
+}
 
     /**
      * 3. UPDATE QTY

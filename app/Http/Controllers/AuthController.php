@@ -8,9 +8,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Servis; 
 use Illuminate\Support\Facades\Redirect;
+// WAJIB IMPORT MODEL CART
+use App\Models\Cart; 
 
 class AuthController extends Controller
 {
+    // ... (fungsi login, logout, register, showLoginForm, showForm, store biarkan saja) ...
 
     public function showLoginForm()
     {
@@ -48,13 +51,13 @@ class AuthController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255', // <-- TAMBAHKAN VALIDASI NAME
+            'name' => 'required|string|max:255',
             'username' => 'required|string|max:50|unique:users,username',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
         User::create([
-            'name'     => $request->name, // <-- TAMBAHKAN KOLOM NAME
+            'name'     => $request->name,
             'username' => $request->username,
             'password' => bcrypt($request->password),
         ]);
@@ -63,38 +66,34 @@ class AuthController extends Controller
     }
 
     // ==============================
-    // FITUR PAYMENT (Sudah ada)
+    // FITUR PAYMENT
     // ==============================
+    
     public function payment()
     {
-        $items = [
-            [
-                'nama' => 'MOTUL Oil Motor SCOOTER POWER LE',
-                'detail' => '4T 5W40 - 0.8 Kendaraan Mesin Oil',
-                'harga' => 82000,
-                'qty' => 1,
-                'image' => 'motul.png',
-            ],
-            [
-                'nama' => 'FDR TL GENZI PRO Ring 14 Ban Motor',
-                'detail' => 'Tubeless Accessories Motorcycle Rasio - 80/80-14',
-                'harga' => 212000,
-                'layanan' => 'Servis mesin',
-                'biaya_layanan' => 14000,
-                'qty' => 1,
-                'image' => 'fdr.png',
-            ],
-        ];
+        $items = session('checkout_items', []);
+        $total = session('checkout_total', 0);
 
-        $total = collect($items)->sum(function ($item) {
-            return ($item['harga'] * $item['qty']) + ($item['biaya_layanan'] ?? 0);
-        });
+        if (empty($items)) {
+            return redirect()->route('cart.show')->with('error', 'Keranjang belanja kosong');
+        }
 
         return view('payment', compact('items', 'total'));
     }
 
     public function processPayment(Request $request)
     {
+        // 1. (Opsional) Simpan ke tabel Transaksi/Detail Transaksi di sini
+        // ...
+        
+        // 2. HAPUS DATA DARI DATABASE CART (INI YANG KURANG KEMARIN)
+        if (Auth::check()) {
+            Cart::where('user_id', Auth::id())->delete();
+        }
+
+        // 3. Hapus session keranjang
+        session()->forget(['cart', 'checkout_items', 'checkout_total', 'payment_method']);
+        
         return redirect()->route('payment.success')->with('success', 'Pembayaran berhasil!');
     }
 
@@ -104,71 +103,38 @@ class AuthController extends Controller
     }
 
     // ==============================
-    // FITUR FORM SERVIS (Baru Ditambahkan)
+    // FITUR PEMILIHAN METODE PEMBAYARAN
     // ==============================
 
-    /**
-     * Menampilkan halaman form servis.
-     * (Nama diubah menjadi serviceCreate agar tidak bentrok)
-     */
+    public function paymentMethod(Request $request)
+    {
+        $total = session('checkout_total', 0);
+        $items = session('checkout_items', []);
+
+        if ($total == 0 || empty($items)) {
+            return redirect()->route('cart.show');
+        }
+
+        return view('payment_method', compact('items', 'total'));
+    }
+
+    public function choosePaymentMethod(Request $request)
+    {
+        $request->validate([
+            'method' => 'required|string'
+        ]);
+
+        $method = $request->method;
+        session(['payment_method' => $method]);
+
+        return redirect()->route('payment'); 
+    }
+
+    // ... (fungsi serviceCreate dan serviceView tetap sama) ...
     public function serviceCreate()
     {
         return view('formservice');
     }
-// ==============================
-// FITUR PEMILIHAN METODE PEMBAYARAN
-// ==============================
-
-public function paymentMethod(Request $request)
-{
-    // Ambil total dari payment sebelumnya
-    // (kalau mau pakai session, isi session total dulu)
-    $total = session('total');
-
-    // Jika tidak ada total di session, hitung ulang default seperti halaman payment
-    if (!$total) {
-        $items = [
-            [
-                'nama' => 'MOTUL Oil Motor SCOOTER POWER LE',
-                'detail' => '4T 5W40 - 0.8 Kendaraan Mesin Oil',
-                'harga' => 82000,
-                'qty' => 1,
-                'image' => 'motul.png',
-            ],
-            [
-                'nama' => 'FDR TL GENZI PRO Ring 14 Ban Motor',
-                'detail' => 'Tubeless Accessories Motorcycle Rasio - 80/80-14',
-                'harga' => 212000,
-                'layanan' => 'Servis mesin',
-                'biaya_layanan' => 14000,
-                'qty' => 1,
-                'image' => 'fdr.png',
-            ],
-        ];
-
-        $total = collect($items)->sum(function ($item) {
-            return ($item['harga'] * $item['qty']) + ($item['biaya_layanan'] ?? 0);
-        });
-    }
-
-    return view('payment-method', compact('total'));
-}
-
-public function choosePaymentMethod(Request $request)
-{
-    $request->validate([
-        'method' => 'required|string'
-    ]);
-
-    $method = $request->method;
-
-    // Simpan metode pembayaran ke session
-    session(['payment_method' => $method]);
-
-    // Redirect ke halaman sukses atau proses pembayaran sesuai kebutuhan
-    return redirect()->route('payment.success')
-                     ->with('success', 'Metode pembayaran dipilih: ' . strtoupper($method));
-}
 
     public function serviceView(Request $request)
     {
