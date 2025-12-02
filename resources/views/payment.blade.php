@@ -7,76 +7,100 @@
 
     <style>
         body {
-            background: #1c1c1c;
+            background: #f4f4f4;
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         .container {
-            width: 900px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
+            width: 95%;
+            max-width: 900px;
+            margin: 20px auto;
         }
 
+        /* HEADER – Sesuai UI Sebelumnya */
         .header {
             display: flex;
             align-items: center;
             background: linear-gradient(to right, #ff8a00, #ff5f00);
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 12px;
             color: #fff;
             margin-bottom: 20px;
-        }
-
-        .logo {
-            font-size: 28px;
-            margin-right: 10px;
         }
 
         .back-btn {
             font-size: 20px;
             margin-right: 15px;
             cursor: pointer;
-            background: #fff;
-            padding: 5px 10px;
-            border-radius: 5px;
+            background: #ffffffcc;
+            padding: 6px 12px;
+            border-radius: 8px;
+            color: #333;
         }
 
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* PRODUK CARD */
         .product-card {
             display: flex;
+            gap: 15px;
+            background: #ffffff;
             padding: 15px;
-            background: #f7f7f7;
-            border-radius: 10px;
+            border-radius: 12px;
             margin-bottom: 15px;
+            box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
         }
 
         .product-card img {
             width: 90px;
-            margin-right: 20px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 10px;
         }
 
+        /* SUMMARY */
         .summary-box {
-            padding: 15px;
-            background: #eeeeee;
-            border-radius: 10px;
-            width: 250px;
-            float: right;
+            background: #ffffff;
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0px 3px 10px rgba(0,0,0,0.12);
         }
 
         .btn-bayar {
             width: 100%;
-            background: #ff7700;
-            padding: 10px;
+            background: linear-gradient(45deg, #ff8a00, #ff5e00);
+            padding: 12px;
             border: none;
-            border-radius: 7px;
+            border-radius: 8px;
             color: #fff;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 17px;
+            margin-top: 15px;
+            font-weight: bold;
         }
 
         .btn-bayar:hover {
-            background: #ff5500;
+            background: linear-gradient(45deg, #ff6f00, #ff4500);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 600px) {
+            .product-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+
+            .product-card img {
+                width: 140px;
+                height: 140px;
+            }
         }
     </style>
 </head>
@@ -84,6 +108,8 @@
 <body>
 
     <div class="container">
+
+        <!-- HEADER sesuai tampilan sebelumnya -->
         <div class="header">
             <div class="back-btn" onclick="history.back()">←</div>
             <div>
@@ -92,34 +118,43 @@
             </div>
         </div>
 
-        <h3>Pilih semua ({{ count($items) }})</h3>
+        <h3 style="margin-bottom: 15px;">Pilih semua ({{ count($items) }})</h3>
 
+        <!-- LIST PRODUK -->
         @foreach ($items as $item)
             <div class="product-card">
-                <img src="/images/{{ $item['image'] }}" alt="">
+                <img src="/images/{{ $item['image'] }}" alt="Produk">
+
                 <div style="flex:1;">
-                    <b>{{ $item['nama'] }}</b><br>
-                    <small>{{ $item['detail'] }}</small><br><br>
-                    Harga: <b>Rp{{ number_format($item['harga']) }}</b><br>
-                    Qty: {{ $item['qty'] }}<br>
+                    <b style="font-size: 17px;">{{ $item['nama'] }}</b><br>
+                    <small style="color: #666;">{{ $item['detail'] }}</small><br><br>
+
+                    <div style="color:#333;">
+                        Harga: <b>Rp{{ number_format($item['harga']) }}</b><br>
+                        Qty: {{ $item['qty'] }}
+                    </div>
 
                     @if(isset($item['layanan']))
-                    <p style="margin-top:10px;">+ {{ $item['layanan'] }} (Rp{{ number_format($item['biaya_layanan']) }})</p>
+                        <p style="margin-top:10px; color:#444;">
+                            + {{ $item['layanan'] }}  
+                            (Rp{{ number_format($item['biaya_layanan']) }})
+                        </p>
                     @endif
                 </div>
             </div>
         @endforeach
 
+        <!-- SUMMARY -->
         <div class="summary-box">
-            <h4>Ringkasan</h4>
-            <p>Total</p>
-            <h2>Rp {{ number_format($total) }}</h2>
+            <h3>Ringkasan Pembayaran</h3>
+            <p style="color:#666;">Total Keseluruhan</p>
+            <h1 style="margin-top:-5px;">Rp {{ number_format($total) }}</h1>
 
-            <form action="{{ route('payment.process') }}" method="POST">
-                @csrf
+            <form action="{{ route('payment.method') }}" method="GET">
                 <button class="btn-bayar">Bayar</button>
             </form>
         </div>
+
     </div>
 
 </body>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 // Import Model
 use App\Models\Cart;
 use App\Models\Oli;
@@ -13,7 +14,9 @@ use App\Models\Sparepart;
 
 class CartController extends Controller
 {
-    // 1. TAMPILKAN KERANJANG (READ DATABASE -> SYNC TO SESSION)
+    /**
+     * 1. TAMPILKAN ISI KERANJANG
+     */
     public function show()
     {
         if (!Auth::check()) {
@@ -21,122 +24,202 @@ class CartController extends Controller
         }
 
         $userId = Auth::id();
-        
-        // Ambil data dari tabel 'carts' milik user ini
-        $cartItems = Cart::where('user_id', $userId)->get();
+        $dbCart = Cart::where('user_id', $userId)->get();
 
         $cart = [];
 
-        foreach ($cartItems as $item) {
-            $product = null;
-            $jenis = $item->product_type; // Ambil dari kolom product_type
-            $id = $item->product_id;      // Ambil dari kolom product_id
-
-            // Logika pencarian produk ke 4 tabel berbeda
-            if ($jenis == 'oli') $product = Oli::find($id);
-            elseif ($jenis == 'ban') $product = Ban::find($id);
-            elseif ($jenis == 'gear') $product = Gear::find($id);
-            else $product = Sparepart::find($id);
+        foreach ($dbCart as $item) {
+            $product = $this->getProduct($item->product_type, $item->product_id);
+            $nama = $this->getProductName($item->product_type, $product);
 
             if ($product) {
-                // Nama Produk (sesuaikan dengan kolom masing-masing tabel)
-                $namaProduk = '';
-                if ($jenis == 'oli') $namaProduk = $product->namaOli;
-                elseif ($jenis == 'ban') $namaProduk = $product->namaBan;
-                elseif ($jenis == 'gear') $namaProduk = $product->namaGear;
-                else $namaProduk = $product->namaSparepart;
-
-                // Format array agar sesuai dengan View cart.blade.php
-                // Key array menggunakan ID dari tabel carts
                 $cart[$item->id] = [
-                    'id_keranjang' => $item->id, 
-                    'product_id' => $id,
-                    'product_type' => $jenis,
-                    'name' => $namaProduk,
-                    'price' => $product->harga,
-                    'qty' => $item->qty, 
-                    'photo' => $product->gambar
+                    'id_keranjang' => $item->id,
+                    'product_id' => $item->product_id,
+                    'product_type' => $item->product_type,
+                    'nama' => $nama,
+                    'harga' => $product->harga,
+                    'qty' => $item->qty,
+                    'gambar' => $product->gambar,
                 ];
             }
         }
 
-        // PENTING: Simpan ke session agar view cart.blade.php kamu tetap jalan normal
+        // Simpan untuk cart page
         session()->put('cart', $cart);
 
         return view('cart', compact('cart'));
     }
 
-    // 2. MENAMBAH KE KERANJANG (CREATE DATABASE)
+    /**
+     * 2. TAMBAH PRODUK
+     */
     public function store(Request $request)
     {
         if (!Auth::check()) {
-            return redirect()->route('login.form')->with('error', 'Login dulu yuk!');
+            return redirect()->route('login.form')
+                ->with('error', 'Silakan login dahulu');
         }
 
         $userId = Auth::id();
-        // Ambil input dari form HTML
         $idProduk = $request->id_produk;
         $jenis = $request->jenis_barang ?? 'sparepart';
         $qty = $request->qty ?? 1;
 
-        // Cek apakah user sudah punya barang ini di database carts?
-        $cekItem = Cart::where('user_id', $userId)
-                    ->where('product_id', $idProduk)
-                    ->where('product_type', $jenis)
-                    ->first();
+        $cek = Cart::where('user_id', $userId)
+            ->where('product_id', $idProduk)
+            ->where('product_type', $jenis)
+            ->first();
 
-        if ($cekItem) {
-            // Jika ada, update jumlahnya di DATABASE
-            $cekItem->qty += $qty;
-            $cekItem->save();
+        if ($cek) {
+            $cek->qty += $qty;
+            $cek->save();
         } else {
-            // Jika belum ada, buat baru di DATABASE
             Cart::create([
                 'user_id' => $userId,
-                'product_id' => $idProduk,   
-                'product_type' => $jenis,    
+                'product_id' => $idProduk,
+                'product_type' => $jenis,
                 'qty' => $qty
             ]);
         }
 
-        return redirect()->route('cart.show')->with('success', 'Berhasil masuk keranjang!');
+        return redirect()->route('cart.show')->with('success', 'Berhasil ditambahkan!');
     }
 
-    // 3. UPDATE JUMLAH (UPDATE DATABASE)
+    /**
+     * 3. UPDATE QTY
+     */
     public function update(Request $request, $id)
     {
-        // $id adalah ID dari tabel carts (Primary Key)
         $item = Cart::find($id);
-        
+
         if ($item) {
             $item->qty = $request->qty;
-            $item->save(); // Simpan ke DB
+            $item->save();
         }
 
         return back()->with('success', 'Jumlah diperbarui.');
     }
 
-    // 4. HAPUS ITEM (DELETE DATABASE)
+    /**
+     * 4. HAPUS PRODUK
+     */
     public function remove($id)
     {
         $item = Cart::find($id);
-        
+
         if ($item) {
-            $item->delete(); // Hapus dari DB
+            $item->delete();
         }
 
         return back()->with('success', 'Produk dihapus.');
     }
 
-    // 5. KOSONGKAN KERANJANG (DELETE ALL USER DATA)
+    /**
+     * 5. CLEAR CART
+     */
     public function clear()
     {
         $userId = Auth::id();
-        Cart::where('user_id', $userId)->delete(); // Hapus semua punya user ini dari DB
+        Cart::where('user_id', $userId)->delete();
 
-        // Bersihkan session juga biar sinkron
-        session()->forget('cart');
+        session()->forget(['cart', 'checkout_items', 'checkout_total']);
 
         return back()->with('success', 'Keranjang dikosongkan.');
+    }
+
+    /**
+     * 6. CHECKOUT — FIX TOTAL TIDAK 0
+     */
+    public function checkout()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login.form');
+        }
+
+        $userId = Auth::id();
+        $dbCart = Cart::where('user_id', $userId)->get();
+
+        $items = [];
+        $total = 0;
+
+        foreach ($dbCart as $item) {
+
+            $product = $this->getProduct($item->product_type, $item->product_id);
+            $nama = $this->getProductName($item->product_type, $product);
+
+            if ($product) {
+
+                $subtotal = $product->harga * $item->qty;
+
+                $items[] = [
+                    'nama'   => $nama,
+                    'harga'  => $product->harga,
+                    'qty'    => $item->qty,
+                    'image'  => $product->gambar,
+                    'subtotal' => $subtotal
+                ];
+
+                $total += $subtotal;
+            }
+        }
+
+        // Simpan ke session — WAJIB agar payment.blade tidak 0
+        session([
+            'checkout_items' => $items,
+            'checkout_total' => $total
+        ]);
+
+        return redirect()->route('payment.method');
+    }
+
+    /**
+     * 7. HALAMAN PILIH METODE PEMBAYARAN
+     */
+    public function paymentMethod()
+    {
+        $items = session('checkout_items', []);
+        $total = session('checkout_total', 0);
+
+        return view('payment_method', compact('items', 'total'));
+    }
+
+    /**
+     * 8. HALAMAN PAYMENT (setelah memilih metode)
+     */
+    public function payment()
+    {
+        $items = session('checkout_items', []);
+        $total = session('checkout_total', 0);
+
+        return view('payment', compact('items', 'total'));
+    }
+
+    /**
+     * HELPER PRODUK
+     */
+    private function getProduct($jenis, $id)
+    {
+        return match ($jenis) {
+            'oli' => Oli::find($id),
+            'ban' => Ban::find($id),
+            'gear' => Gear::find($id),
+            default => Sparepart::find($id),
+        };
+    }
+
+    /**
+     * HELPER NAMA PRODUK
+     */
+    private function getProductName($jenis, $product)
+    {
+        if (!$product) return '';
+
+        return match ($jenis) {
+            'oli' => $product->namaOli,
+            'ban' => $product->namaBan,
+            'gear' => $product->namaGear,
+            default => $product->namaSparepart,
+        };
     }
 }

@@ -3,140 +3,95 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-// Import Model
-use App\Models\Cart;
-use App\Models\Oli;
-use App\Models\Ban;
-use App\Models\Gear;
-use App\Models\Sparepart;
+use App\Models\Transaksi;
 
-class CartController extends Controller
+class TransaksiController extends Controller
 {
-    // 1. TAMPILKAN KERANJANG (READ DATABASE -> SYNC TO SESSION)
-    public function show()
+    /** 
+     * Menampilkan semua transaksi
+     */
+    public function index()
     {
-        if (!Auth::check()) {
-            return redirect()->route('login.form');
-        }
-
-        $userId = Auth::id();
-        
-        // Ambil data dari tabel 'carts' milik user ini
-        $cartItems = Cart::where('user_id', $userId)->get();
-
-        $cart = [];
-
-        foreach ($cartItems as $item) {
-            $product = null;
-            $jenis = $item->product_type; // Ambil dari kolom product_type
-            $id = $item->product_id;      // Ambil dari kolom product_id
-
-            // Logika pencarian produk ke 4 tabel berbeda
-            if ($jenis == 'oli') $product = Oli::find($id);
-            elseif ($jenis == 'ban') $product = Ban::find($id);
-            elseif ($jenis == 'gear') $product = Gear::find($id);
-            else $product = Sparepart::find($id);
-
-            if ($product) {
-                // Nama Produk (sesuaikan dengan kolom masing-masing tabel)
-                $namaProduk = '';
-                if ($jenis == 'oli') $namaProduk = $product->namaOli;
-                elseif ($jenis == 'ban') $namaProduk = $product->namaBan;
-                elseif ($jenis == 'gear') $namaProduk = $product->namaGear;
-                else $namaProduk = $product->namaSparepart;
-
-                // Format array agar sesuai dengan View cart.blade.php
-                // Key array menggunakan ID dari tabel carts
-                $cart[$item->id] = [
-                    'id_keranjang' => $item->id, 
-                    'product_id' => $id,
-                    'product_type' => $jenis,
-                    'name' => $namaProduk,
-                    'price' => $product->harga,
-                    'qty' => $item->qty, 
-                    'photo' => $product->gambar
-                ];
-            }
-        }
-
-        // PENTING: Simpan ke session agar view cart.blade.php kamu tetap jalan normal
-        session()->put('cart', $cart);
-
-        return view('cart', compact('cart'));
+        $transaksi = Transaksi::orderBy('id', 'DESC')->get();
+        return response()->json($transaksi);
     }
 
-    // 2. MENAMBAH KE KERANJANG (CREATE DATABASE)
+    /**
+     * Menyimpan data transaksi
+     */
     public function store(Request $request)
     {
-        if (!Auth::check()) {
-            return redirect()->route('login.form')->with('error', 'Login dulu yuk!');
-        }
+        $request->validate([
+            'user_id'            => 'required|integer',
+            'tanggal_transaksi'  => 'required|date',
+            'total_harga'        => 'required|numeric',
+            'biaya_admin'        => 'required|numeric',
+            'metode_pembayaran'  => 'required|string',
+        ]);
 
-        $userId = Auth::id();
-        // Ambil input dari form HTML
-        $idProduk = $request->id_produk;
-        $jenis = $request->jenis_barang ?? 'sparepart';
-        $qty = $request->qty ?? 1;
+        $transaksi = Transaksi::create([
+            'user_id'            => $request->user_id,
+            'tanggal_transaksi'  => $request->tanggal_transaksi,
+            'total_harga'        => $request->total_harga,
+            'biaya_admin'        => $request->biaya_admin,
+            'metode_pembayaran'  => $request->metode_pembayaran,
+            'status_pembayaran'  => 'pending',
+        ]);
 
-        // Cek apakah user sudah punya barang ini di database carts?
-        $cekItem = Cart::where('user_id', $userId)
-                    ->where('product_id', $idProduk)
-                    ->where('product_type', $jenis)
-                    ->first();
-
-        if ($cekItem) {
-            // Jika ada, update jumlahnya di DATABASE
-            $cekItem->qty += $qty;
-            $cekItem->save();
-        } else {
-            // Jika belum ada, buat baru di DATABASE
-            Cart::create([
-                'user_id' => $userId,
-                'product_id' => $idProduk,   
-                'product_type' => $jenis,    
-                'qty' => $qty
-            ]);
-        }
-
-        return redirect()->route('cart.show')->with('success', 'Berhasil masuk keranjang!');
+        return response()->json([
+            'message' => 'Transaksi berhasil dibuat',
+            'data'    => $transaksi
+        ]);
     }
 
-    // 3. UPDATE JUMLAH (UPDATE DATABASE)
+    /**
+     * Menampilkan detail transaksi
+     */
+    public function show($id)
+    {
+        $transaksi = Transaksi::findOrFail($id);
+        return response()->json($transaksi);
+    }
+
+    /**
+     * Update transaksi
+     */
     public function update(Request $request, $id)
     {
-        // $id adalah ID dari tabel carts (Primary Key)
-        $item = Cart::find($id);
-        
-        if ($item) {
-            $item->qty = $request->qty;
-            $item->save(); // Simpan ke DB
-        }
+        $transaksi = Transaksi::findOrFail($id);
 
-        return back()->with('success', 'Jumlah diperbarui.');
+        $transaksi->update($request->all());
+
+        return response()->json([
+            'message' => 'Transaksi berhasil diupdate',
+            'data' => $transaksi
+        ]);
     }
 
-    // 4. HAPUS ITEM (DELETE DATABASE)
-    public function remove($id)
+    /**
+     * Mengubah status pembayaran (pending → lunas)
+     */
+    public function updateStatus($id)
     {
-        $item = Cart::find($id);
-        
-        if ($item) {
-            $item->delete(); // Hapus dari DB
-        }
+        $transaksi = Transaksi::findOrFail($id);
 
-        return back()->with('success', 'Produk dihapus.');
+        $transaksi->status_pembayaran = 'lunas';
+        $transaksi->save();
+
+        return response()->json([
+            'message' => 'Status pembayaran diperbarui menjadi LUNAS',
+            'data'    => $transaksi
+        ]);
     }
 
-    // 5. KOSONGKAN KERANJANG (DELETE ALL USER DATA)
-    public function clear()
+    /**
+     * Menghapus transaksi
+     */
+    public function destroy($id)
     {
-        $userId = Auth::id();
-        Cart::where('user_id', $userId)->delete(); // Hapus semua punya user ini dari DB
+        $transaksi = Transaksi::findOrFail($id);
+        $transaksi->delete();
 
-        // Bersihkan session juga biar sinkron
-        session()->forget('cart');
-
-        return back()->with('success', 'Keranjang dikosongkan.');
+        return response()->json(['message' => 'Transaksi berhasil dihapus']);
     }
 }

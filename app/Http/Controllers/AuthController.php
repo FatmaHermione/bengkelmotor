@@ -115,6 +115,60 @@ class AuthController extends Controller
     {
         return view('formservice');
     }
+// ==============================
+// FITUR PEMILIHAN METODE PEMBAYARAN
+// ==============================
+
+public function paymentMethod(Request $request)
+{
+    // Ambil total dari payment sebelumnya
+    // (kalau mau pakai session, isi session total dulu)
+    $total = session('total');
+
+    // Jika tidak ada total di session, hitung ulang default seperti halaman payment
+    if (!$total) {
+        $items = [
+            [
+                'nama' => 'MOTUL Oil Motor SCOOTER POWER LE',
+                'detail' => '4T 5W40 - 0.8 Kendaraan Mesin Oil',
+                'harga' => 82000,
+                'qty' => 1,
+                'image' => 'motul.png',
+            ],
+            [
+                'nama' => 'FDR TL GENZI PRO Ring 14 Ban Motor',
+                'detail' => 'Tubeless Accessories Motorcycle Rasio - 80/80-14',
+                'harga' => 212000,
+                'layanan' => 'Servis mesin',
+                'biaya_layanan' => 14000,
+                'qty' => 1,
+                'image' => 'fdr.png',
+            ],
+        ];
+
+        $total = collect($items)->sum(function ($item) {
+            return ($item['harga'] * $item['qty']) + ($item['biaya_layanan'] ?? 0);
+        });
+    }
+
+    return view('payment-method', compact('total'));
+}
+
+public function choosePaymentMethod(Request $request)
+{
+    $request->validate([
+        'method' => 'required|string'
+    ]);
+
+    $method = $request->method;
+
+    // Simpan metode pembayaran ke session
+    session(['payment_method' => $method]);
+
+    // Redirect ke halaman sukses atau proses pembayaran sesuai kebutuhan
+    return redirect()->route('payment.success')
+                     ->with('success', 'Metode pembayaran dipilih: ' . strtoupper($method));
+}
 
     public function serviceView(Request $request)
     {

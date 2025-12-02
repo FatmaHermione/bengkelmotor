@@ -25,22 +25,34 @@
                     @foreach(session('cart') as $id => $item)
                     <div class="cart-item">
                         <input type="checkbox" class="check-item" checked>
-                        <img src="{{ asset('img/' . ($item['photo'] ?? 'no-image.jpg')) }}" class="item-img">
+
+                        {{-- gambar --}}
+                        <img src="{{ asset('img/' . ($item['gambar'] ?? 'no-image.jpg')) }}" class="item-img">
+
                         <div class="item-info">
-                            <h2 class="item-name">{{ $item['name'] }}</h2>
-                            <p class="item-price">Rp {{ number_format($item['price'], 0, ',', '.') }}</p>
+
+                            {{-- nama produk --}}
+                            <h2 class="item-name">{{ $item['nama'] }}</h2>
+
+                            {{-- harga produk --}}
+                            <p class="item-price">Rp {{ number_format($item['harga'], 0, ',', '.') }}</p>
+
+                            {{-- update qty --}}
                             <form action="{{ route('cart.update', $id) }}" method="POST" class="qty-box">
                                 @csrf
                                 <input type="number" name="qty" value="{{ $item['qty'] }}" min="1" class="qty-input">
                                 <button type="submit" class="update-btn">Update</button>
                             </form>
                         </div>
+
+                        {{-- tombol hapus --}}
                         <form action="{{ route('cart.remove', $id) }}" method="POST">
                             @csrf
                             <button class="delete-btn" onclick="return confirm('Hapus?')">✕</button>
                         </form>
                     </div>
                     @endforeach
+
                 @else
                     <div style="text-align: center; padding: 50px; background: white; border-radius: 8px;">
                         <h3>Keranjang Kosong</h3>
@@ -49,14 +61,21 @@
                 @endif
             </div>
 
+            {{-- summary --}}
             @if(session('cart') && count(session('cart')) > 0)
             <div class="summary-box">
                 <h3>Ringkasan</h3>
                 <div class="summary-row">
                     <span>Total Harga</span>
-                    <strong style="color: #d32f2f;">Rp {{ number_format(collect(session('cart'))->sum(fn($i) => $i['price'] * $i['qty']), 0, ',', '.') }}</strong>
+
+                    {{-- perhitungan total harga --}}
+                    <strong style="color: #d32f2f;">
+                        Rp {{ number_format(collect(session('cart'))->sum(fn($i) => $i['harga'] * $i['qty']), 0, ',', '.') }}
+                    </strong>
                 </div>
+
                 <a href="/payment" class="checkout-btn">Checkout</a>
+
                 <form action="{{ route('cart.clear') }}" method="POST" style="text-align: center;">
                     @csrf
                     <button class="clear-btn" onclick="return confirm('Kosongkan?')">Kosongkan Keranjang</button>
