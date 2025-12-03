@@ -38,6 +38,7 @@
             padding: 6px 12px;
             border-radius: 8px;
             color: #333;
+            text-decoration: none; /* Tambahan agar tidak ada garis bawah */
         }
 
         .logo {
@@ -100,6 +101,7 @@
             .product-card img {
                 width: 140px;
                 height: 140px;
+                margin: 0 auto;
             }
         }
     </style>
@@ -111,33 +113,36 @@
 
         <!-- HEADER sesuai tampilan sebelumnya -->
         <div class="header">
-            <div class="back-btn" onclick="history.back()">←</div>
+            <a href="{{ route('payment.method') }}" class="back-btn">←</a>
             <div>
                 <div class="logo">🛵 AXERA MOTOR</div>
                 <small>Bengkel Servis Motor</small>
             </div>
         </div>
 
-        <h3 style="margin-bottom: 15px;">Pilih semua ({{ count($items) }})</h3>
+        <h3 style="margin-bottom: 15px;">Rincian Pesanan ({{ count($items) }})</h3>
 
         <!-- LIST PRODUK -->
         @foreach ($items as $item)
             <div class="product-card">
-                <img src="/images/{{ $item['image'] }}" alt="Produk">
+                <!-- Gunakan asset() untuk gambar agar path benar -->
+                <img src="{{ asset('img/' . ($item['image'] ?? 'no-image.jpg')) }}" alt="Produk">
 
                 <div style="flex:1;">
                     <b style="font-size: 17px;">{{ $item['nama'] }}</b><br>
-                    <small style="color: #666;">{{ $item['detail'] }}</small><br><br>
+                    
+                    {{-- PERBAIKAN: Cek apakah key 'detail' ada, jika tidak, tampilkan string kosong atau strip --}}
+                    <small style="color: #666;">{{ $item['detail'] ?? '-' }}</small><br><br>
 
                     <div style="color:#333;">
-                        Harga: <b>Rp{{ number_format($item['harga']) }}</b><br>
+                        Harga: <b>Rp {{ number_format($item['harga'], 0, ',', '.') }}</b><br>
                         Qty: {{ $item['qty'] }}
                     </div>
 
                     @if(isset($item['layanan']))
                         <p style="margin-top:10px; color:#444;">
                             + {{ $item['layanan'] }}  
-                            (Rp{{ number_format($item['biaya_layanan']) }})
+                            (Rp {{ number_format($item['biaya_layanan'], 0, ',', '.') }})
                         </p>
                     @endif
                 </div>
@@ -147,11 +152,13 @@
         <!-- SUMMARY -->
         <div class="summary-box">
             <h3>Ringkasan Pembayaran</h3>
+            <p style="color:#666;">Metode Pembayaran: <strong>{{ strtoupper(session('payment_method', '-')) }}</strong></p>
             <p style="color:#666;">Total Keseluruhan</p>
-            <h1 style="margin-top:-5px;">Rp {{ number_format($total) }}</h1>
+            <h1 style="margin-top:-5px; color: #d32f2f;">Rp {{ number_format($total, 0, ',', '.') }}</h1>
 
-            <form action="{{ route('payment.method') }}" method="GET">
-                <button class="btn-bayar">Bayar</button>
+            <form action="{{ route('payment.process') }}" method="POST">
+                @csrf
+                <button class="btn-bayar">Bayar Sekarang</button>
             </form>
         </div>
 
