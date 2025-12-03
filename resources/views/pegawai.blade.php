@@ -5,16 +5,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Pegawai</title>
     <link rel="stylesheet" href="{{ asset('css/dataPegawai.css') }}">
+
+    <!-- NAVBAR STYLE -->
+    <style>
+        .navbar {
+            width: 100%;
+            background: white;
+            padding: 10px 6%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #3f2727; /* coklat tua seperti gambar */
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: auto;
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .logo p {
+            margin: 0;
+            font-size: 12px;
+            color: #444;
+        }
+
+        .nav-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #000;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #ff7b00;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-    <div class="back-container">
-        <a href="{{ route('home') }}" class="back-btn">⬅ Kembali</a>
-    </div>
-    <h1>Data Pegawai</h1>
-</header>
+<!-- ================= NAVBAR ================= -->
+<header class="navbar">
 
+    <!-- Logo kiri -->
+    <div class="logo">
+        <img src="{{ asset('img/bike.png') }}" class="logo-icon">
+        <div class="logo-text">
+            <h1>AXERA MOTOR</h1>
+            <p>Bengkel Servis Motor</p>
+        </div>
+    </div>
+
+    <!-- Menu tengah -->
+    <div class="nav-center">
+        <nav class="nav-links">
+            <a href="{{ route('home') }}">Home</a>
+            <a href="{{ route('service.form') }}">Form Service</a>
+            <a href="{{ route('pegawai.index') }}" class="active">Data Pegawai</a>
+            <a href="{{ route('about.index') }}">Tentang Bengkel Kami</a>
+        </nav>
+    </div>
+
+</header>
+<!-- ================= END NAVBAR ================= -->
+<h1 class="judul-halaman">Data Pegawai</h1>
+
+<!-- ================= ISI HALAMAN TANPA HEADER ORANYE ================= -->
 <main class="pegawai-container">
 
     @foreach ($pegawai as $p)

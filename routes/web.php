@@ -110,3 +110,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 Route::post('/detail-transaksi/store', [KeranjangController::class, 'store'])->name('detail-transaksi.store');
 Route::get('/pembayaran', [KeranjangController::class, 'pembayaran'])->name('pembayaran');
+
+Route::get('/about', function() {
+    return view('about');
+})->name('about.index');
+
