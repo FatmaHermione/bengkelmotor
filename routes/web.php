@@ -35,7 +35,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 // ==============================================================
-# 2. ROUTE MEMBER (HARUS LOGIN - USER BIASA BISA AKSES)
+# 2. ROUTE MEMBER (HARUS LOGIN)
 // ==============================================================
 
 Route::middleware(['auth'])->group(function () {
@@ -51,15 +51,12 @@ Route::middleware(['auth'])->group(function () {
     // sparepart hanya index untuk user
     Route::resource('sparepart', SparepartController::class)->only(['index']);
 
-    // ---- KERANJANG BELANJA & CHECKOUT (PERBAIKAN DISINI) ----
+    // ---- KERANJANG BELANJA ----
     Route::get('/cart', [CartController::class, 'show'])->name('cart.show');
-    Route::post('/cart/add', [CartController::class, 'store'])->name('cart.add');
+    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
-
-    // ===> ROUTE CHECKOUT HARUS DISINI (DI DALAM AUTH, BUKAN ADMIN) <===
-    Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 
     // ---- BOOKING SERVIS ----
     Route::get('/service', [BookingServisController::class, 'create'])->name('service.form');
@@ -82,7 +79,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 // ==============================================================
-# 3. ROUTE KHUSUS ADMIN (JANGAN TARUH CART DISINI)
+# 3. ROUTE KHUSUS ADMIN
 // ==============================================================
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -104,13 +101,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // ---- CRUD LAYANAN ----
     Route::resource('daftar-layanan', DaftarLayananController::class)->except(['index']);
-
-    // ---- PEGAWAI (ADMIN CRUD) ----
-    Route::get('/pegawai/tambah', [PegawaiController::class, 'create'])->name('pegawai.create');
-    Route::post('/pegawai/simpan', [PegawaiController::class, 'store'])->name('pegawai.store');
-    Route::get('/pegawai/edit/{id}', [PegawaiController::class, 'edit'])->name('pegawai.edit');
-    Route::put('/pegawai/update/{id}', [PegawaiController::class, 'update'])->name('pegawai.update');
-    Route::delete('/pegawai/hapus/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
 });
 
 
@@ -119,13 +109,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
 // ==============================================================
 
 Route::post('/detail-transaksi/store', [KeranjangController::class, 'store'])->name('detail-transaksi.store');
-<<<<<<< HEAD
 Route::get('/pembayaran', [KeranjangController::class, 'pembayaran'])->name('pembayaran');
 
 Route::get('/about', function() {
     return view('about');
 })->name('about.index');
 
-=======
-Route::get('/pembayaran', [KeranjangController::class, 'pembayaran'])->name('pembayaran');
->>>>>>> 91af1fce5943a10637336d5c9feafcf8d5de5154
