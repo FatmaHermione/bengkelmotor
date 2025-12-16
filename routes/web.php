@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-// ========== IMPORT CONTROLLER ==========
+// ================= CONTROLLERS =================
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DaftarLayananController;
 use App\Http\Controllers\SparepartController;
@@ -14,44 +14,42 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\BookingServisController;
 use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\PaymentController;
 
-
-// ==============================================================
-# 1. ROUTE UMUM (TANPA LOGIN)
-// ==============================================================
-
-Route::get('/', fn() => redirect()->route('login.form'));
+// =================================================
+// 1️⃣ ROUTE PUBLIK (BELUM LOGIN)
+// =================================================
+Route::get('/', fn () => redirect()->route('login.form'));
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.form');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-
-Route::get('/signup', [AuthController::class, 'showForm'])->name('signup.form');
-Route::post('/signup', [AuthController::class, 'store'])->name('signup');
 
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register.form');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-
-// ==============================================================
-# 2. ROUTE MEMBER (HARUS LOGIN)
-// ==============================================================
-
+// =================================================
+// 2️⃣ ROUTE USER (LOGIN WAJIB)
+// =================================================
 Route::middleware(['auth'])->group(function () {
 
     // ---- HOME ----
-    Route::get('/home', fn() => view('home'))->name('home');
+    Route::get('/home', fn () => view('home'))->name('home');
 
-    // ---- PRODUK (USER HANYA MELIHAT) ----
-    Route::get('/oli', [OliController::class, 'index'])->name('oli');
-    Route::get('/ban', [BanController::class, 'index'])->name('ban');
-    Route::get('/gear', [GearController::class, 'index'])->name('gear');
-
-    // sparepart hanya index untuk user
+    // ---- PRODUK (READ ONLY) ----
+    Route::get('/oli', [OliController::class, 'index'])->name('oli.index');
+    Route::get('/ban', [BanController::class, 'index'])->name('ban.index');
+    Route::get('/gear', [GearController::class, 'index'])->name('gear.index');
     Route::resource('sparepart', SparepartController::class)->only(['index']);
 
-    // ---- KERANJANG BELANJA ----
+    // ---- PEGAWAI (READ ONLY) ----
+    Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+
+    // ---- LAYANAN (READ ONLY) ----
+    Route::resource('daftar-layanan', DaftarLayananController::class)->only(['index']);
+
+    // ---- KERANJANG ----
     Route::get('/cart', [CartController::class, 'show'])->name('cart.show');
     Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
@@ -60,58 +58,47 @@ Route::middleware(['auth'])->group(function () {
 
     // ---- BOOKING SERVIS ----
     Route::get('/service', [BookingServisController::class, 'create'])->name('service.form');
-    Route::post('/service/store', [BookingServisController::class, 'store'])->name('service.store');
+    Route::post('/service', [BookingServisController::class, 'store'])->name('service.store');
     Route::get('/riwayat-service', [BookingServisController::class, 'index'])->name('service.riwayat');
 
-    // ---- PEGAWAI (READ ONLY UNTUK USER) ----
-    Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
-
-    // ---- LAYANAN (READ ONLY) ----
-    Route::resource('daftar-layanan', DaftarLayananController::class)->only(['index']);
-
-    // ---- PEMBAYARAN ----
-    Route::get('/payment', [AuthController::class, 'payment'])->name('payment');
-    Route::post('/process-payment', [AuthController::class, 'processPayment'])->name('payment.process');
-    Route::get('/payment-success', [AuthController::class, 'paymentSuccess'])->name('payment.success');
-    Route::get('/payment-method', [AuthController::class, 'paymentMethod'])->name('payment.method');
-    Route::post('/choose-payment-method', [AuthController::class, 'choosePaymentMethod'])->name('choose.payment.method');
+    // ---- PAYMENT ----
+    Route::get('/payment/method', [PaymentController::class, 'paymentMethod'])->name('payment.method');
+    Route::post('/payment/choose', [PaymentController::class, 'choosePaymentMethod'])->name('payment.choose');
+    Route::get('/payment/qris', [PaymentController::class, 'qris'])->name('payment.qris');
+    Route::get('/payment/transfer', [PaymentController::class, 'transfer'])->name('payment.transfer');
+    Route::post('/payment/process', [PaymentController::class, 'process'])->name('payment.process');
+    Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
 });
 
-
-// ==============================================================
-# 3. ROUTE KHUSUS ADMIN
-// ==============================================================
-
+// =================================================
+// 3️⃣ ROUTE ADMIN (LOGIN + ADMIN)
+// =================================================
 Route::middleware(['auth', 'admin'])->group(function () {
+
+    // ---- CRUD PEGAWAI (ADMIN FULL) ----
+    Route::resource('pegawai', PegawaiController::class)->except(['index']);
 
     // ---- CRUD PRODUK UMUM ----
     Route::get('/produk/tambah', [ProdukController::class, 'create'])->name('produk.create');
-    Route::post('/produk/simpan', [ProdukController::class, 'store'])->name('produk.store');
-    Route::get('/produk/edit/{kategori}/{id}', [ProdukController::class, 'edit'])->name('produk.edit');
-    Route::put('/produk/update/{kategori}/{id}', [ProdukController::class, 'update'])->name('produk.update');
-    Route::delete('/produk/hapus/{kategori}/{id}', [ProdukController::class, 'destroy'])->name('produk.destroy');
+    Route::post('/produk', [ProdukController::class, 'store'])->name('produk.store');
+    Route::get('/produk/{kategori}/{id}/edit', [ProdukController::class, 'edit'])->name('produk.edit');
+    Route::put('/produk/{kategori}/{id}', [ProdukController::class, 'update'])->name('produk.update');
+    Route::delete('/produk/{kategori}/{id}', [ProdukController::class, 'destroy'])->name('produk.destroy');
 
-    // ---- CRUD PRODUK PER KATEGORI ----
-    Route::post('/oli/store', [OliController::class, 'store'])->name('oli.store');
-    Route::post('/ban/store', [BanController::class, 'store'])->name('ban.store');
-    Route::post('/gear/store', [GearController::class, 'store'])->name('gear.store');
+    // ---- PRODUK PER KATEGORI ----
+    Route::post('/oli', [OliController::class, 'store'])->name('oli.store');
+    Route::post('/ban', [BanController::class, 'store'])->name('ban.store');
+    Route::post('/gear', [GearController::class, 'store'])->name('gear.store');
 
     // ---- UPDATE STATUS SERVIS ----
-    Route::post('/riwayat-service/update/{id}', [BookingServisController::class, 'updateStatus'])->name('service.update');
+    Route::post('/riwayat-service/{id}', [BookingServisController::class, 'updateStatus'])
+        ->name('service.update');
 
     // ---- CRUD LAYANAN ----
     Route::resource('daftar-layanan', DaftarLayananController::class)->except(['index']);
 });
 
-
-// ==============================================================
-# 4. ROUTE LAMA (KERANJANG TRANSAKSI SIMPAN)
-// ==============================================================
-
-Route::post('/detail-transaksi/store', [KeranjangController::class, 'store'])->name('detail-transaksi.store');
-Route::get('/pembayaran', [KeranjangController::class, 'pembayaran'])->name('pembayaran');
-
-Route::get('/about', function() {
-    return view('about');
-})->name('about.index');
-
+// =================================================
+// 4️⃣ ROUTE LAIN-LAIN
+// =================================================
+Route::get('/about', fn () => view('about'))->name('about.index');

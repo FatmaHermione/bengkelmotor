@@ -8,109 +8,125 @@ use Illuminate\Support\Facades\File;
 
 class PegawaiController extends Controller
 {
-    // READ
+    // ======================
+    // READ (LIST DATA)
+    // ======================
     public function index()
     {
         $pegawai = Pegawai::all();
-        return view('pegawai', compact('pegawai'));
+        return view('pegawai.index', compact('pegawai'));
     }
 
-    // CREATE (FORM)
+    // ======================
+    // CREATE (FORM TAMBAH)
+    // ======================
     public function create()
     {
-        return view('tambah-pegawai');
+        return view('pegawai.create');
     }
 
-    // STORE (SIMPAN DATA BARU) - FOTO OPSIONAL
+    // ======================
+    // STORE (SIMPAN DATA BARU)
+    // ======================
     public function store(Request $request)
     {
-        // 1. Validasi
         $request->validate([
-            'nama' => 'required',
+            'nama'    => 'required',
             'jabatan' => 'required',
-            'email' => 'required|email|unique:pegawais,email',
-            // Ubah 'required' menjadi 'nullable' agar foto tidak wajib
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048' 
+            'email'   => 'required|email|unique:pegawais,email',
+            'foto'    => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // 2. Set Default Foto (Jika user tidak upload foto)
-        // Pastikan Anda punya file 'no-image.jpg' di folder public/img, atau kosongkan string ini
-        $pathFoto = 'img/no-image.jpg'; 
+        // Foto default
+        $pathFoto = 'img/no-image.jpg';
 
-        // 3. Cek jika ada file yang diupload
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
-            $namaFile = time() . "_" . $file->getClientOriginalName();
-            
+            $namaFile = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('img'), $namaFile);
             $pathFoto = 'img/' . $namaFile;
         }
 
-        // 4. Simpan ke Database
         Pegawai::create([
-            'nama' => $request->nama,
+            'nama'    => $request->nama,
             'jabatan' => $request->jabatan,
-            'email' => $request->email,
-            'foto' => $pathFoto
+            'email'   => $request->email,
+            'foto'    => $pathFoto,
         ]);
 
-        return redirect()->route('pegawai.index')->with('success', 'Pegawai baru berhasil ditambahkan!');
+        return redirect()->route('pegawai.index')
+            ->with('success', 'Pegawai berhasil ditambahkan');
     }
 
-    // EDIT (FORM)
+    // ======================
+    // EDIT (FORM EDIT)
+    // ======================
     public function edit($id)
     {
-        $data = Pegawai::findOrFail($id);
-        return view('edit-pegawai', compact('data'));
+        $pegawai = Pegawai::findOrFail($id);
+        return view('pegawai.edit', compact('pegawai'));
     }
 
+    // ======================
     // UPDATE (SIMPAN PERUBAHAN)
+    // ======================
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama' => 'required',
+            'nama'    => 'required',
             'jabatan' => 'required',
-            'email' => 'required|email',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+            'email'   => 'required|email|unique:pegawais,email,' . $id,
+            'foto'    => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $pegawai = Pegawai::findOrFail($id);
 
-        $dataUpdate = [
-            'nama' => $request->nama,
+        $data = [
+            'nama'    => $request->nama,
             'jabatan' => $request->jabatan,
-            'email' => $request->email,
+            'email'   => $request->email,
         ];
 
         if ($request->hasFile('foto')) {
-            if ($pegawai->foto && File::exists(public_path($pegawai->foto)) && $pegawai->foto != 'img/no-image.jpg') {
+            // hapus foto lama (kecuali default)
+            if (
+                $pegawai->foto &&
+                File::exists(public_path($pegawai->foto)) &&
+                $pegawai->foto !== 'img/no-image.jpg'
+            ) {
                 File::delete(public_path($pegawai->foto));
             }
 
             $file = $request->file('foto');
-            $namaFile = time() . "_" . $file->getClientOriginalName();
+            $namaFile = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('img'), $namaFile);
-            
-            $dataUpdate['foto'] = 'img/' . $namaFile;
+            $data['foto'] = 'img/' . $namaFile;
         }
 
-        $pegawai->update($dataUpdate);
+        $pegawai->update($data);
 
-        return redirect()->route('pegawai.index')->with('success', 'Data pegawai berhasil diperbarui!');
+        return redirect()->route('pegawai.index')
+            ->with('success', 'Data pegawai berhasil diperbarui');
     }
 
-    // DESTROY (HAPUS)
+    // ======================
+    // DESTROY (HAPUS DATA)
+    // ======================
     public function destroy($id)
     {
         $pegawai = Pegawai::findOrFail($id);
 
-        // Jangan hapus file default jika dipakai
-        if ($pegawai->foto && File::exists(public_path($pegawai->foto)) && $pegawai->foto != 'img/no-image.jpg') {
+        if (
+            $pegawai->foto &&
+            File::exists(public_path($pegawai->foto)) &&
+            $pegawai->foto !== 'img/no-image.jpg'
+        ) {
             File::delete(public_path($pegawai->foto));
         }
 
         $pegawai->delete();
 
-        return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil dihapus permanen.');
+        return redirect()->route('pegawai.index')
+            ->with('success', 'Pegawai berhasil dihapus');
     }
 }

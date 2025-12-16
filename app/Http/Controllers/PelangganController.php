@@ -1,67 +1,49 @@
 <?php
 
-namespace App\Http\Controllers;
-  
-use App\Models\Pelanggan;
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PelangganController extends Controller
-{ 
-
+{
     public function index()
     {
-        $pelanggan = Pelanggan::all();
-        return view('pelanggan.index', compact('pelanggan'));
+        $pelanggans = User::where('role', 'user')->get();
+        return view('admin.pelanggan.index', compact('pelanggans'));
     }
 
-    public function create()
+    public function edit(User $user)
     {
-        return view('pelanggan.create');
+        return view('admin.pelanggan.edit', compact('user'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'namaPelanggan' => 'required|string|max:100',
-            'alamat' => 'required|string|max:255',
-            'noTelp' => 'required|string|max:20',
-        ]);
-
-        Pelanggan::create($request->all());
-        return redirect()->route('pelanggan.index')->with('success', 'Data pelanggan berhasil ditambahkan');
-    }
-
-    public function edit($id)
-    {
-        $pelanggan = Pelanggan::findOrFail($id);
-        return view('pelanggan.edit', compact('pelanggan'));
-    }
-
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
         $request->validate([
-            'namaPelanggan' => 'required|string|max:100',
-            'alamat' => 'required|string|max:255',
-            'noTelp' => 'required|string|max:20',
+            'name' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:20',
         ]);
 
-        $pelanggan = Pelanggan::findOrFail($id);
-        $pelanggan->update($request->all());
+        $user->update([
+            'name' => $request->name,
+            'phone' => $request->phone,
+        ]);
 
-        return redirect()->route('pelanggan.index')->with('success', 'Data pelanggan berhasil diperbarui');
+        return redirect()
+            ->route('admin.pelanggan.index')
+            ->with('success', 'Data pelanggan berhasil diperbarui');
     }
 
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $pelanggan = Pelanggan::findOrFail($id);
-        $pelanggan->delete();
+        if ($user->role === 'admin') {
+            return back()->with('error', 'Admin tidak bisa dihapus');
+        }
 
-        return redirect()->route('pelanggan.index')->with('success', 'Data pelanggan berhasil dihapus');
-    }
+        $user->delete();
 
-    public function show($id)
-    {
-        $pelanggan = Pelanggan::findOrFail($id);
-        return view('pelanggan.show', compact('pelanggan'));
+        return back()->with('success', 'Pelanggan berhasil dihapus');
     }
 }
